@@ -34,6 +34,11 @@ type Context struct {
 // Addr returns the address the user's server listens on.
 func (c *Context) Addr() string { return c.program.Addr() }
 
+// DataDir returns the --data-dir passed to the user's program. Stage tests
+// may inspect and manipulate its contents (e.g. to craft or corrupt durable
+// state) while the program is stopped.
+func (c *Context) DataDir() string { return c.program.DataDir() }
+
 // Dial opens a new client connection to the user's server.
 func (c *Context) Dial() (*Client, error) { return Dial(c.program.Addr()) }
 

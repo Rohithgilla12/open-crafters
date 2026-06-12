@@ -1,0 +1,49 @@
+slug: build-your-own-wal
+name: Build your own WAL
+short_description: >
+  Build the durability primitive under every database: a write-ahead log
+  with CRC-framed records, torn-write recovery, corruption detection, and
+  snapshot-based compaction — graded byte-for-byte on disk.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port> --data-dir <path>
+tester:
+  challenge_flag: build-your-own-wal
+stages:
+  - slug: bind
+    name: Boot the server
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: kv
+    name: An in-memory key-value store
+    difficulty: easy
+    instructions: stages/02-kv.md
+  - slug: persist
+    name: Survive a crash
+    difficulty: medium
+    instructions: stages/03-persist.md
+  - slug: format
+    name: Write the log format
+    difficulty: medium
+    instructions: stages/04-format.md
+  - slug: replay
+    name: Recover from any log
+    difficulty: medium
+    instructions: stages/05-replay.md
+  - slug: torn-writes
+    name: Torn writes
+    difficulty: hard
+    instructions: stages/06-torn-writes.md
+  - slug: checksums
+    name: Detect corruption
+    difficulty: hard
+    instructions: stages/07-checksums.md
+  - slug: checkpoint
+    name: Snapshots and log truncation
+    difficulty: hard
+    instructions: stages/08-checkpoint.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

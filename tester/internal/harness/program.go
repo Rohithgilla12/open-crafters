@@ -41,6 +41,8 @@ func NewProgram(path string, logf func(string, ...any)) (*Program, error) {
 
 func (p *Program) Addr() string { return fmt.Sprintf("127.0.0.1:%d", p.port) }
 
+func (p *Program) DataDir() string { return p.dataDir }
+
 // Start launches the process and waits until it accepts TCP connections.
 func (p *Program) Start() error {
 	if p.cmd != nil {

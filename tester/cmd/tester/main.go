@@ -15,11 +15,13 @@ import (
 	"os"
 
 	"github.com/open-crafters/open-crafters/tester/internal/challenges/temporal"
+	"github.com/open-crafters/open-crafters/tester/internal/challenges/wal"
 	"github.com/open-crafters/open-crafters/tester/internal/harness"
 )
 
 var challenges = map[string]harness.Challenge{
 	"build-your-own-temporal": temporal.Challenge(),
+	"build-your-own-wal":      wal.Challenge(),
 }
 
 func main() {
