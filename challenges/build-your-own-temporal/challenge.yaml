@@ -1,0 +1,53 @@
+slug: build-your-own-temporal
+name: Build your own Temporal
+short_description: >
+  Build a durable workflow engine from scratch: task queues, event-sourced
+  histories, activities with retries, durable timers, signals — and state
+  that survives a SIGKILL.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port> --data-dir <path>
+tester:
+  challenge_flag: build-your-own-temporal
+stages:
+  - slug: bind
+    name: Boot the server
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: start-workflow
+    name: Start a workflow
+    difficulty: easy
+    instructions: stages/02-start-workflow.md
+  - slug: complete-workflow
+    name: Dispatch and complete a workflow task
+    difficulty: medium
+    instructions: stages/03-complete-workflow.md
+  - slug: history
+    name: Append-only event history
+    difficulty: medium
+    instructions: stages/04-history.md
+  - slug: activities
+    name: Schedule and run activities
+    difficulty: medium
+    instructions: stages/05-activities.md
+  - slug: retries
+    name: Activity retries with backoff
+    difficulty: hard
+    instructions: stages/06-retries.md
+  - slug: timers
+    name: Durable timers
+    difficulty: medium
+    instructions: stages/07-timers.md
+  - slug: durability
+    name: Survive a crash
+    difficulty: hard
+    instructions: stages/08-durability.md
+  - slug: signals
+    name: Signals
+    difficulty: medium
+    instructions: stages/09-signals.md
+  - slug: concurrency
+    name: Concurrent workflows
+    difficulty: hard
+    instructions: stages/10-concurrency.md

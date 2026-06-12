@@ -1,0 +1,3 @@
+tester/tester
+*.tmp
+__pycache__/
