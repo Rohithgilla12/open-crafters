@@ -25,13 +25,23 @@ cd tester && go build ./cmd/tester && cd ..
 # copy a starter and start hacking
 cp -r challenges/build-your-own-temporal/starters/python my-solution
 
-# run stages up to and including a target stage
+# run it — the tester resumes automatically: it re-verifies the stages
+# you've passed and attempts the next one, then points you at the next
+# stage's instructions
 ./tester/tester --challenge build-your-own-temporal \
-    --program my-solution/your_program.sh --stage start-workflow
+    --program my-solution/your_program.sh
 
-# run everything
-./tester/tester --program my-solution/your_program.sh
+# see your progress checklist
+./tester/tester --challenge build-your-own-temporal \
+    --program my-solution/your_program.sh --status
+
+# other modes
+#   --stage <slug>   run up to and including a specific stage
+#   --all            run every stage
 ```
+
+Progress is tracked in `<your solution dir>/.open-crafters/progress.json`,
+so it travels with your solution repo.
 
 The tester never reads your code. If you speak the protocol, you pass — in
 Python, Go, Rust, Zig, or anything that can open a TCP socket.

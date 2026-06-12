@@ -9,19 +9,20 @@ import (
 )
 
 func Challenge() harness.Challenge {
+	docs := "challenges/build-your-own-wal/stages/"
 	return harness.Challenge{
 		Slug: "build-your-own-wal",
 		Name: "Build your own WAL",
 		Stages: []harness.Stage{
-			{Slug: "bind", Name: "Boot the server", Test: testBind},
-			{Slug: "kv", Name: "An in-memory key-value store", Test: testKV},
-			{Slug: "persist", Name: "Survive a crash", Test: testPersist},
-			{Slug: "format", Name: "Write the log format", Test: testFormat},
-			{Slug: "replay", Name: "Recover from any log", Test: testReplay},
-			{Slug: "torn-writes", Name: "Torn writes", Test: testTornWrites},
-			{Slug: "checksums", Name: "Detect corruption", Test: testChecksums},
-			{Slug: "checkpoint", Name: "Snapshots and log truncation", Test: testCheckpoint},
-			{Slug: "gauntlet", Name: "The gauntlet", Test: testGauntlet},
+			{Slug: "bind", Name: "Boot the server", Instructions: docs + "01-bind.md", Test: testBind},
+			{Slug: "kv", Name: "An in-memory key-value store", Instructions: docs + "02-kv.md", Test: testKV},
+			{Slug: "persist", Name: "Survive a crash", Instructions: docs + "03-persist.md", Test: testPersist},
+			{Slug: "format", Name: "Write the log format", Instructions: docs + "04-format.md", Test: testFormat},
+			{Slug: "replay", Name: "Recover from any log", Instructions: docs + "05-replay.md", Test: testReplay},
+			{Slug: "torn-writes", Name: "Torn writes", Instructions: docs + "06-torn-writes.md", Test: testTornWrites},
+			{Slug: "checksums", Name: "Detect corruption", Instructions: docs + "07-checksums.md", Test: testChecksums},
+			{Slug: "checkpoint", Name: "Snapshots and log truncation", Instructions: docs + "08-checkpoint.md", Test: testCheckpoint},
+			{Slug: "gauntlet", Name: "The gauntlet", Instructions: docs + "09-gauntlet.md", Test: testGauntlet},
 		},
 	}
 }

@@ -11,20 +11,21 @@ import (
 )
 
 func Challenge() harness.Challenge {
+	docs := "challenges/build-your-own-temporal/stages/"
 	return harness.Challenge{
 		Slug: "build-your-own-temporal",
 		Name: "Build your own Temporal",
 		Stages: []harness.Stage{
-			{Slug: "bind", Name: "Boot the server", Test: testBind},
-			{Slug: "start-workflow", Name: "Start a workflow", Test: testStartWorkflow},
-			{Slug: "complete-workflow", Name: "Dispatch and complete a workflow task", Test: testCompleteWorkflow},
-			{Slug: "history", Name: "Append-only event history", Test: testHistory},
-			{Slug: "activities", Name: "Schedule and run activities", Test: testActivities},
-			{Slug: "retries", Name: "Activity retries with backoff", Test: testRetries},
-			{Slug: "timers", Name: "Durable timers", Test: testTimers},
-			{Slug: "durability", Name: "Survive a crash", Test: testDurability},
-			{Slug: "signals", Name: "Signals", Test: testSignals},
-			{Slug: "concurrency", Name: "Concurrent workflows", Test: testConcurrency},
+			{Slug: "bind", Name: "Boot the server", Instructions: docs + "01-bind.md", Test: testBind},
+			{Slug: "start-workflow", Name: "Start a workflow", Instructions: docs + "02-start-workflow.md", Test: testStartWorkflow},
+			{Slug: "complete-workflow", Name: "Dispatch and complete a workflow task", Instructions: docs + "03-complete-workflow.md", Test: testCompleteWorkflow},
+			{Slug: "history", Name: "Append-only event history", Instructions: docs + "04-history.md", Test: testHistory},
+			{Slug: "activities", Name: "Schedule and run activities", Instructions: docs + "05-activities.md", Test: testActivities},
+			{Slug: "retries", Name: "Activity retries with backoff", Instructions: docs + "06-retries.md", Test: testRetries},
+			{Slug: "timers", Name: "Durable timers", Instructions: docs + "07-timers.md", Test: testTimers},
+			{Slug: "durability", Name: "Survive a crash", Instructions: docs + "08-durability.md", Test: testDurability},
+			{Slug: "signals", Name: "Signals", Instructions: docs + "09-signals.md", Test: testSignals},
+			{Slug: "concurrency", Name: "Concurrent workflows", Instructions: docs + "10-concurrency.md", Test: testConcurrency},
 		},
 	}
 }

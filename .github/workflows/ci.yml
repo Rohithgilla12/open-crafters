@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tester:
+    name: Build tester & verify challenges
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+          cache: false
+
+      - name: Vet and build the tester
+        working-directory: tester
+        run: |
+          go vet ./...
+          go build ./cmd/tester
+
+      - name: "Reference solution: Build your own Temporal (all 10 stages)"
+        run: tester/tester --challenge build-your-own-temporal --all
+          --program examples/solutions/build-your-own-temporal/python/your_program.sh
+
+      - name: "Reference solution: Build your own WAL (all 9 stages)"
+        run: tester/tester --challenge build-your-own-wal --all
+          --program examples/solutions/build-your-own-wal/python/your_program.sh
+
+      - name: "Starters pass stage 1 (Python and Go, both challenges)"
+        run: |
+          tester/tester --challenge build-your-own-temporal --stage bind \
+            --program challenges/build-your-own-temporal/starters/python/your_program.sh
+          tester/tester --challenge build-your-own-temporal --stage bind \
+            --program challenges/build-your-own-temporal/starters/go/your_program.sh
+          tester/tester --challenge build-your-own-wal --stage bind \
+            --program challenges/build-your-own-wal/starters/python/your_program.sh
+          tester/tester --challenge build-your-own-wal --stage bind \
+            --program challenges/build-your-own-wal/starters/go/your_program.sh
