@@ -93,7 +93,7 @@ solution_slug() {
 }
 
 cmd_start() {
-  [ $# -ge 1 ] || die "usage: crafters start <challenge> [dir] [--lang python|go]"
+  [ $# -ge 1 ] || die "usage: crafters start <challenge> [dir] [--lang python|go|typescript]"
   local query="$1"; shift
   local lang="python" dest=""
   while [ $# -gt 0 ]; do
@@ -149,7 +149,7 @@ usage() {
 crafters — open-crafters launcher
 
 USAGE
-  crafters start <challenge> [dir] [--lang python|go]   scaffold a solution and grade it
+  crafters start <challenge> [dir] [--lang python|go|typescript]   scaffold a solution and grade it
   crafters test  [dir] [--all|--stage <slug>]          re-grade (resumes; --all runs every stage)
   crafters status [dir]                                 show the progress checklist
   crafters list                                         list challenges and stages

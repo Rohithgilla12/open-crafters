@@ -17,6 +17,10 @@ jobs:
           go-version: "1.24"
           cache: false
 
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
       - name: Vet and build the tester
         working-directory: tester
         run: |
@@ -35,21 +39,19 @@ jobs:
         run: tester/tester --challenge build-your-own-wal --all
           --program examples/solutions/build-your-own-wal/go/your_program.sh
 
+      - name: "Reference solution: Build your own WAL — TypeScript/Bun (all 9 stages)"
+        run: tester/tester --challenge build-your-own-wal --all
+          --program examples/solutions/build-your-own-wal/typescript/your_program.sh
+
       - name: "Reference solution: Build your own message queue (all 9 stages)"
         run: tester/tester --challenge build-your-own-queue --all
           --program examples/solutions/build-your-own-queue/python/your_program.sh
 
-      - name: "Starters pass stage 1 (Python and Go, all challenges)"
+      - name: "Starters pass stage 1 (Python, Go, TypeScript — all challenges)"
         run: |
-          tester/tester --challenge build-your-own-temporal --stage bind \
-            --program challenges/build-your-own-temporal/starters/python/your_program.sh
-          tester/tester --challenge build-your-own-temporal --stage bind \
-            --program challenges/build-your-own-temporal/starters/go/your_program.sh
-          tester/tester --challenge build-your-own-wal --stage bind \
-            --program challenges/build-your-own-wal/starters/python/your_program.sh
-          tester/tester --challenge build-your-own-wal --stage bind \
-            --program challenges/build-your-own-wal/starters/go/your_program.sh
-          tester/tester --challenge build-your-own-queue --stage bind \
-            --program challenges/build-your-own-queue/starters/python/your_program.sh
-          tester/tester --challenge build-your-own-queue --stage bind \
-            --program challenges/build-your-own-queue/starters/go/your_program.sh
+          for ch in build-your-own-temporal build-your-own-wal build-your-own-queue; do
+            for lang in python go typescript; do
+              tester/tester --challenge "$ch" --stage bind \
+                --program "challenges/$ch/starters/$lang/your_program.sh"
+            done
+          done

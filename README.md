@@ -50,7 +50,7 @@ That last line is your prompt. The loop from here:
 ### The `crafters` launcher
 
 ```sh
-crafters start <challenge> [dir] [--lang python|go]   # scaffold a solution + grade it
+crafters start <challenge> [dir] [--lang python|go|typescript]   # scaffold a solution + grade it
 crafters test  [dir]                                  # re-grade (resume)
 crafters status [dir]                                 # progress checklist
 crafters list                                         # all challenges and stages
