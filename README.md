@@ -8,39 +8,34 @@ primitives senior engineers actually wrestle with: workflow engines,
 write-ahead logs, consensus, schedulers. You implement the system in **any
 language**; a test harness grades you stage by stage, entirely over the wire.
 
-## Prerequisites
-
-- **Go ≥ 1.21** — to build the tester (the grader). It's the only fixed
-  dependency; you don't write any Go unless you want to.
-- **Any language that can open a TCP socket** — to write your solution.
-  Python and Go starters ship with every challenge; Rust, Zig, C, Node,
-  anything works.
-
 ## Quickstart
 
-Build the grader once, copy a starter into your own directory, and run it.
-This example uses **Build your own WAL** — a good first challenge (see
-[below](#which-challenge-should-i-start-with)).
+One command installs everything — a prebuilt grader (no Go needed), the
+challenge content, and the `crafters` launcher on your PATH:
 
 ```sh
-# 1. build the grader (once)
-cd tester && go build ./cmd/tester && cd ..
-
-# 2. copy a starter into your own working directory
-cp -r challenges/build-your-own-wal/starters/python my-wal
-
-# 3. grade it
-./tester/tester --challenge build-your-own-wal --program my-wal/your_program.sh
+curl -fsSL https://raw.githubusercontent.com/Rohithgilla12/open-crafters/main/install.sh | sh
 ```
 
-The starter already passes stage 1, so you'll see something like:
+Then go from zero to coding in two commands:
+
+```sh
+crafters start wal      # scaffold the WAL challenge (a good first one) and grade it
+cd my-wal               # edit main.py here
+crafters test           # re-grade — resumes exactly where you left off
+```
+
+`crafters start` already passes stage 1, so you'll see something like:
 
 ```
+✓ created ./my-wal from the python starter for "build-your-own-wal"
+  protocol: .../challenges/build-your-own-wal/PROTOCOL.md
+
 [stage 1/9] bind — Boot the server
 ✓ bind passed (0.21s)
-
-Next up: kv — An in-memory key-value store
-Instructions: challenges/build-your-own-wal/stages/02-kv.md
+[stage 2/9] kv — An in-memory key-value store
+✗ stage "kv" failed: get "fruit": UNKNOWN_METHOD ...
+Stuck? Re-read the instructions: challenges/build-your-own-wal/stages/02-kv.md
 ```
 
 That last line is your prompt. The loop from here:
@@ -48,27 +43,46 @@ That last line is your prompt. The loop from here:
 1. **Read** the stage instructions it pointed you at, plus the challenge's
    `PROTOCOL.md` (the authoritative wire spec).
 2. **Implement** the next method in your copy (`my-wal/main.py`).
-3. **Re-run the same command.** The tester re-verifies the stages you've
-   already passed, then attempts the next one — no flags needed to advance.
-4. When a stage fails, it tells you exactly what it **expected vs. observed**.
-   Fix it and repeat.
+3. **`crafters test`** — re-verifies the stages you've passed, then attempts
+   the next one. When a stage fails it tells you exactly what it **expected vs.
+   observed**. Fix it and repeat.
 
-Your submission is just an executable the tester runs as
-`./your_program.sh --port <port> --data-dir <path>`. The tester spawns it,
-talks to it over TCP, and even `SIGKILL`s and restarts it to test durability —
-but it **never reads your code**. If you speak the protocol, you pass, in any
-language.
-
-Progress is saved in `my-wal/.open-crafters/progress.json`, so it travels with
-your solution repo — stop and resume whenever.
-
-### Tester modes
+### The `crafters` launcher
 
 ```sh
---status            # print your progress checklist and exit (doesn't run anything)
---stage <slug>      # run up to and including one stage
---all               # run every stage from scratch
---list              # list all challenges and their stages
+crafters start <challenge> [dir] [--lang python|go]   # scaffold a solution + grade it
+crafters test  [dir]                                  # re-grade (resume)
+crafters status [dir]                                 # progress checklist
+crafters list                                         # all challenges and stages
+```
+
+`<challenge>` takes a fuzzy name (`wal`, `queue`, `temporal`) or a full slug.
+Progress is saved in `<solution>/.open-crafters/progress.json`, so it travels
+with your solution — stop and resume whenever.
+
+Your submission is just an executable the grader runs as
+`./your_program.sh --port <port> --data-dir <path>`. The grader spawns it,
+talks to it over TCP, and even `SIGKILL`s and restarts it to test durability —
+but it **never reads your code**. If you speak the protocol, you pass, in any
+language with a TCP socket (Python, Go, Rust, Zig, C, Node, …).
+
+### Prefer to run from a clone?
+
+No install needed — `./crafters` works straight from a checkout, building the
+grader on first use (needs **Go ≥ 1.21**):
+
+```sh
+git clone https://github.com/Rohithgilla12/open-crafters && cd open-crafters
+./crafters start wal
+```
+
+Or skip the launcher entirely and call the grader directly:
+
+```sh
+cd tester && go build ./cmd/tester && cd ..
+./tester/tester --challenge build-your-own-wal --program my-wal/your_program.sh
+#   --status   checklist    --stage <slug>   up to a stage
+#   --all      every stage   --list           all challenges
 ```
 
 ## Challenges
@@ -106,13 +120,15 @@ it's cheap to try one and switch.
 ## Repository layout
 
 ```
+crafters                    the launcher (start / test / status / list)
+install.sh                  one-line installer (curl … | sh)
 challenges/<slug>/          challenge definition
   challenge.yaml            metadata + ordered stage list
   PROTOCOL.md               the wire contract (the real spec)
   stages/NN-<slug>.md       per-stage instructions
   starters/<language>/      minimal templates that pass stage 1
 examples/solutions/<slug>/  reference solutions that pass all stages
-tester/                     the Go test harness
+tester/                     the Go test harness (the grader)
   internal/harness/         challenge-agnostic core (process mgmt, protocol client, runner)
   internal/challenges/      per-challenge stage tests
 docs/                       architecture & challenge-authoring guides

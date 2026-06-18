@@ -2,3 +2,4 @@ tester/tester
 *.tmp
 __pycache__/
 .open-crafters/
+tester/dist/

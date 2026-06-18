@@ -1,0 +1,44 @@
+name: Release
+
+# Publishes prebuilt grader binaries so users can install without Go:
+#   git tag v0.1.0 && git push origin v0.1.0
+# install.sh downloads these from the "latest" release.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  binaries:
+    name: Build & publish grader binaries
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+          cache: false
+
+      - name: Cross-compile the grader
+        working-directory: tester
+        env:
+          CGO_ENABLED: "0"
+        run: |
+          mkdir -p dist
+          for target in linux/amd64 linux/arm64 darwin/amd64 darwin/arm64; do
+            os="${target%/*}"; arch="${target#*/}"
+            echo "building crafters-tester_${os}_${arch}"
+            GOOS="$os" GOARCH="$arch" go build -trimpath \
+              -o "dist/crafters-tester_${os}_${arch}" ./cmd/tester
+          done
+
+      - name: Publish to the GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: tester/dist/crafters-tester_*
+          fail_on_unmatched_files: true
+          generate_release_notes: true
