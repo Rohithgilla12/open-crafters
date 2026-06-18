@@ -21,6 +21,17 @@ var content embed.FS
 
 func challengeDir(slug string) string { return "challenges/" + slug }
 
+// ChallengesFS returns the embedded challenge tree rooted at challenges/, so
+// "build-your-own-wal/PROTOCOL.md" addresses a challenge file. Used by the
+// static site generator.
+func ChallengesFS() fs.FS {
+	sub, err := fs.Sub(content, "challenges")
+	if err != nil {
+		panic(err) // the embed is static; this cannot fail
+	}
+	return sub
+}
+
 // StarterLangs returns the languages with a starter template for a challenge.
 func StarterLangs(slug string) []string {
 	entries, err := content.ReadDir(challengeDir(slug) + "/starters")

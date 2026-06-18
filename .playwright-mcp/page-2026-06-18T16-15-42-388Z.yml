@@ -1,0 +1,245 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main"
+  - generic [ref=e4]:
+    - generic [ref=e5]: ● AS9100-BASED · ISO 9001 PRINCIPLES · FULL MATERIAL TRACEABILITY
+    - generic [ref=e6]: HOUSTON, TX · EST. 1998
+  - banner [ref=e7]:
+    - generic [ref=e8]:
+      - link "VaneTech Aero Components — home" [ref=e9] [cursor=pointer]:
+        - /url: /
+        - img [ref=e10]
+        - generic [ref=e18]:
+          - generic [ref=e19]: VaneTech
+          - generic [ref=e20]: Aero Components
+      - navigation "Primary" [ref=e21]:
+        - link "About" [ref=e22] [cursor=pointer]:
+          - /url: /about/
+        - link "Products & Solutions" [ref=e23] [cursor=pointer]:
+          - /url: /products/
+        - link "Quality & Engineering" [ref=e24] [cursor=pointer]:
+          - /url: /quality/
+        - link "Experience" [ref=e25] [cursor=pointer]:
+          - /url: /experience/
+        - link "Request a Quote" [ref=e26] [cursor=pointer]:
+          - /url: /contact/
+  - main [ref=e27]:
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e31]: Precision Turbine · Aerospace · Defense
+        - heading "Engineering for the parts that turn the world." [level=1] [ref=e32]
+        - paragraph [ref=e33]: Since 1998, VaneTech Aero Components has designed, sourced, and supplied precision-engineered components for the critical rotating and stationary systems at the core of flight, defense, and power generation.
+        - generic [ref=e34]:
+          - link "Explore capabilities →" [ref=e35] [cursor=pointer]:
+            - /url: /products/
+            - text: Explore capabilities
+            - generic [ref=e36]: →
+          - link "Talk to engineering →" [ref=e37] [cursor=pointer]:
+            - /url: /contact/
+            - text: Talk to engineering
+            - generic [ref=e38]: →
+      - generic [ref=e39]:
+        - generic [ref=e44]:
+          - text: DWG VT-001 · REV C
+          - text: ‌TURBINE AIRFOIL
+        - generic [ref=e45]: MATL IN-718 · SCALE 1:1
+        - img "Dimensioned turbine airfoil cross-section" [ref=e46]:
+          - generic [ref=e48]: CHORD 412.0 ±0.02
+          - generic [ref=e49]: T 24.5
+          - generic [ref=e51]: L.E.
+          - generic [ref=e52]: T.E.
+    - generic [ref=e54]:
+      - generic [ref=e55]:
+        - generic [ref=e56]: 25+
+        - generic [ref=e57]: Years of practice
+      - generic [ref=e58]:
+        - generic [ref=e59]: "3"
+        - generic [ref=e60]: Continents served
+      - generic [ref=e61]:
+        - generic [ref=e62]: 5-axis
+        - generic [ref=e63]: CNC capability
+      - generic [ref=e64]:
+        - generic [ref=e65]: 100%
+        - generic [ref=e66]: Material traceability
+    - generic [ref=e68]:
+      - generic [ref=e69]:
+        - generic [ref=e70]:
+          - generic [ref=e71]: 01 — About
+          - heading "A technology-driven partner across the full component lifecycle." [level=2] [ref=e72]
+        - generic [ref=e73]:
+          - paragraph [ref=e74]: VaneTech Aero Components specializes in precision aerospace and turbomachinery components — supporting customers from concept and prototyping through production and aftermarket support.
+          - paragraph [ref=e75]: Our commitment to engineering excellence, quality, and customer satisfaction has enabled us to support customers across North America, Europe, and Asia through a combination of in-house engineering and a qualified global manufacturing network.
+          - paragraph [ref=e76]:
+            - link "More about us →" [ref=e77] [cursor=pointer]:
+              - /url: /about/
+              - text: More about us
+              - generic [ref=e78]: →
+      - list [ref=e79]:
+        - listitem [ref=e80]:
+          - generic [ref=e81]: C-01
+          - heading "Turbine Blade Engineering" [level=3] [ref=e82]
+          - paragraph [ref=e83]: Aero engine blades, vanes, and airfoil development for critical rotating systems.
+          - generic [ref=e84]: →
+        - listitem [ref=e85]:
+          - generic [ref=e86]: C-02
+          - heading "Vane & Airfoil Development" [level=3] [ref=e87]
+          - paragraph [ref=e88]: Complex airfoil geometries requiring multi-axis machining and full profile inspection.
+          - generic [ref=e89]: →
+        - listitem [ref=e90]:
+          - generic [ref=e91]: C-03
+          - heading "Reverse Engineering" [level=3] [ref=e92]
+          - paragraph [ref=e93]: CAD reconstruction and CAD/CAM programming from legacy or sample components.
+          - generic [ref=e94]: →
+        - listitem [ref=e95]:
+          - generic [ref=e96]: C-04
+          - heading "Prototype Development" [level=3] [ref=e97]
+          - paragraph [ref=e98]: A controlled path from concept to production-ready first articles.
+          - generic [ref=e99]: →
+        - listitem [ref=e100]:
+          - generic [ref=e101]: C-05
+          - heading "Global Manufacturing Management" [level=3] [ref=e102]
+          - paragraph [ref=e103]: Qualification and development of a scalable, cost-effective partner network.
+          - generic [ref=e104]: →
+    - generic [ref=e106]:
+      - generic [ref=e107]:
+        - generic [ref=e108]:
+          - generic [ref=e109]: 02 — Products & Solutions
+          - heading "Components for every critical system." [level=2] [ref=e110]
+        - link "See all products & solutions →" [ref=e111] [cursor=pointer]:
+          - /url: /products/
+          - text: See all products & solutions
+          - generic [ref=e112]: →
+      - generic [ref=e113]:
+        - article [ref=e114]:
+          - generic [ref=e115]: No. 01
+          - text: AE
+          - heading "Aero Engine Components" [level=3] [ref=e116]
+          - list [ref=e118]:
+            - listitem [ref=e119]: Compressor blades
+            - listitem [ref=e120]: Turbine blades
+            - listitem [ref=e121]: Fan blades
+            - listitem [ref=e122]: Rotor blades & stator vanes
+        - article [ref=e123]:
+          - generic [ref=e124]: No. 02
+          - text: GT
+          - heading "Gas Turbine Components" [level=3] [ref=e125]
+          - list [ref=e127]:
+            - listitem [ref=e128]: Turbine blades
+            - listitem [ref=e129]: Turbine vanes
+            - listitem [ref=e130]: Combustor components
+            - listitem [ref=e131]: Shrouds
+        - article [ref=e132]:
+          - generic [ref=e133]: No. 03
+          - text: AS
+          - heading "Aerospace Components" [level=3] [ref=e134]
+          - list [ref=e136]:
+            - listitem [ref=e137]: Precision structural parts
+            - listitem [ref=e138]: Aircraft engine components
+            - listitem [ref=e139]: Mounting brackets
+            - listitem [ref=e140]: Housings & casings
+        - article [ref=e141]:
+          - generic [ref=e142]: No. 04
+          - text: DF
+          - heading "Defense Components" [level=3] [ref=e143]
+          - list [ref=e145]:
+            - listitem [ref=e146]: Missile system components
+            - listitem [ref=e147]: UAV / drone structural parts
+            - listitem [ref=e148]: Radar system mechanicals
+            - listitem [ref=e149]: Ground support equipment
+        - article [ref=e150]:
+          - generic [ref=e151]: No. 05
+          - text: SL
+          - heading "Space & Launch Vehicle" [level=3] [ref=e152]
+          - list [ref=e154]:
+            - listitem [ref=e155]: Satellite structural hardware
+            - listitem [ref=e156]: Launch vehicle precision parts
+            - listitem [ref=e157]: Propulsion system components
+            - listitem [ref=e158]: Ground support equipment
+        - article [ref=e159]:
+          - generic [ref=e160]: No. 06
+          - text: MF
+          - heading "Manufacturing & Supply Chain" [level=3] [ref=e161]
+          - list [ref=e163]:
+            - listitem [ref=e164]: 3 / 4 / 5-axis CNC machining
+            - listitem [ref=e165]: High-speed milling
+            - listitem [ref=e166]: Precision turning
+            - listitem [ref=e167]: Surface grinding
+    - generic [ref=e170]:
+      - generic [ref=e171]:
+        - generic [ref=e172]: 03 — Quality & Engineering
+        - paragraph [ref=e173]:
+          - text: Quality is not a stage. It is
+          - emphasis [ref=e174]: the whole process
+          - text: — engineered to the highest aerospace and defense standards.
+        - paragraph [ref=e175]: Our engineering team provides end-to-end support, from concept design to production readiness, processing the alloys that survive extreme environments.
+        - generic [ref=e176]:
+          - generic [ref=e177]: Titanium Alloys
+          - generic [ref=e178]: Inconel Alloys
+          - generic [ref=e179]: Nickel-Based Superalloys
+          - generic [ref=e180]: Stainless Steel
+          - generic [ref=e181]: Alloy Steel
+          - generic [ref=e182]: Aerospace-Grade Aluminum
+        - paragraph [ref=e183]:
+          - link "Our quality systems →" [ref=e184] [cursor=pointer]:
+            - /url: /quality/
+            - text: Our quality systems
+            - generic [ref=e185]: →
+      - generic [ref=e186]:
+        - generic [ref=e187]:
+          - generic [ref=e188]: Quality Systems
+          - generic [ref=e189]: REV. 2026
+        - generic [ref=e190]:
+          - generic [ref=e191]: Aerospace practices
+          - generic [ref=e192]: AS9100
+        - generic [ref=e193]:
+          - generic [ref=e194]: Management principles
+          - generic [ref=e195]: ISO 9001
+        - generic [ref=e196]:
+          - generic [ref=e197]: First article inspection
+          - generic [ref=e198]: FAI
+        - generic [ref=e199]:
+          - generic [ref=e200]: Material traceability
+          - generic [ref=e201]: 100%
+        - generic [ref=e202]:
+          - generic [ref=e203]: Validation
+          - generic [ref=e204]: In-process
+        - generic [ref=e205]:
+          - generic [ref=e206]: Calibration
+          - generic [ref=e207]: Controlled
+    - generic [ref=e209]:
+      - generic [ref=e210]:
+        - text: Let's talk specifications
+        - heading "Bring us the part that cannot fail." [level=2] [ref=e211]
+        - paragraph [ref=e212]: We welcome inquiries from aerospace, defense, energy, and industrial partners worldwide — for product information, technical clarifications, or collaboration.
+      - link "sales@vanetechaero.com →" [ref=e213] [cursor=pointer]:
+        - /url: mailto:sales@vanetechaero.com
+        - text: sales@vanetechaero.com
+        - generic [ref=e214]: →
+  - contentinfo [ref=e215]:
+    - generic [ref=e216]:
+      - generic [ref=e217]:
+        - generic [ref=e218]:
+          - link "VaneTech Aero Components — home" [ref=e219] [cursor=pointer]:
+            - /url: /
+            - img [ref=e220]
+            - generic [ref=e227]:
+              - generic [ref=e228]: VaneTech
+              - generic [ref=e229]: Aero Components
+          - paragraph [ref=e230]: Engineering excellence since 1998. Houston, Texas.
+        - generic [ref=e231]:
+          - heading "Headquarters" [level=4] [ref=e232]
+          - generic [ref=e233]:
+            - generic [ref=e234]: 2604 E NASA Pkwy
+            - generic [ref=e235]: Houston, TX 77058
+            - generic [ref=e236]: United States
+        - generic [ref=e237]:
+          - heading "Contact" [level=4] [ref=e238]
+          - generic [ref=e239]:
+            - link "sales@vanetechaero.com" [ref=e240] [cursor=pointer]:
+              - /url: mailto:sales@vanetechaero.com
+            - link "info@vanetechaero.com" [ref=e241] [cursor=pointer]:
+              - /url: mailto:info@vanetechaero.com
+            - generic [ref=e242]: North America · Europe · Asia
+      - generic [ref=e243]:
+        - generic [ref=e244]: © 1998–2026 VaneTech Aero Components
+        - generic [ref=e245]: Engineering Excellence Since 1998
