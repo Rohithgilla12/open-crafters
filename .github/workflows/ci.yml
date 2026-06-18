@@ -10,9 +10,9 @@ jobs:
     name: Build tester & verify challenges
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: "1.24"
           cache: false
@@ -27,9 +27,13 @@ jobs:
         run: tester/tester --challenge build-your-own-temporal --all
           --program examples/solutions/build-your-own-temporal/python/your_program.sh
 
-      - name: "Reference solution: Build your own WAL (all 9 stages)"
+      - name: "Reference solution: Build your own WAL — Python (all 9 stages)"
         run: tester/tester --challenge build-your-own-wal --all
           --program examples/solutions/build-your-own-wal/python/your_program.sh
+
+      - name: "Reference solution: Build your own WAL — Go (all 9 stages)"
+        run: tester/tester --challenge build-your-own-wal --all
+          --program examples/solutions/build-your-own-wal/go/your_program.sh
 
       - name: "Reference solution: Build your own message queue (all 9 stages)"
         run: tester/tester --challenge build-your-own-queue --all
