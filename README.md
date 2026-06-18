@@ -8,43 +8,68 @@ primitives senior engineers actually wrestle with: workflow engines,
 write-ahead logs, consensus, schedulers. You implement the system in **any
 language**; a test harness grades you stage by stage, entirely over the wire.
 
-## How it works
+## Prerequisites
 
-1. Pick a challenge and read its `PROTOCOL.md` — the wire contract your
-   program must speak.
-2. Start from a starter template (or from scratch). Your submission is just
-   an executable: `./your_program.sh --port <port> --data-dir <path>`.
-3. Run the tester. It spawns your program, drives it through staged tests —
-   including killing it to test durability — and tells you exactly what's
-   wrong when a stage fails.
+- **Go ≥ 1.21** — to build the tester (the grader). It's the only fixed
+  dependency; you don't write any Go unless you want to.
+- **Any language that can open a TCP socket** — to write your solution.
+  Python and Go starters ship with every challenge; Rust, Zig, C, Node,
+  anything works.
+
+## Quickstart
+
+Build the grader once, copy a starter into your own directory, and run it.
+This example uses **Build your own WAL** — a good first challenge (see
+[below](#which-challenge-should-i-start-with)).
 
 ```sh
-# build the tester (once)
+# 1. build the grader (once)
 cd tester && go build ./cmd/tester && cd ..
 
-# copy a starter and start hacking
-cp -r challenges/build-your-own-temporal/starters/python my-solution
+# 2. copy a starter into your own working directory
+cp -r challenges/build-your-own-wal/starters/python my-wal
 
-# run it — the tester resumes automatically: it re-verifies the stages
-# you've passed and attempts the next one, then points you at the next
-# stage's instructions
-./tester/tester --challenge build-your-own-temporal \
-    --program my-solution/your_program.sh
-
-# see your progress checklist
-./tester/tester --challenge build-your-own-temporal \
-    --program my-solution/your_program.sh --status
-
-# other modes
-#   --stage <slug>   run up to and including a specific stage
-#   --all            run every stage
+# 3. grade it
+./tester/tester --challenge build-your-own-wal --program my-wal/your_program.sh
 ```
 
-Progress is tracked in `<your solution dir>/.open-crafters/progress.json`,
-so it travels with your solution repo.
+The starter already passes stage 1, so you'll see something like:
 
-The tester never reads your code. If you speak the protocol, you pass — in
-Python, Go, Rust, Zig, or anything that can open a TCP socket.
+```
+[stage 1/9] bind — Boot the server
+✓ bind passed (0.21s)
+
+Next up: kv — An in-memory key-value store
+Instructions: challenges/build-your-own-wal/stages/02-kv.md
+```
+
+That last line is your prompt. The loop from here:
+
+1. **Read** the stage instructions it pointed you at, plus the challenge's
+   `PROTOCOL.md` (the authoritative wire spec).
+2. **Implement** the next method in your copy (`my-wal/main.py`).
+3. **Re-run the same command.** The tester re-verifies the stages you've
+   already passed, then attempts the next one — no flags needed to advance.
+4. When a stage fails, it tells you exactly what it **expected vs. observed**.
+   Fix it and repeat.
+
+Your submission is just an executable the tester runs as
+`./your_program.sh --port <port> --data-dir <path>`. The tester spawns it,
+talks to it over TCP, and even `SIGKILL`s and restarts it to test durability —
+but it **never reads your code**. If you speak the protocol, you pass, in any
+language.
+
+Progress is saved in `my-wal/.open-crafters/progress.json`, so it travels with
+your solution repo — stop and resume whenever.
+
+### Tester modes
+
+```sh
+--status            # print your progress checklist and exit (doesn't run anything)
+--stage <slug>      # run up to and including one stage
+--all               # run every stage from scratch
+--list              # list all challenges and their stages
+```
 
 ## Challenges
 
@@ -55,6 +80,28 @@ Python, Go, Rust, Zig, or anything that can open a TCP socket.
 | [Build your own message queue](challenges/build-your-own-queue/) — a durable broker: at-least-once delivery, visibility timeouts, receipt fencing, dead-letter queues | 9 | ✅ ready |
 | Build your own workflow SDK — deterministic replay, the other half of Temporal | — | planned |
 | Build your own Raft | — | planned |
+
+### Which challenge should I start with?
+
+All three are meaty, but they build on a shared idea — **make a promise
+durable before you acknowledge it** — in increasing order of scope:
+
+1. **Build your own WAL** — *start here.* The most self-contained of the
+   three, and it teaches the write-before-ack discipline the other two lean
+   on. You get crisp, byte-level feedback (the tester parses and crafts your
+   log), so mistakes are concrete and easy to localize.
+2. **Build your own message queue** — next. Reuses that durability discipline
+   but the lesson is *delivery semantics*: at-least-once, visibility timeouts,
+   and the receipt-fencing bug that quietly loses work in real systems. Graded
+   purely by behavior, so you choose your own on-disk format.
+3. **Build your own Temporal** — the biggest. A full durable workflow engine —
+   task queues, event-sourced histories, retries, durable timers, crash
+   recovery. Easier to reason about once durability (WAL) and queue mechanics
+   (message queue) are already second nature.
+
+Each is independent — you can start with whichever system you most want to
+understand. Stage 1 of any of them is a 30-minute "boot and answer a ping," so
+it's cheap to try one and switch.
 
 ## Repository layout
 
