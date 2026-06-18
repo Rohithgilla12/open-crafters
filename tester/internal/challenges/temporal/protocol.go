@@ -188,7 +188,15 @@ func pollActivityTaskUntil(c *harness.Client, timeout time.Duration) (*ActivityT
 // expectNoWorkflowTask asserts that no workflow task is delivered for the
 // given duration.
 func expectNoWorkflowTask(c *harness.Client, d time.Duration) error {
-	deadline := time.Now().Add(d)
+	return expectNoWorkflowTaskBefore(c, time.Now().Add(d))
+}
+
+// expectNoWorkflowTaskBefore asserts that no workflow task is delivered until
+// the given absolute deadline. Anchoring to an absolute instant (rather than a
+// duration measured from the call) is what keeps a timer test honest on a
+// loaded CI runner: a slow preceding RPC can't push the "not yet" window across
+// the timer's fire time and flag a perfectly-timed fire as "too early".
+func expectNoWorkflowTaskBefore(c *harness.Client, deadline time.Time) error {
 	for time.Now().Before(deadline) {
 		task, err := pollWorkflowTask(c)
 		if err != nil {

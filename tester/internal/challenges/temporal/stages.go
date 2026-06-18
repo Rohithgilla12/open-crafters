@@ -378,8 +378,12 @@ func testTimers(ctx *harness.Context) error {
 		return err
 	}
 
-	// The timer must not fire early.
-	if err := expectNoWorkflowTask(c, 300*time.Millisecond); err != nil {
+	// The timer must not fire early. Anchor the check to an absolute instant
+	// well before the 500ms fire time so a slow StartTimer RPC on a loaded
+	// runner can't drift the window across the fire time. The real lower-bound
+	// guarantee is the elapsed >= ~500ms assertion below; this just catches a
+	// timer that fires immediately.
+	if err := expectNoWorkflowTaskBefore(c, timerSet.Add(250*time.Millisecond)); err != nil {
 		return fmt.Errorf("the timer fired too early: %w", err)
 	}
 	task, err = pollWorkflowTaskUntil(c, pollTimeout)
