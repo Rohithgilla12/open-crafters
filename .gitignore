@@ -5,3 +5,4 @@ __pycache__/
 .open-crafters/
 /site/
 oc-*.png
+.playwright-mcp/
