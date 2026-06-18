@@ -124,8 +124,17 @@ cmd_start() {
 }
 
 cmd_test() {
-  local dir="${1:-.}"; local slug; slug="$(solution_slug "$dir")"
-  grader --challenge "$slug" --program "$dir/your_program.sh"
+  local dir="." extra=()
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --all)      extra+=(--all); shift ;;
+      --stage)    extra+=(--stage "${2:?--stage needs a slug}"); shift 2 ;;
+      --stage=*)  extra+=(--stage "${1#--stage=}"); shift ;;
+      *)          dir="$1"; shift ;;
+    esac
+  done
+  local slug; slug="$(solution_slug "$dir")"
+  grader --challenge "$slug" --program "$dir/your_program.sh" ${extra[@]+"${extra[@]}"}
 }
 
 cmd_status() {
@@ -141,7 +150,7 @@ crafters — open-crafters launcher
 
 USAGE
   crafters start <challenge> [dir] [--lang python|go]   scaffold a solution and grade it
-  crafters test  [dir]                                  re-grade (resumes where you left off)
+  crafters test  [dir] [--all|--stage <slug>]          re-grade (resumes; --all runs every stage)
   crafters status [dir]                                 show the progress checklist
   crafters list                                         list challenges and stages
 
