@@ -1,5 +1,8 @@
 # open-crafters
 
+[![CI](https://github.com/Rohithgilla12/open-crafters/actions/workflows/ci.yml/badge.svg)](https://github.com/Rohithgilla12/open-crafters/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/Rohithgilla12/open-crafters?label=release)](https://github.com/Rohithgilla12/open-crafters/releases/latest)
+
 **Open-source "build your own X" challenges for serious infrastructure.**
 
 In the spirit of [CodeCrafters](https://codecrafters.io) and
@@ -17,6 +20,9 @@ challenge content, and the `crafters` launcher on your PATH:
 curl -fsSL https://raw.githubusercontent.com/Rohithgilla12/open-crafters/main/install.sh | sh
 ```
 
+This pulls the latest release (currently **v0.1.1**): prebuilt grader binaries
+for macOS and Linux (amd64/arm64), so you don't need Go.
+
 Then go from zero to coding in two commands:
 
 ```sh
@@ -24,6 +30,9 @@ crafters start wal      # scaffold the WAL challenge (a good first one) and grad
 cd my-wal               # edit main.py here
 crafters test           # re-grade — resumes exactly where you left off
 ```
+
+Starters ship in **Python, Go, and TypeScript (Bun)** — solve in whichever you
+like: `crafters start wal --lang go` or `--lang typescript`.
 
 `crafters start` already passes stage 1, so you'll see something like:
 
@@ -64,7 +73,9 @@ Your submission is just an executable the grader runs as
 `./your_program.sh --port <port> --data-dir <path>`. The grader spawns it,
 talks to it over TCP, and even `SIGKILL`s and restarts it to test durability —
 but it **never reads your code**. If you speak the protocol, you pass, in any
-language with a TCP socket (Python, Go, Rust, Zig, C, Node, …).
+language with a TCP socket. Starters ship for **Python, Go, and TypeScript
+(Bun)**; the WAL challenge has reference solutions in all three (Rust, Zig, C,
+Node, … all work too — just add a `starters/<lang>/` template).
 
 ### Prefer to run from a clone?
 
@@ -126,7 +137,7 @@ challenges/<slug>/          challenge definition
   challenge.yaml            metadata + ordered stage list
   PROTOCOL.md               the wire contract (the real spec)
   stages/NN-<slug>.md       per-stage instructions
-  starters/<language>/      minimal templates that pass stage 1
+  starters/<language>/      minimal templates that pass stage 1 (python · go · typescript)
 examples/solutions/<slug>/  reference solutions that pass all stages
 tester/                     the Go test harness (the grader)
   internal/harness/         challenge-agnostic core (process mgmt, protocol client, runner)
