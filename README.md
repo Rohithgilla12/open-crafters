@@ -52,6 +52,7 @@ Python, Go, Rust, Zig, or anything that can open a TCP socket.
 |---|---|---|
 | [Build your own Temporal](challenges/build-your-own-temporal/) — a durable workflow engine: task queues, event-sourced histories, activity retries, durable timers, signals, crash recovery | 10 | ✅ ready |
 | [Build your own WAL](challenges/build-your-own-wal/) — a byte-exact write-ahead log: CRC framing, torn-write recovery, corruption detection, checkpointing | 9 | ✅ ready |
+| [Build your own message queue](challenges/build-your-own-queue/) — a durable broker: at-least-once delivery, visibility timeouts, receipt fencing, dead-letter queues | 9 | ✅ ready |
 | Build your own workflow SDK — deterministic replay, the other half of Temporal | — | planned |
 | Build your own Raft | — | planned |
 

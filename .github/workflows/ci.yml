@@ -31,7 +31,11 @@ jobs:
         run: tester/tester --challenge build-your-own-wal --all
           --program examples/solutions/build-your-own-wal/python/your_program.sh
 
-      - name: "Starters pass stage 1 (Python and Go, both challenges)"
+      - name: "Reference solution: Build your own message queue (all 9 stages)"
+        run: tester/tester --challenge build-your-own-queue --all
+          --program examples/solutions/build-your-own-queue/python/your_program.sh
+
+      - name: "Starters pass stage 1 (Python and Go, all challenges)"
         run: |
           tester/tester --challenge build-your-own-temporal --stage bind \
             --program challenges/build-your-own-temporal/starters/python/your_program.sh
@@ -41,3 +45,7 @@ jobs:
             --program challenges/build-your-own-wal/starters/python/your_program.sh
           tester/tester --challenge build-your-own-wal --stage bind \
             --program challenges/build-your-own-wal/starters/go/your_program.sh
+          tester/tester --challenge build-your-own-queue --stage bind \
+            --program challenges/build-your-own-queue/starters/python/your_program.sh
+          tester/tester --challenge build-your-own-queue --stage bind \
+            --program challenges/build-your-own-queue/starters/go/your_program.sh

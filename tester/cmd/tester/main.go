@@ -23,6 +23,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/open-crafters/open-crafters/tester/internal/challenges/queue"
 	"github.com/open-crafters/open-crafters/tester/internal/challenges/temporal"
 	"github.com/open-crafters/open-crafters/tester/internal/challenges/wal"
 	"github.com/open-crafters/open-crafters/tester/internal/harness"
@@ -32,6 +33,7 @@ import (
 var challenges = map[string]harness.Challenge{
 	"build-your-own-temporal": temporal.Challenge(),
 	"build-your-own-wal":      wal.Challenge(),
+	"build-your-own-queue":    queue.Challenge(),
 }
 
 func main() {

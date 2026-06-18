@@ -1,0 +1,49 @@
+slug: build-your-own-queue
+name: Build your own message queue
+short_description: >
+  Build the broker every distributed system leans on: a durable message queue
+  with at-least-once delivery, visibility timeouts, receipt fencing, and
+  dead-letter queues — graded entirely over the wire, crashes included.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port> --data-dir <path>
+tester:
+  challenge_flag: build-your-own-queue
+stages:
+  - slug: bind
+    name: Boot the server
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: send-receive
+    name: Send, receive, ack
+    difficulty: easy
+    instructions: stages/02-send-receive.md
+  - slug: durability
+    name: Survive a crash
+    difficulty: medium
+    instructions: stages/03-durability.md
+  - slug: redelivery
+    name: Visibility timeouts
+    difficulty: medium
+    instructions: stages/04-redelivery.md
+  - slug: nack
+    name: Negative acknowledgement
+    difficulty: easy
+    instructions: stages/05-nack.md
+  - slug: fencing
+    name: Receipt fencing
+    difficulty: hard
+    instructions: stages/06-fencing.md
+  - slug: dead-letter
+    name: Dead-letter queues
+    difficulty: hard
+    instructions: stages/07-dead-letter.md
+  - slug: queues
+    name: Many queues and stats
+    difficulty: medium
+    instructions: stages/08-queues.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md
