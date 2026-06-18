@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/open-crafters/open-crafters/tester/internal/harness"
+	"github.com/Rohithgilla12/open-crafters/internal/harness"
 )
 
 func Challenge() harness.Challenge {

@@ -1,5 +1,5 @@
-tester/tester
+/crafters
+/dist/
 *.tmp
 __pycache__/
 .open-crafters/
-tester/dist/

@@ -59,6 +59,11 @@ type RunOptions struct {
 	Logf        func(format string, args ...any)
 	// OnStagePass, if set, is called after each stage passes.
 	OnStagePass func(Stage)
+	// OnStageStart/OnStageEnd, if set, bracket each stage attempt so a caller
+	// (e.g. the TUI) can render live progress without parsing Logf output.
+	// OnStageEnd's error is nil on success.
+	OnStageStart func(Stage)
+	OnStageEnd   func(Stage, error, time.Duration)
 }
 
 // Run executes a challenge's stages per opts.
@@ -82,12 +87,20 @@ func Run(ch Challenge, opts RunOptions) error {
 	for i, stage := range stages {
 		logf("")
 		logf("\x1b[1m[stage %d/%d] %s — %s\x1b[0m", i+1, len(ch.Stages), stage.Slug, stage.Name)
+		if opts.OnStageStart != nil {
+			opts.OnStageStart(stage)
+		}
 		start := time.Now()
-		if err := runStage(stage, opts.ProgramPath, logf); err != nil {
+		err := runStage(stage, opts.ProgramPath, logf)
+		elapsed := time.Since(start)
+		if opts.OnStageEnd != nil {
+			opts.OnStageEnd(stage, err, elapsed)
+		}
+		if err != nil {
 			logf("\x1b[31m✗ stage %q failed: %v\x1b[0m", stage.Slug, err)
 			return fmt.Errorf("stage %q failed", stage.Slug)
 		}
-		logf("\x1b[32m✓ %s passed (%.2fs)\x1b[0m", stage.Slug, time.Since(start).Seconds())
+		logf("\x1b[32m✓ %s passed (%.2fs)\x1b[0m", stage.Slug, elapsed.Seconds())
 		if opts.OnStagePass != nil {
 			opts.OnStagePass(stage)
 		}

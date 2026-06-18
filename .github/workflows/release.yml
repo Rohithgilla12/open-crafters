@@ -23,22 +23,21 @@ jobs:
           go-version: "1.24"
           cache: false
 
-      - name: Cross-compile the grader
-        working-directory: tester
+      - name: Cross-compile the crafters binary
         env:
           CGO_ENABLED: "0"
         run: |
           mkdir -p dist
           for target in linux/amd64 linux/arm64 darwin/amd64 darwin/arm64; do
             os="${target%/*}"; arch="${target#*/}"
-            echo "building crafters-tester_${os}_${arch}"
+            echo "building crafters_${os}_${arch}"
             GOOS="$os" GOARCH="$arch" go build -trimpath \
-              -o "dist/crafters-tester_${os}_${arch}" ./cmd/tester
+              -o "dist/crafters_${os}_${arch}" ./cmd/crafters
           done
 
       - name: Publish to the GitHub release
         uses: softprops/action-gh-release@v3
         with:
-          files: tester/dist/crafters-tester_*
+          files: dist/crafters_*
           fail_on_unmatched_files: true
           generate_release_notes: true

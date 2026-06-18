@@ -13,17 +13,21 @@ language**; a test harness grades you stage by stage, entirely over the wire.
 
 ## Quickstart
 
-One command installs everything — a prebuilt grader (no Go needed), the
-challenge content, and the `crafters` launcher on your PATH:
+One command installs `crafters` — a single self-contained binary with the
+challenge content embedded (no Go, no repo checkout):
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/Rohithgilla12/open-crafters/main/install.sh | sh
 ```
 
-This pulls the latest release (currently **v0.1.1**): prebuilt grader binaries
-for macOS and Linux (amd64/arm64), so you don't need Go.
+Run it with no arguments for an interactive **dashboard** — browse challenges,
+see your progress, and watch stages grade live:
 
-Then go from zero to coding in two commands:
+```sh
+crafters
+```
+
+Or go straight from zero to coding in two commands:
 
 ```sh
 crafters start wal      # scaffold the WAL challenge (a good first one) and grade it
@@ -56,13 +60,15 @@ That last line is your prompt. The loop from here:
    the next one. When a stage fails it tells you exactly what it **expected vs.
    observed**. Fix it and repeat.
 
-### The `crafters` launcher
+### The `crafters` commands
 
 ```sh
+crafters                                              # interactive dashboard (TUI)
 crafters start <challenge> [dir] [--lang python|go|typescript]   # scaffold a solution + grade it
-crafters test  [dir]                                  # re-grade (resume)
+crafters test  [dir] [--all] [--stage <slug>]         # re-grade (resume)
 crafters status [dir]                                 # progress checklist
 crafters list                                         # all challenges and stages
+crafters grade --challenge <slug> --program <path>    # grade an arbitrary program (CI/scripts)
 ```
 
 `<challenge>` takes a fuzzy name (`wal`, `queue`, `temporal`) or a full slug.
@@ -77,23 +83,22 @@ language with a TCP socket. Starters ship for **Python, Go, and TypeScript
 (Bun)**; the WAL challenge has reference solutions in all three (Rust, Zig, C,
 Node, … all work too — just add a `starters/<lang>/` template).
 
-### Prefer to run from a clone?
+### Build from source instead
 
-No install needed — `./crafters` works straight from a checkout, building the
-grader on first use (needs **Go ≥ 1.21**):
+Needs **Go ≥ 1.21**. Either install straight from the module:
+
+```sh
+go install github.com/Rohithgilla12/open-crafters/cmd/crafters@latest
+```
+
+…or build from a clone:
 
 ```sh
 git clone https://github.com/Rohithgilla12/open-crafters && cd open-crafters
+go build -o crafters ./cmd/crafters
 ./crafters start wal
-```
-
-Or skip the launcher entirely and call the grader directly:
-
-```sh
-cd tester && go build ./cmd/tester && cd ..
-./tester/tester --challenge build-your-own-wal --program my-wal/your_program.sh
-#   --status   checklist    --stage <slug>   up to a stage
-#   --all      every stage   --list           all challenges
+# CI/scripts grade an arbitrary program directly:
+#   ./crafters grade --challenge build-your-own-wal --all --program my-wal/your_program.sh
 ```
 
 ## Challenges
@@ -131,17 +136,17 @@ it's cheap to try one and switch.
 ## Repository layout
 
 ```
-crafters                    the launcher (start / test / status / list)
+cmd/crafters/               the CLI: subcommands (main.go) + dashboard TUI (tui.go)
+content.go                  go:embed of challenges/ into the binary
 install.sh                  one-line installer (curl … | sh)
-challenges/<slug>/          challenge definition
+challenges/<slug>/          challenge definition (embedded into the binary)
   challenge.yaml            metadata + ordered stage list
   PROTOCOL.md               the wire contract (the real spec)
   stages/NN-<slug>.md       per-stage instructions
   starters/<language>/      minimal templates that pass stage 1 (python · go · typescript)
 examples/solutions/<slug>/  reference solutions that pass all stages
-tester/                     the Go test harness (the grader)
-  internal/harness/         challenge-agnostic core (process mgmt, protocol client, runner)
-  internal/challenges/      per-challenge stage tests
+internal/harness/           challenge-agnostic core (process mgmt, protocol client, runner)
+internal/challenges/        per-challenge stage tests
 docs/                       architecture & challenge-authoring guides
 ```
 
