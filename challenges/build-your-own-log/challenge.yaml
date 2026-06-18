@@ -1,0 +1,50 @@
+slug: build-your-own-log
+name: Build your own log
+short_description: >
+  Build the abstraction under Kafka and every event-streaming system: an
+  append-only log with absolute offsets, replayable non-destructive reads,
+  consumer-group offset tracking, and retention that never renumbers — graded
+  over the wire, crashes included.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port> --data-dir <path>
+tester:
+  challenge_flag: build-your-own-log
+stages:
+  - slug: bind
+    name: Boot the server
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: append-read
+    name: Append and read by offset
+    difficulty: easy
+    instructions: stages/02-append-read.md
+  - slug: durability
+    name: Survive a crash
+    difficulty: medium
+    instructions: stages/03-durability.md
+  - slug: topics
+    name: Independent topics
+    difficulty: easy
+    instructions: stages/04-topics.md
+  - slug: consumer-groups
+    name: Consumer group offsets
+    difficulty: medium
+    instructions: stages/05-consumer-groups.md
+  - slug: replay
+    name: Replay and batching
+    difficulty: medium
+    instructions: stages/06-replay.md
+  - slug: retention
+    name: Retention keeps offsets absolute
+    difficulty: hard
+    instructions: stages/07-retention.md
+  - slug: offset-durability
+    name: Durable offsets and resume
+    difficulty: medium
+    instructions: stages/08-offset-durability.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

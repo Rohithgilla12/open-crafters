@@ -51,9 +51,13 @@ jobs:
         run: ./crafters grade --challenge build-your-own-mvcc --all
           --program examples/solutions/build-your-own-mvcc/python/your_program.sh
 
+      - name: "Reference: Build your own log (all 9 stages)"
+        run: ./crafters grade --challenge build-your-own-log --all
+          --program examples/solutions/build-your-own-log/python/your_program.sh
+
       - name: "Starters pass stage 1 (Python, Go, TypeScript — all challenges)"
         run: |
-          for ch in build-your-own-temporal build-your-own-wal build-your-own-queue build-your-own-mvcc; do
+          for ch in build-your-own-temporal build-your-own-wal build-your-own-queue build-your-own-mvcc build-your-own-log; do
             for lang in python go typescript; do
               ./crafters grade --challenge "$ch" --stage bind \
                 --program "challenges/$ch/starters/$lang/your_program.sh"
