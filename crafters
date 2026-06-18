@@ -110,6 +110,7 @@ cmd_start() {
   [ -e "$dest" ] && die "'$dest' already exists — pass a different directory name."
 
   cp -r "$src" "$dest"
+  rm -rf "$dest/.open-crafters"          # start fresh — never inherit the starter's progress
   mkdir -p "$dest/.open-crafters"
   echo "$slug" > "$dest/.open-crafters/challenge"
   chmod +x "$dest/your_program.sh" 2>/dev/null || true
