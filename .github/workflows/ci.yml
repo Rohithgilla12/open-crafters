@@ -14,7 +14,7 @@ jobs:
 
       - uses: actions/setup-go@v6
         with:
-          go-version: "1.24"
+          go-version: "1.25"
           cache: false
 
       - uses: oven-sh/setup-bun@v2

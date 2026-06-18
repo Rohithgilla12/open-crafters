@@ -85,7 +85,7 @@ Node, … all work too — just add a `starters/<lang>/` template).
 
 ### Build from source instead
 
-Needs **Go ≥ 1.21**. Either install straight from the module:
+Needs **Go ≥ 1.25**. Either install straight from the module:
 
 ```sh
 go install github.com/Rohithgilla12/open-crafters/cmd/crafters@latest
