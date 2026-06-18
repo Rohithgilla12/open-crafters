@@ -64,10 +64,7 @@ func Scaffold(slug, lang, destDir string) error {
 	// nested module and exclude it from go:embed), so generate one here. A
 	// lenient go version keeps it runnable on older toolchains.
 	if lang == "go" {
-		mod := filepath.Base(destDir)
-		if mod == "" || mod == "." || mod == string(filepath.Separator) {
-			mod = "solution"
-		}
+		mod := goModuleName(filepath.Base(destDir))
 		gomod := fmt.Sprintf("module %s\n\ngo 1.21\n", mod)
 		if err := os.WriteFile(filepath.Join(destDir, "go.mod"), []byte(gomod), 0o644); err != nil {
 			return err
@@ -83,6 +80,25 @@ func Scaffold(slug, lang, destDir string) error {
 	// Make the entry point runnable; ignore on platforms without exec bits.
 	_ = os.Chmod(filepath.Join(destDir, "your_program.sh"), 0o755)
 	return nil
+}
+
+// goModuleName turns a directory base name into a safe Go module path,
+// replacing anything outside [A-Za-z0-9._-] with '-'.
+func goModuleName(base string) string {
+	var b strings.Builder
+	for _, r := range base {
+		switch {
+		case r >= 'a' && r <= 'z', r >= 'A' && r <= 'Z', r >= '0' && r <= '9', r == '.', r == '_', r == '-':
+			b.WriteRune(r)
+		default:
+			b.WriteRune('-')
+		}
+	}
+	name := strings.Trim(b.String(), "-.")
+	if name == "" {
+		return "solution"
+	}
+	return name
 }
 
 func copyTree(srcRoot, dstRoot string) error {

@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/charmbracelet/bubbles/spinner"
+	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"golang.org/x/term"
@@ -40,6 +41,7 @@ type screen int
 const (
 	screenHome screen = iota
 	screenLang
+	screenName
 	screenGrading
 )
 
@@ -65,10 +67,12 @@ type model struct {
 	scr    screen
 
 	// selection
-	sel  row
-	ch   harness.Challenge
-	lang int
-	langs []string
+	sel        row
+	ch         harness.Challenge
+	lang       int
+	langChoice string
+	nameInput  textinput.Model
+	defaultName string
 
 	// grading
 	spinner  spinner.Model
@@ -206,6 +210,12 @@ func (m *model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.scr = screenHome
 		return m, nil
 	}
+	// Keep the text input (and its blinking cursor) alive on the name screen.
+	if m.scr == screenName {
+		var cmd tea.Cmd
+		m.nameInput, cmd = m.nameInput.Update(msg)
+		return m, cmd
+	}
 	return m, nil
 }
 
@@ -233,7 +243,7 @@ func (m *model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			m.sel = m.rows[m.cursor]
 			m.ch = challenges[m.sel.slug]
 			if m.sel.solutionDir != "" {
-				return m, m.beginGrading(m.sel.solutionDir, "")
+				return m, m.beginGrading(m.sel.solutionDir, "", "")
 			}
 			m.scr = screenLang
 			m.lang = 0
@@ -252,7 +262,24 @@ func (m *model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 				m.lang++
 			}
 		case "enter":
-			return m, m.beginGrading("", langChoices[m.lang])
+			m.langChoice = langChoices[m.lang]
+			return m, m.enterNameScreen()
+		}
+
+	case screenName:
+		switch msg.String() {
+		case "esc":
+			m.scr = screenLang
+		case "enter":
+			name := strings.TrimSpace(m.nameInput.Value())
+			if name == "" {
+				name = m.defaultName
+			}
+			return m, m.beginGrading("", m.langChoice, name)
+		default:
+			var cmd tea.Cmd
+			m.nameInput, cmd = m.nameInput.Update(msg)
+			return m, cmd
 		}
 
 	case screenGrading:
@@ -270,9 +297,25 @@ func (m *model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
+// enterNameScreen sets up the directory-name prompt, pre-filled with the
+// default so a learner can just press enter.
+func (m *model) enterNameScreen() tea.Cmd {
+	m.scr = screenName
+	m.defaultName = "my-" + strings.TrimPrefix(m.sel.slug, "build-your-own-")
+	ti := textinput.New()
+	ti.Placeholder = m.defaultName
+	ti.SetValue(m.defaultName)
+	ti.CharLimit = 64
+	ti.Width = 36
+	ti.Focus()
+	ti.CursorEnd()
+	m.nameInput = ti
+	return textinput.Blink
+}
+
 // beginGrading enters the grading screen and launches the run. dir is set when
-// resuming an existing solution; otherwise lang drives a fresh scaffold.
-func (m *model) beginGrading(dir, lang string) tea.Cmd {
+// resuming an existing solution; otherwise (lang, name) drive a fresh scaffold.
+func (m *model) beginGrading(dir, lang, name string) tea.Cmd {
 	m.scr = screenGrading
 	m.stages = m.ch.Stages
 	m.state = make([]stageState, len(m.stages))
@@ -283,7 +326,10 @@ func (m *model) beginGrading(dir, lang string) tea.Cmd {
 	ch := m.ch
 	start := func() tea.Msg {
 		if dir == "" {
-			d := "my-" + strings.TrimPrefix(slug, "build-your-own-")
+			d := name
+			if d == "" {
+				d = "my-" + strings.TrimPrefix(slug, "build-your-own-")
+			}
 			if err := opencrafters.Scaffold(slug, lang, d); err != nil {
 				return scaffoldErrMsg{err}
 			}
@@ -349,6 +395,8 @@ func (m *model) View() string {
 	switch m.scr {
 	case screenLang:
 		return m.viewLang()
+	case screenName:
+		return m.viewName()
 	case screenGrading:
 		return m.viewGrading()
 	default:
@@ -360,19 +408,32 @@ func (m *model) viewHome() string {
 	var b strings.Builder
 	b.WriteString(titleStyle.Render("open-crafters") + "  build-your-own-X for serious infrastructure\n\n")
 	for i, r := range m.rows {
-		cursor := "  "
 		name := fmt.Sprintf("%-32s", r.name)
-		line := fmt.Sprintf("%s %s %2d/%-2d  %s", cursor, name, r.passed, r.stages, bar(r.passed, r.stages, 12))
+		base := fmt.Sprintf("%s %2d/%-2d  %s", name, r.passed, r.stages, bar(r.passed, r.stages, 12))
 		if i == m.cursor {
-			line = selStyle.Render("▸ " + line[2:])
+			b.WriteString(selStyle.Render("▸ " + base))
+		} else {
+			b.WriteString("  " + base)
 		}
-		b.WriteString(line + "\n")
+		if r.solutionDir != "" {
+			b.WriteString("  " + dimStyle.Render("./"+r.solutionDir))
+		}
+		b.WriteString("\n")
 	}
 	b.WriteString("\n")
 	if m.banner != "" {
 		b.WriteString(bannerStyle.Render(m.banner) + "\n\n")
 	}
 	b.WriteString(helpStyle.Render("↑/↓ select · enter: start/resume · q: quit"))
+	return b.String()
+}
+
+func (m *model) viewName() string {
+	var b strings.Builder
+	b.WriteString(titleStyle.Render("Start "+m.sel.name) + dimStyle.Render("  ·  "+m.langChoice) + "\n")
+	b.WriteString(dimStyle.Render("Name your solution directory:") + "\n\n")
+	b.WriteString("  " + m.nameInput.View() + "\n\n")
+	b.WriteString(helpStyle.Render("enter: scaffold & grade · esc: back"))
 	return b.String()
 }
 

@@ -72,6 +72,8 @@ crafters grade --challenge <slug> --program <path>    # grade an arbitrary progr
 ```
 
 `<challenge>` takes a fuzzy name (`wal`, `queue`, `temporal`) or a full slug.
+Name the solution directory yourself by passing it as the second argument
+(`crafters start wal my-cool-name`) — the dashboard prompts for it too.
 Progress is saved in `<solution>/.open-crafters/progress.json`, so it travels
 with your solution — stop and resume whenever.
 

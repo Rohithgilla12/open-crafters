@@ -39,9 +39,19 @@ func TestTUIFlow(t *testing.T) {
 		t.Fatalf("expected language screen, got %v", m.scr)
 	}
 
-	// Choosing a language enters the grading screen. We ignore the returned
-	// command (it would launch the real grader), then simulate its events.
+	// Choosing a language opens the name prompt, pre-filled with a default.
 	next, _ := m.Update(tea.KeyMsg{Type: tea.KeyEnter})
+	m = next.(*model)
+	if m.scr != screenName {
+		t.Fatalf("expected name screen, got %v", m.scr)
+	}
+	if m.nameInput.Value() == "" {
+		t.Fatal("name input should be pre-filled with a default")
+	}
+
+	// Accepting the name enters the grading screen. We ignore the returned
+	// command (it would launch the real grader), then simulate its events.
+	next, _ = m.Update(tea.KeyMsg{Type: tea.KeyEnter})
 	m = next.(*model)
 	if m.scr != screenGrading {
 		t.Fatalf("expected grading screen, got %v", m.scr)
