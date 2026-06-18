@@ -60,6 +60,20 @@ func Scaffold(slug, lang, destDir string) error {
 		return err
 	}
 
+	// The Go starter ships without a go.mod (it would make the directory a
+	// nested module and exclude it from go:embed), so generate one here. A
+	// lenient go version keeps it runnable on older toolchains.
+	if lang == "go" {
+		mod := filepath.Base(destDir)
+		if mod == "" || mod == "." || mod == string(filepath.Separator) {
+			mod = "solution"
+		}
+		gomod := fmt.Sprintf("module %s\n\ngo 1.21\n", mod)
+		if err := os.WriteFile(filepath.Join(destDir, "go.mod"), []byte(gomod), 0o644); err != nil {
+			return err
+		}
+	}
+
 	if err := os.MkdirAll(filepath.Join(destDir, ".open-crafters"), 0o755); err != nil {
 		return err
 	}
