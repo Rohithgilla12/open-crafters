@@ -110,6 +110,7 @@ go build -o crafters ./cmd/crafters
 | [Build your own Temporal](challenges/build-your-own-temporal/) — a durable workflow engine: task queues, event-sourced histories, activity retries, durable timers, signals, crash recovery | 10 | ✅ ready |
 | [Build your own WAL](challenges/build-your-own-wal/) — a byte-exact write-ahead log: CRC framing, torn-write recovery, corruption detection, checkpointing | 9 | ✅ ready |
 | [Build your own message queue](challenges/build-your-own-queue/) — a durable broker: at-least-once delivery, visibility timeouts, receipt fencing, dead-letter queues | 9 | ✅ ready |
+| [Build your own MVCC](challenges/build-your-own-mvcc/) — a transactional KV store: snapshot isolation, multi-version reads, first-committer-wins conflicts, crash-durable commits | 9 | ✅ ready |
 | Build your own workflow SDK — deterministic replay, the other half of Temporal | — | planned |
 | Build your own Raft | — | planned |
 
@@ -130,6 +131,11 @@ durable before you acknowledge it** — in increasing order of scope:
    task queues, event-sourced histories, retries, durable timers, crash
    recovery. Easier to reason about once durability (WAL) and queue mechanics
    (message queue) are already second nature.
+
+**Build your own MVCC** sits on a different axis — concurrency control rather
+than durability — so start it whenever transactions interest you; it doesn't
+depend on the others, and (apart from one crash stage) it's graded purely on
+logic, no timing.
 
 Each is independent — you can start with whichever system you most want to
 understand. Stage 1 of any of them is a 30-minute "boot and answer a ping," so

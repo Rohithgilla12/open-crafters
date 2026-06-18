@@ -1,0 +1,50 @@
+slug: build-your-own-mvcc
+name: Build your own MVCC
+short_description: >
+  Build the concurrency control inside a real database: a transactional
+  key-value store with multi-version snapshot isolation, first-committer-wins
+  conflict detection, and crash-durable commits — graded over the wire with no
+  timing assumptions.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port> --data-dir <path>
+tester:
+  challenge_flag: build-your-own-mvcc
+stages:
+  - slug: bind
+    name: Boot the server
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: transactions
+    name: Begin, commit, rollback
+    difficulty: easy
+    instructions: stages/02-transactions.md
+  - slug: snapshot
+    name: Snapshot isolation
+    difficulty: medium
+    instructions: stages/03-snapshot.md
+  - slug: atomicity
+    name: All-or-nothing commits
+    difficulty: medium
+    instructions: stages/04-atomicity.md
+  - slug: conflicts
+    name: Write-write conflicts
+    difficulty: hard
+    instructions: stages/05-conflicts.md
+  - slug: deletes
+    name: Deletes and tombstones
+    difficulty: medium
+    instructions: stages/06-deletes.md
+  - slug: durability
+    name: Survive a crash
+    difficulty: medium
+    instructions: stages/07-durability.md
+  - slug: write-skew
+    name: The isolation boundary
+    difficulty: hard
+    instructions: stages/08-write-skew.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

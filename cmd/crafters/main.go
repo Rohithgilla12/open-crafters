@@ -24,6 +24,7 @@ import (
 	"strings"
 
 	opencrafters "github.com/Rohithgilla12/open-crafters"
+	"github.com/Rohithgilla12/open-crafters/internal/challenges/mvcc"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/queue"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/temporal"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/wal"
@@ -35,6 +36,7 @@ var challenges = map[string]harness.Challenge{
 	"build-your-own-temporal": temporal.Challenge(),
 	"build-your-own-wal":      wal.Challenge(),
 	"build-your-own-queue":    queue.Challenge(),
+	"build-your-own-mvcc":     mvcc.Challenge(),
 }
 
 // challengeOrder is the canonical display order (WAL first — the recommended
@@ -42,6 +44,7 @@ var challenges = map[string]harness.Challenge{
 var challengeOrder = []string{
 	"build-your-own-wal",
 	"build-your-own-queue",
+	"build-your-own-mvcc",
 	"build-your-own-temporal",
 }
 
