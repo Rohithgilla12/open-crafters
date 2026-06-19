@@ -27,9 +27,15 @@ jobs:
           go test ./...
           go build -o crafters ./cmd/crafters
 
-      - name: "Reference: Build your own Temporal (all 10 stages)"
+      - name: "Reference: Build your own Temporal — Python"
         run: ./crafters grade --challenge build-your-own-temporal --all
           --program examples/solutions/build-your-own-temporal/python/your_program.sh
+      - name: "Reference: Build your own Temporal — Go"
+        run: ./crafters grade --challenge build-your-own-temporal --all
+          --program examples/solutions/build-your-own-temporal/go/your_program.sh
+      - name: "Reference: Build your own Temporal — TypeScript/Bun"
+        run: ./crafters grade --challenge build-your-own-temporal --all
+          --program examples/solutions/build-your-own-temporal/typescript/your_program.sh
 
       - name: "Reference: Build your own WAL — Python"
         run: ./crafters grade --challenge build-your-own-wal --all
