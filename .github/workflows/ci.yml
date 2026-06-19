@@ -47,9 +47,15 @@ jobs:
         run: ./crafters grade --challenge build-your-own-queue --all
           --program examples/solutions/build-your-own-queue/python/your_program.sh
 
-      - name: "Reference: Build your own MVCC (all 9 stages)"
+      - name: "Reference: Build your own MVCC — Python"
         run: ./crafters grade --challenge build-your-own-mvcc --all
           --program examples/solutions/build-your-own-mvcc/python/your_program.sh
+      - name: "Reference: Build your own MVCC — Go"
+        run: ./crafters grade --challenge build-your-own-mvcc --all
+          --program examples/solutions/build-your-own-mvcc/go/your_program.sh
+      - name: "Reference: Build your own MVCC — TypeScript/Bun"
+        run: ./crafters grade --challenge build-your-own-mvcc --all
+          --program examples/solutions/build-your-own-mvcc/typescript/your_program.sh
 
       - name: "Reference: Build your own log (all 9 stages)"
         run: ./crafters grade --challenge build-your-own-log --all
