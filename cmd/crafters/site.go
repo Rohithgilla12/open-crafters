@@ -69,8 +69,9 @@ func cmdSite(args []string) {
 			if err != nil {
 				die("rendering %s: %v", s.Instructions, err)
 			}
-			sc.Stages = append(sc.Stages, siteStage{Num: i + 1, Slug: s.Slug, Name: s.Name, HTML: html})
+			sc.Stages = append(sc.Stages, siteStage{Num: i + 1, Slug: s.Slug, Name: s.Name, Difficulty: s.Difficulty, HTML: html})
 		}
+		sc.DiffMix = difficultyMix(sc.Stages)
 		site = append(site, sc)
 	}
 
@@ -101,13 +102,30 @@ func cmdSite(args []string) {
 type siteStage struct {
 	Num        int
 	Slug, Name string
+	Difficulty string
 	HTML       template.HTML
 }
 
 type siteChallenge struct {
 	Slug, Name, Tagline string
 	Stages              []siteStage
+	DiffMix             template.HTML
 	ProtocolHTML        template.HTML
+}
+
+// difficultyMix renders a small colored breakdown of stage difficulties.
+func difficultyMix(stages []siteStage) template.HTML {
+	n := map[string]int{}
+	for _, s := range stages {
+		n[s.Difficulty]++
+	}
+	var parts []string
+	for _, d := range []string{"easy", "medium", "hard"} {
+		if n[d] > 0 {
+			parts = append(parts, fmt.Sprintf(`<span class="diff diff-%s">%d %s</span>`, d, n[d], d))
+		}
+	}
+	return template.HTML(strings.Join(parts, " ")) //nolint:gosec // fixed, internal strings
 }
 
 // tagline pulls the folded `short_description:` block out of a challenge.yaml
@@ -159,6 +177,7 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
   <a class="card" href="{{.Slug}}.html">
     <h2>{{.Name}}</h2>
     <p>{{.Tagline}}</p>
+    <div class="mix">{{.DiffMix}}</div>
     <span class="meta">{{len .Stages}} stages →</span>
   </a>
 {{end}}
@@ -183,7 +202,7 @@ var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Par
 <ol class="stages">
 {{range .Stages}}
   <li><details>
-    <summary><span class="num">{{.Num}}</span> {{.Name}} <span class="slug">{{.Slug}}</span></summary>
+    <summary><span class="num">{{.Num}}</span> {{.Name}} <span class="diff diff-{{.Difficulty}}">{{.Difficulty}}</span> <span class="slug">{{.Slug}}</span></summary>
     <div class="md">{{.HTML}}</div>
   </details></li>
 {{end}}
@@ -240,6 +259,11 @@ summary:hover{background:var(--panel2)}
   background:var(--panel2);border:1px solid var(--border);border-radius:50%;color:var(--accent);
   font-size:.82rem;font-family:ui-monospace,monospace}
 .slug{margin-left:auto;color:var(--dim);font-size:.8rem;font-family:ui-monospace,monospace}
+.diff{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;
+  padding:.1rem .45rem;border-radius:999px;border:1px solid currentColor}
+.diff-easy{color:#5ad1b3}.diff-medium{color:#e0c45a}.diff-hard{color:#e57a86}
+.mix{display:flex;gap:.4rem;flex-wrap:wrap;margin:0 0 .9rem}
+.mix .diff{border:none;padding:0;font-size:.72rem}
 .md{padding:.2rem 1.2rem 1.1rem}
 .md h1,.md h2,.md h3{letter-spacing:-.01em;margin:1.3rem 0 .6rem}
 .md h1{font-size:1.4rem}.md h2{font-size:1.15rem}.md h3{font-size:1rem}

@@ -99,6 +99,19 @@ var (
 	bannerStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("11"))
 )
 
+// diffTag renders a colored difficulty label for the TUI.
+func diffTag(d string) string {
+	switch d {
+	case "easy":
+		return lipgloss.NewStyle().Foreground(lipgloss.Color("10")).Render("easy  ")
+	case "medium":
+		return lipgloss.NewStyle().Foreground(lipgloss.Color("11")).Render("medium")
+	case "hard":
+		return lipgloss.NewStyle().Foreground(lipgloss.Color("9")).Render("hard  ")
+	}
+	return d
+}
+
 func newModel() *model {
 	sp := spinner.New()
 	sp.Spinner = spinner.Dot
@@ -467,11 +480,11 @@ func (m *model) viewGrading() string {
 		default:
 			icon = dimStyle.Render("·")
 		}
-		name := s.Name
+		label := fmt.Sprintf("%-18s %-24s", s.Slug, s.Name)
 		if m.state[i] == statePending {
-			name = dimStyle.Render(name)
+			label = dimStyle.Render(label)
 		}
-		b.WriteString(fmt.Sprintf("  %s  %-20s %s\n", icon, s.Slug, name))
+		b.WriteString("  " + icon + "  " + diffTag(s.Difficulty) + "  " + label + "\n")
 	}
 	b.WriteString("\n")
 	if m.failMsg != "" {

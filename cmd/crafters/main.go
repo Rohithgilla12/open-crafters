@@ -218,9 +218,22 @@ func cmdList() {
 		ch := challenges[slug]
 		fmt.Printf("%s — %s\n", slug, ch.Name)
 		for i, s := range ch.Stages {
-			fmt.Printf("  %2d. %-20s %s\n", i+1, s.Slug, s.Name)
+			fmt.Printf("  %2d. %-20s %-34s %s\n", i+1, s.Slug, s.Name, difficultyTag(s.Difficulty))
 		}
 	}
+}
+
+// difficultyTag renders a colored difficulty label for terminal output.
+func difficultyTag(d string) string {
+	switch d {
+	case "easy":
+		return "\x1b[32measy\x1b[0m"
+	case "medium":
+		return "\x1b[33mmedium\x1b[0m"
+	case "hard":
+		return "\x1b[31mhard\x1b[0m"
+	}
+	return d
 }
 
 func cmdGrade(args []string) {
@@ -337,13 +350,13 @@ func printStatus(ch harness.Challenge, prog *progress.File, solutionDir string) 
 	for i, s := range ch.Stages {
 		switch {
 		case prog.HasPassed(ch.Slug, s.Slug):
-			fmt.Printf("  \x1b[32m✓\x1b[0m %2d. %-18s %s\n", i+1, s.Slug, s.Name)
+			fmt.Printf("  \x1b[32m✓\x1b[0m %2d. %-18s %-34s %s\n", i+1, s.Slug, s.Name, difficultyTag(s.Difficulty))
 		case !nextMarked:
-			fmt.Printf("  \x1b[33m→\x1b[0m %2d. %-18s %s   \x1b[33m← next\x1b[0m\n", i+1, s.Slug, s.Name)
+			fmt.Printf("  \x1b[33m→\x1b[0m %2d. %-18s %-34s %s   \x1b[33m← next\x1b[0m\n", i+1, s.Slug, s.Name, difficultyTag(s.Difficulty))
 			fmt.Printf("       instructions: %s\n", instructionPath(&ch.Stages[i], solutionDir))
 			nextMarked = true
 		default:
-			fmt.Printf("    %2d. %-18s %s\n", i+1, s.Slug, s.Name)
+			fmt.Printf("    %2d. %-18s %-34s %s\n", i+1, s.Slug, s.Name, difficultyTag(s.Difficulty))
 		}
 	}
 	if !nextMarked {

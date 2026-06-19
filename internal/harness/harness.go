@@ -13,6 +13,7 @@ import (
 type Stage struct {
 	Slug         string
 	Name         string
+	Difficulty   string // "easy" | "medium" | "hard"
 	Instructions string // repo-relative path to the stage's instructions
 	Test         func(*Context) error
 }
