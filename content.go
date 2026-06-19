@@ -19,6 +19,12 @@ import (
 //go:embed challenges
 var content embed.FS
 
+//go:embed assets/og.png
+var ogImage []byte
+
+// OGImage returns the social-card PNG, emitted by the site generator.
+func OGImage() []byte { return ogImage }
+
 func challengeDir(slug string) string { return "challenges/" + slug }
 
 // ChallengesFS returns the embedded challenge tree rooted at challenges/, so

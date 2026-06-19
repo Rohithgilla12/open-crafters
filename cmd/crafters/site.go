@@ -97,6 +97,9 @@ func cmdSite(args []string) {
 	if err := os.WriteFile(filepath.Join(out, "style.css"), []byte(siteCSS), 0o644); err != nil {
 		die("%v", err)
 	}
+	if err := os.WriteFile(filepath.Join(out, "og.png"), opencrafters.OGImage(), 0o644); err != nil {
+		die("%v", err)
+	}
 	fmt.Printf("wrote %d pages + style.css to %s/\n", len(site)+1, out)
 }
 
@@ -172,7 +175,20 @@ var tmplFuncs = template.FuncMap{
 var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>open-crafters — build-your-own-X for serious infrastructure</title>
+<title>open-crafters — build your own X for serious infrastructure</title>
+<meta name="description" content="Open-source build-your-own-X challenges for the production-infrastructure primitives senior engineers actually wrestle with — workflow engines, write-ahead logs, message queues, MVCC, Kafka-style logs. Implement in any language; graded black-box over the wire, crashes included.">
+<link rel="canonical" href="https://rohithgilla12.github.io/open-crafters/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="open-crafters — build your own X for serious infrastructure">
+<meta property="og:description" content="Build-your-own-X challenges for real infra primitives: workflow engines, WALs, message queues, MVCC, logs. Any language, graded black-box over the wire — crashes included.">
+<meta property="og:url" content="https://rohithgilla12.github.io/open-crafters/">
+<meta property="og:image" content="https://rohithgilla12.github.io/open-crafters/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="open-crafters — build your own X for serious infrastructure">
+<meta name="twitter:description" content="Build-your-own-X challenges for real infra primitives, in any language. Graded black-box over the wire, crashes included.">
+<meta name="twitter:image" content="https://rohithgilla12.github.io/open-crafters/og.png">
 <link rel="stylesheet" href="style.css">
 </head><body><div class="wrap">
 <header class="hero">
@@ -202,6 +218,19 @@ var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Par
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{.Name}} — open-crafters</title>
+<meta name="description" content="{{.Tagline}}">
+<link rel="canonical" href="https://rohithgilla12.github.io/open-crafters/{{.Slug}}.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{.Name}} — open-crafters">
+<meta property="og:description" content="{{.Tagline}}">
+<meta property="og:url" content="https://rohithgilla12.github.io/open-crafters/{{.Slug}}.html">
+<meta property="og:image" content="https://rohithgilla12.github.io/open-crafters/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{.Name}} — open-crafters">
+<meta name="twitter:description" content="{{.Tagline}}">
+<meta name="twitter:image" content="https://rohithgilla12.github.io/open-crafters/og.png">
 <link rel="stylesheet" href="style.css">
 </head><body><div class="wrap">
 <p class="back"><a href="index.html">← all challenges</a></p>
