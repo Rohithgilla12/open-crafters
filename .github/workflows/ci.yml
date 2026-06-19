@@ -57,9 +57,15 @@ jobs:
         run: ./crafters grade --challenge build-your-own-mvcc --all
           --program examples/solutions/build-your-own-mvcc/typescript/your_program.sh
 
-      - name: "Reference: Build your own log (all 9 stages)"
+      - name: "Reference: Build your own log — Python"
         run: ./crafters grade --challenge build-your-own-log --all
           --program examples/solutions/build-your-own-log/python/your_program.sh
+      - name: "Reference: Build your own log — Go"
+        run: ./crafters grade --challenge build-your-own-log --all
+          --program examples/solutions/build-your-own-log/go/your_program.sh
+      - name: "Reference: Build your own log — TypeScript/Bun"
+        run: ./crafters grade --challenge build-your-own-log --all
+          --program examples/solutions/build-your-own-log/typescript/your_program.sh
 
       - name: "Starters pass stage 1 (Python, Go, TypeScript — all challenges)"
         run: |
