@@ -69,6 +69,10 @@ func main() {
 		cmdGrade(args[1:])
 	case "site":
 		cmdSite(args[1:])
+	case "update":
+		cmdUpdate()
+	case "version", "--version", "-v":
+		cmdVersion()
 	case "-h", "--help", "help":
 		usage(os.Stdout)
 	default:
@@ -89,6 +93,8 @@ USAGE
   crafters list
   crafters grade --challenge <slug> --program <path> [--all|--stage <slug>|--status]
   crafters site [--out dir]             generate the static showcase site
+  crafters update                       self-update to the latest release
+  crafters version                      print the version
 
 EXAMPLES
   crafters                       # browse challenges and grade interactively

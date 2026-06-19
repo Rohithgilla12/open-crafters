@@ -58,6 +58,7 @@ func cmdSite(args []string) {
 
 		if y, err := fs.ReadFile(cfs, path.Join(slug, "challenge.yaml")); err == nil {
 			sc.Tagline = tagline(y)
+			sc.Difficulty = yamlField(y, "difficulty")
 		}
 		if html, err := render(path.Join(slug, "PROTOCOL.md")); err == nil {
 			sc.ProtocolHTML = html
@@ -108,9 +109,21 @@ type siteStage struct {
 
 type siteChallenge struct {
 	Slug, Name, Tagline string
+	Difficulty          string
 	Stages              []siteStage
 	DiffMix             template.HTML
 	ProtocolHTML        template.HTML
+}
+
+// yamlField returns a top-level (non-indented) scalar field from a
+// challenge.yaml, e.g. yamlField(y, "difficulty") → "hard".
+func yamlField(y []byte, key string) string {
+	for _, ln := range strings.Split(string(y), "\n") {
+		if strings.HasPrefix(ln, key+":") {
+			return strings.TrimSpace(strings.TrimPrefix(ln, key+":"))
+		}
+	}
+	return ""
 }
 
 // difficultyMix renders a small colored breakdown of stage difficulties.
@@ -175,7 +188,7 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
 <main class="grid">
 {{range .}}
   <a class="card" href="{{.Slug}}.html">
-    <h2>{{.Name}}</h2>
+    <h2>{{.Name}} <span class="badge diff-{{.Difficulty}}">{{.Difficulty}}</span></h2>
     <p>{{.Tagline}}</p>
     <div class="mix">{{.DiffMix}}</div>
     <span class="meta">{{len .Stages}} stages →</span>
@@ -193,7 +206,7 @@ var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Par
 </head><body><div class="wrap">
 <p class="back"><a href="index.html">← all challenges</a></p>
 <header class="chead">
-  <h1>{{.Name}}</h1>
+  <h1>{{.Name}} <span class="badge diff-{{.Difficulty}}">{{.Difficulty}}</span></h1>
   <p class="tag">{{.Tagline}}</p>
   <div class="install"><code>crafters start {{.Slug | short}}</code></div>
 </header>
@@ -262,6 +275,9 @@ summary:hover{background:var(--panel2)}
 .diff{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;
   padding:.1rem .45rem;border-radius:999px;border:1px solid currentColor}
 .diff-easy{color:#5ad1b3}.diff-medium{color:#e0c45a}.diff-hard{color:#e57a86}
+.badge{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  padding:.18rem .5rem;border-radius:999px;vertical-align:middle;color:#0b0e14}
+.badge.diff-easy{background:#5ad1b3}.badge.diff-medium{background:#e0c45a}.badge.diff-hard{background:#e57a86}
 .mix{display:flex;gap:.4rem;flex-wrap:wrap;margin:0 0 .9rem}
 .mix .diff{border:none;padding:0;font-size:.72rem}
 .md{padding:.2rem 1.2rem 1.1rem}

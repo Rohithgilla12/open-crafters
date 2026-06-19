@@ -32,6 +32,7 @@ jobs:
             os="${target%/*}"; arch="${target#*/}"
             echo "building crafters_${os}_${arch}"
             GOOS="$os" GOARCH="$arch" go build -trimpath \
+              -ldflags "-X main.version=${GITHUB_REF_NAME}" \
               -o "dist/crafters_${os}_${arch}" ./cmd/crafters
           done
 
