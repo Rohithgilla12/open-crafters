@@ -19,11 +19,18 @@ import (
 //go:embed challenges
 var content embed.FS
 
-//go:embed assets/og.png
-var ogImage []byte
+//go:embed assets
+var assets embed.FS
 
-// OGImage returns the social-card PNG, emitted by the site generator.
-func OGImage() []byte { return ogImage }
+// AssetsFS returns the embedded static assets (favicon, OG image, …), rooted
+// at assets/, which the site generator copies into the output directory.
+func AssetsFS() fs.FS {
+	sub, err := fs.Sub(assets, "assets")
+	if err != nil {
+		panic(err)
+	}
+	return sub
+}
 
 func challengeDir(slug string) string { return "challenges/" + slug }
 

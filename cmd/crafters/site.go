@@ -97,8 +97,19 @@ func cmdSite(args []string) {
 	if err := os.WriteFile(filepath.Join(out, "style.css"), []byte(siteCSS), 0o644); err != nil {
 		die("%v", err)
 	}
-	if err := os.WriteFile(filepath.Join(out, "og.png"), opencrafters.OGImage(), 0o644); err != nil {
-		die("%v", err)
+	// Copy every static asset (favicon, OG image, apple-touch-icon) to the root.
+	afs := opencrafters.AssetsFS()
+	if err := fs.WalkDir(afs, ".", func(p string, d fs.DirEntry, err error) error {
+		if err != nil || d.IsDir() {
+			return err
+		}
+		b, err := fs.ReadFile(afs, p)
+		if err != nil {
+			return err
+		}
+		return os.WriteFile(filepath.Join(out, filepath.FromSlash(p)), b, 0o644)
+	}); err != nil {
+		die("copying assets: %v", err)
 	}
 	fmt.Printf("wrote %d pages + style.css to %s/\n", len(site)+1, out)
 }
@@ -177,6 +188,8 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>open-crafters — build your own X for serious infrastructure</title>
 <meta name="description" content="Open-source build-your-own-X challenges for the production-infrastructure primitives senior engineers actually wrestle with — workflow engines, write-ahead logs, message queues, MVCC, Kafka-style logs. Implement in any language; graded black-box over the wire, crashes included.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="canonical" href="https://rohithgilla12.github.io/open-crafters/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="open-crafters — build your own X for serious infrastructure">
@@ -219,6 +232,8 @@ var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Par
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{.Name}} — open-crafters</title>
 <meta name="description" content="{{.Tagline}}">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="canonical" href="https://rohithgilla12.github.io/open-crafters/{{.Slug}}.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="{{.Name}} — open-crafters">
