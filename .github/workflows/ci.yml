@@ -43,9 +43,15 @@ jobs:
         run: ./crafters grade --challenge build-your-own-wal --all
           --program examples/solutions/build-your-own-wal/typescript/your_program.sh
 
-      - name: "Reference: Build your own message queue (all 9 stages)"
+      - name: "Reference: Build your own message queue — Python"
         run: ./crafters grade --challenge build-your-own-queue --all
           --program examples/solutions/build-your-own-queue/python/your_program.sh
+      - name: "Reference: Build your own message queue — Go"
+        run: ./crafters grade --challenge build-your-own-queue --all
+          --program examples/solutions/build-your-own-queue/go/your_program.sh
+      - name: "Reference: Build your own message queue — TypeScript/Bun"
+        run: ./crafters grade --challenge build-your-own-queue --all
+          --program examples/solutions/build-your-own-queue/typescript/your_program.sh
 
       - name: "Reference: Build your own MVCC — Python"
         run: ./crafters grade --challenge build-your-own-mvcc --all
