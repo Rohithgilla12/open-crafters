@@ -1,0 +1,49 @@
+slug: build-your-own-workflow-sdk
+name: Build your own workflow SDK
+short_description: >
+  Build the deterministic replay engine behind Temporal workers: given an event
+  history, emit the commands workflow code would produce — pure, repeatable,
+  and correct after activities, timers, and signals.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port> --data-dir <path>
+tester:
+  challenge_flag: build-your-own-workflow-sdk
+stages:
+  - slug: bind
+    name: Boot the server
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: simple-complete
+    name: Replay to completion
+    difficulty: easy
+    instructions: stages/02-simple-complete.md
+  - slug: schedule-activity
+    name: Schedule an activity
+    difficulty: medium
+    instructions: stages/03-schedule-activity.md
+  - slug: activity-result
+    name: React to activity completion
+    difficulty: medium
+    instructions: stages/04-activity-result.md
+  - slug: waiting
+    name: Waiting means empty commands
+    difficulty: medium
+    instructions: stages/05-waiting.md
+  - slug: timers
+    name: Durable timers in replay
+    difficulty: medium
+    instructions: stages/06-timers.md
+  - slug: signals
+    name: Signals in replay
+    difficulty: medium
+    instructions: stages/07-signals.md
+  - slug: determinism
+    name: Same history, same commands
+    difficulty: hard
+    instructions: stages/08-determinism.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

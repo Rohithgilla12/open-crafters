@@ -114,7 +114,7 @@ go build -o crafters ./cmd/crafters
 | [Build your own message queue](challenges/build-your-own-queue/) — a durable broker: at-least-once delivery, visibility timeouts, receipt fencing, dead-letter queues | 9 | ✅ ready |
 | [Build your own MVCC](challenges/build-your-own-mvcc/) — a transactional KV store: snapshot isolation, multi-version reads, first-committer-wins conflicts, crash-durable commits | 9 | ✅ ready |
 | [Build your own log](challenges/build-your-own-log/) — a Kafka-style append log: absolute offsets, replayable reads, consumer-group offsets, retention without renumbering | 9 | ✅ ready |
-| Build your own workflow SDK — deterministic replay, the other half of Temporal | — | planned |
+| [Build your own workflow SDK](challenges/build-your-own-workflow-sdk/) — deterministic replay: given an event history, emit the commands workflow code would produce | 9 | ✅ ready |
 | Build your own Raft | — | planned |
 
 ### Which challenge should I start with?
@@ -134,6 +134,9 @@ durable before you acknowledge it** — in increasing order of scope:
    task queues, event-sourced histories, retries, durable timers, crash
    recovery. Easier to reason about once durability (WAL) and queue mechanics
    (message queue) are already second nature.
+4. **Build your own workflow SDK** — the other half of Temporal. After the
+   server, build the deterministic replay engine workers use: same history in,
+   same commands out.
 
 **Build your own MVCC** sits on a different axis — concurrency control rather
 than durability — so start it whenever transactions interest you; it doesn't
