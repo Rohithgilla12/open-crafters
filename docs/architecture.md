@@ -82,8 +82,8 @@ language. The trade-off (polling latency) is irrelevant at test scale.
 
 ## Roadmap
 
-- A `runner` service: sandboxed Docker execution of submissions for hosted
-  grading (git-push-to-test, CodeCrafters style).
+- **Hosted runner** (`cmd/runner`, `crafters submit`): sandboxed Docker grading on
+  a VPS — see [hosted-runner.md](hosted-runner.md).
 - `challenge.yaml`-driven test scaffolding so simple protocol assertions can
   be declared rather than coded.
 - Web UI: stage instructions, run logs, leaderboards.

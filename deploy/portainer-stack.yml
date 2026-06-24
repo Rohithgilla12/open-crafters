@@ -1,0 +1,39 @@
+# Portainer stack for the open-crafters hosted runner.
+#
+# Prerequisites on the VPS:
+#   - Docker + Portainer
+#   - Cloudflare Tunnel pointing runner.gilla.fun → runner:8080
+#
+# Build images first (from the repo root on the VPS):
+#   docker build -t open-crafters-grade:latest -f docker/grade/Dockerfile .
+#   docker build -t open-crafters-runner:latest -f docker/runner/Dockerfile .
+#
+# Then deploy this stack in Portainer and set RUNNER_TOKEN in the UI.
+
+services:
+  runner:
+    image: open-crafters-runner:latest
+    container_name: open-crafters-runner
+    restart: unless-stopped
+    environment:
+      RUNNER_TOKEN: ${RUNNER_TOKEN:?set a long random secret}
+      RUNNER_LISTEN: ":8080"
+      RUNNER_GRADE_IMAGE: open-crafters-grade:latest
+      RUNNER_MAX_CONCURRENT: "2"
+      RUNNER_JOB_TIMEOUT: "15m"
+      RUNNER_WORK_DIR: /var/lib/open-crafters/jobs
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Bind mount (not a named volume): grade containers need the same host
+      # path when the runner spawns them via the Docker socket.
+      - /var/lib/open-crafters/jobs:/var/lib/open-crafters/jobs
+    ports:
+      # Bind locally if cloudflared runs on the host; omit if the tunnel container
+      # joins this compose network and targets http://runner:8080 instead.
+      - "127.0.0.1:8080:8080"
+    networks:
+      - open-crafters
+
+networks:
+  open-crafters:
+    name: open-crafters
