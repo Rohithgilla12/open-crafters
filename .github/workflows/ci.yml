@@ -89,9 +89,19 @@ jobs:
         run: ./crafters grade --challenge build-your-own-workflow-sdk --all
           --program examples/solutions/build-your-own-workflow-sdk/typescript/your_program.sh
 
+      - name: "Reference: Build your own Raft — Python"
+        run: ./crafters grade --challenge build-your-own-raft --all
+          --program examples/solutions/build-your-own-raft/python/your_program.sh
+      - name: "Reference: Build your own Raft — Go"
+        run: ./crafters grade --challenge build-your-own-raft --all
+          --program examples/solutions/build-your-own-raft/go/your_program.sh
+      - name: "Reference: Build your own Raft — TypeScript/Bun"
+        run: ./crafters grade --challenge build-your-own-raft --all
+          --program examples/solutions/build-your-own-raft/typescript/your_program.sh
+
       - name: "Starters pass stage 1 (Python, Go, TypeScript — all challenges)"
         run: |
-          for ch in build-your-own-temporal build-your-own-wal build-your-own-queue build-your-own-mvcc build-your-own-log build-your-own-workflow-sdk; do
+          for ch in build-your-own-temporal build-your-own-wal build-your-own-queue build-your-own-mvcc build-your-own-log build-your-own-workflow-sdk build-your-own-raft; do
             for lang in python go typescript; do
               ./crafters grade --challenge "$ch" --stage bind \
                 --program "challenges/$ch/starters/$lang/your_program.sh"

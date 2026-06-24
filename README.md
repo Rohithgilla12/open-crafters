@@ -115,7 +115,7 @@ go build -o crafters ./cmd/crafters
 | [Build your own MVCC](challenges/build-your-own-mvcc/) — a transactional KV store: snapshot isolation, multi-version reads, first-committer-wins conflicts, crash-durable commits | 9 | ✅ ready |
 | [Build your own log](challenges/build-your-own-log/) — a Kafka-style append log: absolute offsets, replayable reads, consumer-group offsets, retention without renumbering | 9 | ✅ ready |
 | [Build your own workflow SDK](challenges/build-your-own-workflow-sdk/) — deterministic replay: given an event history, emit the commands workflow code would produce | 9 | ✅ ready |
-| Build your own Raft | — | planned |
+| [Build your own Raft](challenges/build-your-own-raft/) — a 3-node Raft cluster: leader election, log replication, crash recovery, and partition safety | 9 | ✅ ready |
 
 ### Which challenge should I start with?
 
@@ -137,6 +137,8 @@ durable before you acknowledge it** — in increasing order of scope:
 4. **Build your own workflow SDK** — the other half of Temporal. After the
    server, build the deterministic replay engine workers use: same history in,
    same commands out.
+5. **Build your own Raft** — consensus. After WAL, replicate a log across three
+   nodes with leader election, crash recovery, and partition safety.
 
 **Build your own MVCC** sits on a different axis — concurrency control rather
 than durability — so start it whenever transactions interest you; it doesn't

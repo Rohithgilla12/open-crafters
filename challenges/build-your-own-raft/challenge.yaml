@@ -1,0 +1,50 @@
+slug: build-your-own-raft
+name: Build your own Raft
+short_description: >
+  Build a 3-node Raft cluster: leader election, log replication, crash recovery,
+  and partition safety — graded over a live multi-node cluster with network
+  partitions.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --node-id <id> --peers <peers> --port <port> --data-dir <path>
+tester:
+  challenge_flag: build-your-own-raft
+cluster_size: 3
+stages:
+  - slug: bind
+    name: Boot the cluster
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: leader
+    name: Leader election
+    difficulty: medium
+    instructions: stages/02-leader.md
+  - slug: replicate
+    name: Replicate a write
+    difficulty: medium
+    instructions: stages/03-replicate.md
+  - slug: read
+    name: Read your writes
+    difficulty: easy
+    instructions: stages/04-read.md
+  - slug: follower-crash
+    name: Survive a follower crash
+    difficulty: medium
+    instructions: stages/05-follower-crash.md
+  - slug: leader-crash
+    name: Survive a leader crash
+    difficulty: hard
+    instructions: stages/06-leader-crash.md
+  - slug: durability
+    name: Survive a full crash
+    difficulty: hard
+    instructions: stages/07-durability.md
+  - slug: partition
+    name: Partition safety
+    difficulty: hard
+    instructions: stages/08-partition.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

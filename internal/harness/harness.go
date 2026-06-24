@@ -16,22 +16,56 @@ type Stage struct {
 	Difficulty   string // "easy" | "medium" | "hard"
 	Instructions string // repo-relative path to the stage's instructions
 	Test         func(*Context) error
+	TestCluster  func(*ClusterContext) error // used when Challenge.ClusterSize > 0
 }
 
 // Challenge is a named, ordered list of stages.
 type Challenge struct {
-	Slug   string
-	Name   string
-	Stages []Stage
+	Slug        string
+	Name        string
+	Stages      []Stage
+	ClusterSize int // 0 = single process; >0 = multi-node cluster (e.g. Raft)
 }
 
-// Context is handed to each stage test. Each stage gets a fresh program
-// instance (fresh data dir); within a stage the test may kill and restart
-// the program to verify durability.
+// Context is handed to each single-process stage test.
 type Context struct {
 	program *Program
 	Logf    func(format string, args ...any)
 }
+
+// ClusterContext is handed to multi-node stage tests.
+type ClusterContext struct {
+	cluster *Cluster
+	Logf    func(format string, args ...any)
+}
+
+// Dial opens a client connection to node id (1-based).
+func (c *ClusterContext) Dial(nodeID int) (*Client, error) { return c.cluster.Dial(nodeID) }
+
+// Addr returns the client address for node id.
+func (c *ClusterContext) Addr(nodeID int) (string, error) { return c.cluster.Addr(nodeID) }
+
+// DataDir returns the data directory for node id.
+func (c *ClusterContext) DataDir(nodeID int) (string, error) { return c.cluster.DataDir(nodeID) }
+
+// KillNode SIGKILLs node id.
+func (c *ClusterContext) KillNode(nodeID int) error { return c.cluster.KillNode(nodeID) }
+
+// RestartNode restarts node id with the same data dir.
+func (c *ClusterContext) RestartNode(nodeID int) error { return c.cluster.RestartNode(nodeID) }
+
+// Partition blocks traffic between nodes a and b (both directions).
+func (c *ClusterContext) Partition(a, b int) error { return c.cluster.Partition(a, b) }
+
+// Heal removes all network partitions.
+func (c *ClusterContext) Heal() { c.cluster.Heal() }
+
+func (c *ClusterContext) IsRunning(nodeID int) (bool, error) {
+	return c.cluster.IsRunning(nodeID)
+}
+
+// ClusterSize returns the number of nodes in the cluster.
+func (c *ClusterContext) ClusterSize() int { return c.cluster.Size() }
 
 // Addr returns the address the user's server listens on.
 func (c *Context) Addr() string { return c.program.Addr() }
@@ -92,7 +126,7 @@ func Run(ch Challenge, opts RunOptions) error {
 			opts.OnStageStart(stage)
 		}
 		start := time.Now()
-		err := runStage(stage, opts.ProgramPath, logf)
+		err := runStage(stage, opts.ProgramPath, ch.ClusterSize, logf)
 		elapsed := time.Since(start)
 		if opts.OnStageEnd != nil {
 			opts.OnStageEnd(stage, err, elapsed)
@@ -111,7 +145,24 @@ func Run(ch Challenge, opts RunOptions) error {
 	return nil
 }
 
-func runStage(stage Stage, programPath string, logf func(string, ...any)) error {
+func runStage(stage Stage, programPath string, clusterSize int, logf func(string, ...any)) error {
+	if clusterSize > 0 {
+		if stage.TestCluster == nil {
+			return fmt.Errorf("stage %q requires TestCluster (cluster size %d)", stage.Slug, clusterSize)
+		}
+		cluster, err := NewCluster(programPath, clusterSize, logf)
+		if err != nil {
+			return err
+		}
+		defer cluster.Cleanup()
+		if err := cluster.StartAll(); err != nil {
+			return err
+		}
+		return stage.TestCluster(&ClusterContext{cluster: cluster, Logf: logf})
+	}
+	if stage.Test == nil {
+		return fmt.Errorf("stage %q requires Test", stage.Slug)
+	}
 	program, err := NewProgram(programPath, logf)
 	if err != nil {
 		return err

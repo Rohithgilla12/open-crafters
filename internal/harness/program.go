@@ -48,7 +48,17 @@ func (p *Program) Start() error {
 	if p.cmd != nil {
 		return fmt.Errorf("program already running")
 	}
-	cmd := exec.Command(p.path, "--port", fmt.Sprint(p.port), "--data-dir", p.dataDir)
+	return p.StartWithArgs(nil)
+}
+
+// StartWithArgs launches the process with extra CLI flags before --port and
+// --data-dir (used by multi-node challenges).
+func (p *Program) StartWithArgs(extra []string) error {
+	if p.cmd != nil {
+		return fmt.Errorf("program already running")
+	}
+	args := append(append([]string{}, extra...), "--port", fmt.Sprint(p.port), "--data-dir", p.dataDir)
+	cmd := exec.Command(p.path, args...)
 	cmd.Dir = filepath.Dir(p.path)
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
