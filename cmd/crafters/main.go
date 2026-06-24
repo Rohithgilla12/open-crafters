@@ -28,6 +28,7 @@ import (
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/mvcc"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/queue"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/raft"
+	"github.com/Rohithgilla12/open-crafters/internal/challenges/scheduler"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/temporal"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/wal"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/workflowsdk"
@@ -43,6 +44,7 @@ var challenges = map[string]harness.Challenge{
 	"build-your-own-log":            logstore.Challenge(),
 	"build-your-own-workflow-sdk": workflowsdk.Challenge(),
 	"build-your-own-raft":         raft.Challenge(),
+	"build-your-own-scheduler":    scheduler.Challenge(),
 }
 
 // challengeOrder is the canonical display order (WAL first — the recommended
@@ -55,6 +57,7 @@ var challengeOrder = []string{
 	"build-your-own-temporal",
 	"build-your-own-workflow-sdk",
 	"build-your-own-raft",
+	"build-your-own-scheduler",
 }
 
 func main() {

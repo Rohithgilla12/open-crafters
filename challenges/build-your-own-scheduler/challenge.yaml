@@ -1,0 +1,48 @@
+slug: build-your-own-scheduler
+name: Build your own scheduler
+short_description: >
+  Build a durable job scheduler: delayed and recurring jobs, worker polling,
+  leases, retries, and crash-safe fire times — graded over the wire.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port> --data-dir <path>
+tester:
+  challenge_flag: build-your-own-scheduler
+stages:
+  - slug: bind
+    name: Boot the server
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: schedule
+    name: Schedule a delayed job
+    difficulty: easy
+    instructions: stages/02-schedule.md
+  - slug: complete
+    name: Complete a job
+    difficulty: easy
+    instructions: stages/03-complete.md
+  - slug: lease
+    name: Job leases
+    difficulty: medium
+    instructions: stages/04-lease.md
+  - slug: retry
+    name: Retries
+    difficulty: medium
+    instructions: stages/05-retry.md
+  - slug: cancel
+    name: Cancel a job
+    difficulty: easy
+    instructions: stages/06-cancel.md
+  - slug: durability
+    name: Survive a crash
+    difficulty: hard
+    instructions: stages/07-durability.md
+  - slug: recurring
+    name: Recurring jobs
+    difficulty: medium
+    instructions: stages/08-recurring.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md
