@@ -78,6 +78,8 @@ func main() {
 		cmdGrade(args[1:])
 	case "site":
 		cmdSite(args[1:])
+	case "submit":
+		cmdSubmit(args[1:])
 	case "update":
 		cmdUpdate()
 	case "version", "--version", "-v":
@@ -101,6 +103,7 @@ USAGE
   crafters status [dir]
   crafters list
   crafters grade --challenge <slug> --program <path> [--all|--stage <slug>|--status]
+  crafters submit [dir] [--url <url>] [--token <secret>] [--all|--stage <slug>]
   crafters site [--out dir]             generate the static showcase site
   crafters update                       self-update to the latest release
   crafters version                      print the version

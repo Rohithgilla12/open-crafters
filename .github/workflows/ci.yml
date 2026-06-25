@@ -26,6 +26,7 @@ jobs:
           go vet ./...
           go test ./...
           go build -o crafters ./cmd/crafters
+          go build -o runner ./cmd/runner
 
       - name: "Reference: Build your own Temporal — Python"
         run: ./crafters grade --challenge build-your-own-temporal --all

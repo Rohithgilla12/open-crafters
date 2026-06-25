@@ -163,9 +163,26 @@ challenges/<slug>/          challenge definition (embedded into the binary)
   starters/<language>/      minimal templates that pass stage 1 (python · go · typescript)
 examples/solutions/<slug>/  reference solutions that pass all stages
 internal/harness/           challenge-agnostic core (process mgmt, protocol client, runner)
+internal/runner/            hosted grading API (Docker sandbox)
+cmd/runner/                 runner service binary
+docker/                     runner + grade sandbox images
+deploy/                     Portainer stack for VPS deployment
 internal/challenges/        per-challenge stage tests
 docs/                       architecture & challenge-authoring guides
 ```
+
+## Hosted runner
+
+Grade submissions on a VPS instead of locally:
+
+```sh
+export CRAFTERS_RUNNER_URL=https://runner.gilla.fun
+export CRAFTERS_RUNNER_TOKEN=...
+cd my-wal && crafters submit
+```
+
+Deploy with Docker + Portainer + a Cloudflare Tunnel — see
+[docs/hosted-runner.md](docs/hosted-runner.md).
 
 ## Contributing
 

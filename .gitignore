@@ -1,4 +1,5 @@
 /crafters
+/runner
 /dist/
 *.tmp
 __pycache__/
