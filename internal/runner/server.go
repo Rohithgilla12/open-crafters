@@ -1,7 +1,6 @@
 package runner
 
 import (
-	"context"
 	"crypto/rand"
 	"crypto/subtle"
 	"encoding/hex"
@@ -11,10 +10,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
-	"time"
 )
 
 // Service accepts grading jobs and runs them in a worker pool.
@@ -22,6 +19,7 @@ type Service struct {
 	cfg      Config
 	store    *Store
 	executor *Executor
+	github   *GitHubClient
 	sem      chan struct{}
 }
 
@@ -34,97 +32,19 @@ func NewService(cfg Config) (*Service, error) {
 		cfg:      cfg,
 		store:    store,
 		executor: NewExecutor(cfg),
+		github:   NewGitHubClient(cfg.GitHubToken),
 		sem:      make(chan struct{}, cfg.MaxConcurrent),
 	}, nil
 }
 
 func (s *Service) Store() *Store { return s.store }
 
-// Enqueue stores a job and starts processing asynchronously.
-func (s *Service) Enqueue(challenge, stage string, all bool, zipBytes []byte) (*Job, error) {
-	id, err := newJobID()
-	if err != nil {
-		return nil, err
+// EnqueueGitHub grades a push archive and reports via GitHub Checks.
+func (s *Service) EnqueueGitHub(challenge string, zipBytes []byte, gh *GitHubMeta) (*Job, error) {
+	if gh == nil {
+		return nil, fmt.Errorf("missing github metadata")
 	}
-	job := &Job{
-		ID:        id,
-		Status:    StatusQueued,
-		Challenge: challenge,
-		Stage:     stage,
-		All:       all,
-		CreatedAt: time.Now().UTC(),
-	}
-	s.store.Put(job)
-
-	go s.runJob(job, zipBytes)
-	return job, nil
-}
-
-func (s *Service) runJob(job *Job, zipBytes []byte) {
-	s.sem <- struct{}{}
-	defer func() { <-s.sem }()
-
-	s.store.Update(job.ID, func(j *Job) {
-		j.Status = StatusRunning
-		j.StartedAt = time.Now().UTC()
-	})
-
-	workDir, err := os.MkdirTemp(s.cfg.WorkDir, "job-"+job.ID+"-*")
-	if err != nil {
-		s.finishError(job.ID, fmt.Errorf("creating work dir: %w", err))
-		return
-	}
-	defer os.RemoveAll(workDir)
-
-	zipPath := filepath.Join(workDir, "submission.zip")
-	if err := os.WriteFile(zipPath, zipBytes, 0o600); err != nil {
-		s.finishError(job.ID, fmt.Errorf("writing submission: %w", err))
-		return
-	}
-
-	extractDir := filepath.Join(workDir, "src")
-	if err := os.MkdirAll(extractDir, 0o755); err != nil {
-		s.finishError(job.ID, err)
-		return
-	}
-	programPath, err := ExtractZip(bytesReaderAt(zipBytes), int64(len(zipBytes)), extractDir)
-	if err != nil {
-		s.finishError(job.ID, err)
-		return
-	}
-
-	logText, exitCode, runErr := s.executor.Run(context.Background(), job.ID, GradeRequest{
-		Challenge:   job.Challenge,
-		Stage:       job.Stage,
-		All:         job.All,
-		WorkDir:     extractDir,
-		ProgramPath: programPath,
-	})
-
-	status := StatusPassed
-	errMsg := ""
-	if runErr != nil {
-		status = StatusError
-		errMsg = runErr.Error()
-	} else if exitCode != 0 {
-		status = StatusFailed
-	}
-
-	s.store.Update(job.ID, func(j *Job) {
-		j.Status = status
-		j.ExitCode = exitCode
-		j.Log = logText
-		j.Error = errMsg
-		j.FinishedAt = time.Now().UTC()
-	})
-}
-
-func (s *Service) finishError(id string, err error) {
-	s.store.Update(id, func(j *Job) {
-		j.Status = StatusError
-		j.Error = err.Error()
-		j.FinishedAt = time.Now().UTC()
-	})
+	return s.enqueue(challenge, "", false, zipBytes, "github", gh)
 }
 
 // Server is the HTTP front door for the runner service.
@@ -144,6 +64,7 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET /v1/jobs", s.handleListJobs)
 	mux.HandleFunc("GET /v1/jobs/{id}", s.handleGetJob)
 	mux.HandleFunc("POST /v1/grade", s.handleGrade)
+	mux.HandleFunc("POST /v1/webhook/github", s.handleGitHubWebhook)
 	return mux
 }
 

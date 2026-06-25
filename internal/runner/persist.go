@@ -101,20 +101,23 @@ func historyDir(cfg Config) string {
 type JobSummary struct {
 	ID         string `json:"id"`
 	Status     Status `json:"status"`
+	Source     string `json:"source,omitempty"`
 	Challenge  string `json:"challenge"`
 	Stage      string `json:"stage,omitempty"`
 	All        bool   `json:"all"`
 	ExitCode   int    `json:"exit_code,omitempty"`
 	Error      string `json:"error,omitempty"`
+	GitHubRepo string `json:"github_repo,omitempty"`
 	CreatedAt  string `json:"created_at"`
 	StartedAt  string `json:"started_at,omitempty"`
 	FinishedAt string `json:"finished_at,omitempty"`
 }
 
 func summarizeJob(j *Job) JobSummary {
-	return JobSummary{
+	sum := JobSummary{
 		ID:         j.ID,
 		Status:     j.Status,
+		Source:     j.Source,
 		Challenge:  j.Challenge,
 		Stage:      j.Stage,
 		All:        j.All,
@@ -124,6 +127,10 @@ func summarizeJob(j *Job) JobSummary {
 		StartedAt:  formatTime(j.StartedAt),
 		FinishedAt: formatTime(j.FinishedAt),
 	}
+	if j.GitHub != nil {
+		sum.GitHubRepo = j.GitHub.Owner + "/" + j.GitHub.Repo
+	}
+	return sum
 }
 
 func formatTime(t time.Time) string {

@@ -20,6 +20,10 @@ services:
       RUNNER_MAX_CONCURRENT: "2"
       RUNNER_JOB_TIMEOUT: "15m"
       RUNNER_WORK_DIR: /var/lib/open-crafters/jobs
+      # Optional: GitHub push → auto-grade (see docs/github-webhook.md)
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      GITHUB_WEBHOOK_SECRET: ${GITHUB_WEBHOOK_SECRET:-}
+      RUNNER_GITHUB_BRANCHES: ${RUNNER_GITHUB_BRANCHES:-default}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/open-crafters/jobs:/var/lib/open-crafters/jobs

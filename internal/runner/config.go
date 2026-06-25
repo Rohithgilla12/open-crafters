@@ -15,8 +15,11 @@ type Config struct {
 	MaxConcurrent int
 	JobTimeout    time.Duration
 	WorkDir       string
-	MaxZipBytes   int64
-	JobHistoryDir string
+	MaxZipBytes        int64
+	JobHistoryDir      string
+	GitHubWebhookSecret string
+	GitHubToken         string
+	GitHubBranches      string // "default", "*", or comma-separated branch names
 }
 
 // ConfigFromEnv loads configuration from environment variables.
@@ -28,7 +31,10 @@ func ConfigFromEnv() (Config, error) {
 		MaxConcurrent: envIntOr("RUNNER_MAX_CONCURRENT", 2),
 		JobTimeout:    envDurationOr("RUNNER_JOB_TIMEOUT", 15*time.Minute),
 		WorkDir:       envOr("RUNNER_WORK_DIR", "/var/lib/open-crafters/jobs"),
-		MaxZipBytes:   envInt64Or("RUNNER_MAX_ZIP_BYTES", 10<<20), // 10 MiB
+		MaxZipBytes:         envInt64Or("RUNNER_MAX_ZIP_BYTES", 10<<20), // 10 MiB
+		GitHubWebhookSecret: os.Getenv("GITHUB_WEBHOOK_SECRET"),
+		GitHubToken:         os.Getenv("GITHUB_TOKEN"),
+		GitHubBranches:      envOr("RUNNER_GITHUB_BRANCHES", "default"),
 	}
 	if cfg.Token == "" {
 		return cfg, fmt.Errorf("RUNNER_TOKEN is required")
