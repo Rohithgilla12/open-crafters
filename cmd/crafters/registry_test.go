@@ -140,6 +140,31 @@ func TestStartersAndReferencesExist(t *testing.T) {
 	}
 }
 
+// TestWalkthroughCoverage: a walkthrough is optional, but when a challenge
+// ships one it must cover every stage and every section must carry a hint —
+// so the post-pass walkthrough and the `crafters hint` nudge can't go stale
+// relative to the stage ladder.
+func TestWalkthroughCoverage(t *testing.T) {
+	for slug, ch := range challenges {
+		if !opencrafters.HasWalkthrough(slug) {
+			continue
+		}
+		covered := map[string]bool{}
+		for _, s := range opencrafters.WalkthroughStageSlugs(slug) {
+			covered[s] = true
+		}
+		for _, st := range ch.Stages {
+			if !covered[st.Slug] {
+				t.Errorf("%s: walkthrough is missing a section for stage %q", slug, st.Slug)
+				continue
+			}
+			if hint, ok := opencrafters.StageHint(slug, st.Slug); !ok || strings.TrimSpace(hint) == "" {
+				t.Errorf("%s/%s: walkthrough section has no hint (expected a leading > blockquote)", slug, st.Slug)
+			}
+		}
+	}
+}
+
 // yamlStageSlugs extracts the ordered `- slug:` values under the top-level
 // `stages:` key of a challenge.yaml. The repo hand-parses YAML (no dependency),
 // so this mirrors that minimal approach.
