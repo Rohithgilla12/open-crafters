@@ -1,12 +1,12 @@
-# VPS deployment for hosts that already run cloudflared on Docker network
-# `cloudflare-tunnel_default` (e.g. gilla.fun). No host port publish — avoids
-# conflicts with other services on :8080.
+# VPS deployment when cloudflared routes use host IP:port (e.g. gilla.fun).
 #
 #   export RUNNER_TOKEN=$(openssl rand -hex 32)
 #   docker compose -f deploy/vps-compose.yml up -d
 #
 # Cloudflare Tunnel public hostname:
-#   runner.gilla.fun → http://open-crafters-runner:8080
+#   runner.gilla.fun → http://150.230.131.66:18080
+#
+# Port 18080 avoids conflict with qBittorrent on :8080.
 
 services:
   runner:
@@ -23,6 +23,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/open-crafters/jobs:/var/lib/open-crafters/jobs
+    ports:
+      - "18080:8080"
     networks:
       - cloudflare-tunnel_default
 
