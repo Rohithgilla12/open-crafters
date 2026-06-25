@@ -145,9 +145,14 @@ Headers: `Authorization: Bearer <token>` or `X-Crafters-Token: <token>`
 Returns `202` with a job object. Poll `GET /v1/jobs/{id}` until `status` is
 `passed`, `failed`, or `error`.
 
-### `GET /v1/jobs/{id}`
+### `GET /v1/jobs`
 
-Returns the job including `log` (full `crafters grade` output).
+List recent jobs (summary only, no logs). Query `?limit=50` (max 200).
+
+### `GET /`
+
+Web dashboard — enter your token to browse job history and logs. Or open
+`/?token=<RUNNER_TOKEN>` directly.
 
 ## Environment variables
 

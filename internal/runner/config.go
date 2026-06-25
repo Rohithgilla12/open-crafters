@@ -16,6 +16,7 @@ type Config struct {
 	JobTimeout    time.Duration
 	WorkDir       string
 	MaxZipBytes   int64
+	JobHistoryDir string
 }
 
 // ConfigFromEnv loads configuration from environment variables.

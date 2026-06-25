@@ -35,7 +35,10 @@ func main() {
 		log.Fatalf("runner: creating work dir: %v", err)
 	}
 
-	svc := runner.NewService(cfg)
+	svc, err := runner.NewService(cfg)
+	if err != nil {
+		log.Fatalf("runner: %v", err)
+	}
 	srv := runner.NewServer(svc)
 	log.Printf("listening on %s (grade image %s, max concurrent %d)", cfg.Listen, cfg.GradeImage, cfg.MaxConcurrent)
 	if err := http.ListenAndServe(cfg.Listen, srv.Handler()); err != nil {

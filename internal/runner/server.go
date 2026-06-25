@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -24,13 +25,17 @@ type Service struct {
 	sem      chan struct{}
 }
 
-func NewService(cfg Config) *Service {
+func NewService(cfg Config) (*Service, error) {
+	store, err := NewStore(historyDir(cfg))
+	if err != nil {
+		return nil, err
+	}
 	return &Service{
 		cfg:      cfg,
-		store:    NewStore(),
+		store:    store,
 		executor: NewExecutor(cfg),
 		sem:      make(chan struct{}, cfg.MaxConcurrent),
-	}
+	}, nil
 }
 
 func (s *Service) Store() *Store { return s.store }
@@ -134,7 +139,9 @@ func NewServer(svc *Service) *Server {
 
 func (s *Server) Handler() http.Handler {
 	mux := http.NewServeMux()
+	mux.HandleFunc("GET /", s.handleDashboard)
 	mux.HandleFunc("GET /health", s.handleHealth)
+	mux.HandleFunc("GET /v1/jobs", s.handleListJobs)
 	mux.HandleFunc("GET /v1/jobs/{id}", s.handleGetJob)
 	mux.HandleFunc("POST /v1/grade", s.handleGrade)
 	return mux
@@ -142,6 +149,22 @@ func (s *Server) Handler() http.Handler {
 
 func (s *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
+}
+
+func (s *Server) handleListJobs(w http.ResponseWriter, r *http.Request) {
+	if !s.authorize(r) {
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
+	}
+	limit := 50
+	if v := r.URL.Query().Get("limit"); v != "" {
+		if n, err := strconv.Atoi(v); err == nil && n > 0 && n <= 200 {
+			limit = n
+		}
+	}
+	writeJSON(w, http.StatusOK, map[string]any{
+		"jobs": s.svc.store.ListRecent(limit),
+	})
 }
 
 func (s *Server) handleGetJob(w http.ResponseWriter, r *http.Request) {
@@ -214,6 +237,9 @@ func (s *Server) authorize(r *http.Request) bool {
 }
 
 func tokenFromRequest(r *http.Request) string {
+	if t := r.URL.Query().Get("token"); t != "" {
+		return t
+	}
 	if h := r.Header.Get("Authorization"); strings.HasPrefix(h, "Bearer ") {
 		return strings.TrimSpace(strings.TrimPrefix(h, "Bearer "))
 	}
