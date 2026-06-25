@@ -25,6 +25,7 @@ import (
 
 	opencrafters "github.com/Rohithgilla12/open-crafters"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/logstore"
+	"github.com/Rohithgilla12/open-crafters/internal/challenges/lsm"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/mvcc"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/queue"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/raft"
@@ -42,6 +43,7 @@ var challenges = map[string]harness.Challenge{
 	"build-your-own-queue":    queue.Challenge(),
 	"build-your-own-mvcc":     mvcc.Challenge(),
 	"build-your-own-log":            logstore.Challenge(),
+	"build-your-own-lsm":            lsm.Challenge(),
 	"build-your-own-workflow-sdk": workflowsdk.Challenge(),
 	"build-your-own-raft":         raft.Challenge(),
 	"build-your-own-scheduler":    scheduler.Challenge(),
@@ -53,6 +55,7 @@ var challengeOrder = []string{
 	"build-your-own-wal",
 	"build-your-own-queue",
 	"build-your-own-log",
+	"build-your-own-lsm",
 	"build-your-own-mvcc",
 	"build-your-own-temporal",
 	"build-your-own-workflow-sdk",

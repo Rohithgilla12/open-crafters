@@ -114,6 +114,7 @@ go build -o crafters ./cmd/crafters
 | [Build your own message queue](challenges/build-your-own-queue/) — a durable broker: at-least-once delivery, visibility timeouts, receipt fencing, dead-letter queues | 9 | ✅ ready |
 | [Build your own MVCC](challenges/build-your-own-mvcc/) — a transactional KV store: snapshot isolation, multi-version reads, first-committer-wins conflicts, crash-durable commits | 9 | ✅ ready |
 | [Build your own log](challenges/build-your-own-log/) — a Kafka-style append log: absolute offsets, replayable reads, consumer-group offsets, retention without renumbering | 9 | ✅ ready |
+| [Build your own LSM-tree](challenges/build-your-own-lsm/) — a log-structured merge-tree KV store: memtable, byte-exact SSTables, range scans, compaction, tombstones | 9 | ✅ ready |
 | [Build your own workflow SDK](challenges/build-your-own-workflow-sdk/) — deterministic replay: given an event history, emit the commands workflow code would produce | 9 | ✅ ready |
 | [Build your own Raft](challenges/build-your-own-raft/) — a 3-node Raft cluster: leader election, log replication, crash recovery, and partition safety | 9 | ✅ ready |
 | [Build your own scheduler](challenges/build-your-own-scheduler/) — a durable job scheduler: delayed and recurring jobs, worker polling, leases, and retries | 9 | ✅ ready |

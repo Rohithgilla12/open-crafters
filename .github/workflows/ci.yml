@@ -27,6 +27,7 @@ jobs:
           go test ./...
           go build -o crafters ./cmd/crafters
           go build -o runner ./cmd/runner
+          go build -o learn ./cmd/learn
 
       - name: "Reference: Build your own Temporal — Python"
         run: ./crafters grade --challenge build-your-own-temporal --all
@@ -80,6 +81,16 @@ jobs:
         run: ./crafters grade --challenge build-your-own-log --all
           --program examples/solutions/build-your-own-log/typescript/your_program.sh
 
+      - name: "Reference: Build your own LSM-tree — Python"
+        run: ./crafters grade --challenge build-your-own-lsm --all
+          --program examples/solutions/build-your-own-lsm/python/your_program.sh
+      - name: "Reference: Build your own LSM-tree — Go"
+        run: ./crafters grade --challenge build-your-own-lsm --all
+          --program examples/solutions/build-your-own-lsm/go/your_program.sh
+      - name: "Reference: Build your own LSM-tree — TypeScript/Bun"
+        run: ./crafters grade --challenge build-your-own-lsm --all
+          --program examples/solutions/build-your-own-lsm/typescript/your_program.sh
+
       - name: "Reference: Build your own workflow SDK — Python"
         run: ./crafters grade --challenge build-your-own-workflow-sdk --all
           --program examples/solutions/build-your-own-workflow-sdk/python/your_program.sh
@@ -112,7 +123,7 @@ jobs:
 
       - name: "Starters pass stage 1 (Python, Go, TypeScript — all challenges)"
         run: |
-          for ch in build-your-own-temporal build-your-own-wal build-your-own-queue build-your-own-mvcc build-your-own-log build-your-own-workflow-sdk build-your-own-raft build-your-own-scheduler; do
+          for ch in build-your-own-temporal build-your-own-wal build-your-own-queue build-your-own-mvcc build-your-own-log build-your-own-lsm build-your-own-workflow-sdk build-your-own-raft build-your-own-scheduler; do
             for lang in python go typescript; do
               ./crafters grade --challenge "$ch" --stage bind \
                 --program "challenges/$ch/starters/$lang/your_program.sh"

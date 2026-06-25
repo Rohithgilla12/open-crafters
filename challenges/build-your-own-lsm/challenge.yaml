@@ -1,0 +1,49 @@
+slug: build-your-own-lsm
+name: Build your own LSM-tree
+short_description: >
+  Build a log-structured merge-tree key-value store: in-memory memtable,
+  on-disk SSTables in a byte-exact format, range scans, compaction, and
+  tombstones — graded over TCP and by parsing your SST files.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port> --data-dir <path>
+tester:
+  challenge_flag: build-your-own-lsm
+stages:
+  - slug: bind
+    name: Boot the server
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: put-get
+    name: An in-memory key-value store
+    difficulty: easy
+    instructions: stages/02-put-get.md
+  - slug: flush
+    name: Flush to SSTable
+    difficulty: medium
+    instructions: stages/03-flush.md
+  - slug: restart
+    name: Recover after restart
+    difficulty: medium
+    instructions: stages/04-restart.md
+  - slug: scan
+    name: Range scan
+    difficulty: medium
+    instructions: stages/05-scan.md
+  - slug: compaction
+    name: Compact SSTables
+    difficulty: hard
+    instructions: stages/06-compaction.md
+  - slug: delete
+    name: Tombstones
+    difficulty: hard
+    instructions: stages/07-delete.md
+  - slug: durability
+    name: Multi-file recovery
+    difficulty: hard
+    instructions: stages/08-durability.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

@@ -3,12 +3,24 @@
 #   export RUNNER_TOKEN=$(openssl rand -hex 32)
 #   docker compose -f deploy/vps-compose.yml up -d
 #
-# Cloudflare Tunnel public hostname:
+# Cloudflare Tunnel public hostnames:
 #   runner.gilla.fun → http://150.230.131.66:18080
+#   learn.gilla.fun  → http://150.230.131.66:18081
 #
 # Port 18080 avoids conflict with qBittorrent on :8080.
 
 services:
+  learn:
+    image: open-crafters-learn:latest
+    container_name: open-crafters-learn
+    restart: unless-stopped
+    environment:
+      LEARN_LISTEN: ":8081"
+    ports:
+      - "18081:8081"
+    networks:
+      - cloudflare-tunnel_default
+
   runner:
     image: open-crafters-runner:latest
     container_name: open-crafters-runner
