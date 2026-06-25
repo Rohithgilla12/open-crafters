@@ -118,6 +118,7 @@ go build -o crafters ./cmd/crafters
 | [Build your own workflow SDK](challenges/build-your-own-workflow-sdk/) — deterministic replay: given an event history, emit the commands workflow code would produce | 9 | ✅ ready |
 | [Build your own Raft](challenges/build-your-own-raft/) — a 3-node Raft cluster: leader election, log replication, crash recovery, and partition safety | 9 | ✅ ready |
 | [Build your own scheduler](challenges/build-your-own-scheduler/) — a durable job scheduler: delayed and recurring jobs, worker polling, leases, and retries | 9 | ✅ ready |
+| [Build your own rate limiter](challenges/build-your-own-rate-limiter/) — a rate-limiting service: fixed windows, token buckets, sliding windows, per-key limits, atomic admission under concurrency, crash-durable state, and a throughput floor | 9 | ✅ ready |
 
 ### Which challenge should I start with?
 

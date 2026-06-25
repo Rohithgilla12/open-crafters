@@ -29,6 +29,7 @@ import (
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/mvcc"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/queue"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/raft"
+	"github.com/Rohithgilla12/open-crafters/internal/challenges/ratelimiter"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/scheduler"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/temporal"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/wal"
@@ -38,15 +39,16 @@ import (
 )
 
 var challenges = map[string]harness.Challenge{
-	"build-your-own-temporal": temporal.Challenge(),
-	"build-your-own-wal":      wal.Challenge(),
-	"build-your-own-queue":    queue.Challenge(),
-	"build-your-own-mvcc":     mvcc.Challenge(),
-	"build-your-own-log":            logstore.Challenge(),
-	"build-your-own-lsm":            lsm.Challenge(),
+	"build-your-own-temporal":     temporal.Challenge(),
+	"build-your-own-wal":          wal.Challenge(),
+	"build-your-own-queue":        queue.Challenge(),
+	"build-your-own-mvcc":         mvcc.Challenge(),
+	"build-your-own-log":          logstore.Challenge(),
+	"build-your-own-lsm":          lsm.Challenge(),
 	"build-your-own-workflow-sdk": workflowsdk.Challenge(),
 	"build-your-own-raft":         raft.Challenge(),
 	"build-your-own-scheduler":    scheduler.Challenge(),
+	"build-your-own-rate-limiter": ratelimiter.Challenge(),
 }
 
 // challengeOrder is the canonical display order (WAL first — the recommended
@@ -61,6 +63,7 @@ var challengeOrder = []string{
 	"build-your-own-workflow-sdk",
 	"build-your-own-raft",
 	"build-your-own-scheduler",
+	"build-your-own-rate-limiter",
 }
 
 func main() {
