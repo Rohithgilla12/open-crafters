@@ -3,11 +3,15 @@ package main
 import (
 	"archive/zip"
 	"bytes"
+	"context"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
 	"mime/multipart"
+	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -129,6 +133,7 @@ Upload a solution directory to a hosted runner for sandboxed grading.
 Environment:
   CRAFTERS_RUNNER_URL    base URL of the runner API (e.g. https://runner.gilla.fun)
   CRAFTERS_RUNNER_TOKEN  bearer token for the runner API
+  CRAFTERS_RUNNER_RESOLVE_IP  optional: dial this IP for TLS (Tailscale MagicDNS workaround)
 
 Options:
   --url <url>            runner base URL (overrides CRAFTERS_RUNNER_URL)
@@ -183,7 +188,7 @@ func postGrade(baseURL, token, challenge, stage string, all bool, zipBytes []byt
 	req.Header.Set("Content-Type", mw.FormDataContentType())
 	req.Header.Set("Authorization", "Bearer "+token)
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := runnerHTTPClient(baseURL).Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -207,7 +212,7 @@ func pollJob(baseURL, token, id string) (*remoteJob, error) {
 			return nil, err
 		}
 		req.Header.Set("Authorization", "Bearer "+token)
-		resp, err := http.DefaultClient.Do(req)
+		resp, err := runnerHTTPClient(baseURL).Do(req)
 		if err != nil {
 			return nil, err
 		}
@@ -228,6 +233,33 @@ func pollJob(baseURL, token, id string) (*remoteJob, error) {
 			return &job, nil
 		}
 	}
+}
+
+func runnerHTTPClient(baseURL string) *http.Client {
+	resolveIP := strings.TrimSpace(os.Getenv("CRAFTERS_RUNNER_RESOLVE_IP"))
+	if resolveIP == "" {
+		return http.DefaultClient
+	}
+	u, err := url.Parse(baseURL)
+	if err != nil {
+		return http.DefaultClient
+	}
+	host := u.Hostname()
+	dialer := &net.Dialer{Timeout: 30 * time.Second}
+	transport := &http.Transport{
+		TLSClientConfig: &tls.Config{ServerName: host},
+		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+			dialHost, port, err := net.SplitHostPort(addr)
+			if err != nil {
+				return nil, err
+			}
+			if dialHost == host {
+				addr = net.JoinHostPort(resolveIP, port)
+			}
+			return dialer.DialContext(ctx, network, addr)
+		},
+	}
+	return &http.Client{Transport: transport}
 }
 
 func zipSolutionDir(dir string) ([]byte, error) {
