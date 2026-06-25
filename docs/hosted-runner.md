@@ -37,7 +37,21 @@ config):
 
 Recommended hostname: **`https://runner.gilla.fun`**
 
-Optional hardening in Cloudflare:
+**If you already run `cloudflared` in Docker** (network `cloudflare-tunnel_default`),
+use `deploy/vps-compose.yml` instead of the Portainer stack — it attaches the
+runner to the same network with no host port binding (avoids conflicts with
+other services on `:8080`):
+
+| Field | Value |
+|-------|-------|
+| **Subdomain** | `runner` |
+| **Domain** | `gilla.fun` |
+| **Service type** | HTTP |
+| **URL** | `http://open-crafters-runner:8080` |
+
+If `cloudflared` runs on the **host** (not in Docker), use
+`deploy/portainer-stack.yml` and point the tunnel at `http://localhost:8080`
+(or another free local port).
 
 - **Access** policy (service token or email allowlist) in front of the API
 - **Rate limiting** on `POST /v1/grade`

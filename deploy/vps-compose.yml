@@ -1,0 +1,31 @@
+# VPS deployment for hosts that already run cloudflared on Docker network
+# `cloudflare-tunnel_default` (e.g. gilla.fun). No host port publish — avoids
+# conflicts with other services on :8080.
+#
+#   export RUNNER_TOKEN=$(openssl rand -hex 32)
+#   docker compose -f deploy/vps-compose.yml up -d
+#
+# Cloudflare Tunnel public hostname:
+#   runner.gilla.fun → http://open-crafters-runner:8080
+
+services:
+  runner:
+    image: open-crafters-runner:latest
+    container_name: open-crafters-runner
+    restart: unless-stopped
+    environment:
+      RUNNER_TOKEN: ${RUNNER_TOKEN:?set a long random secret}
+      RUNNER_LISTEN: ":8080"
+      RUNNER_GRADE_IMAGE: open-crafters-grade:latest
+      RUNNER_MAX_CONCURRENT: "2"
+      RUNNER_JOB_TIMEOUT: "15m"
+      RUNNER_WORK_DIR: /var/lib/open-crafters/jobs
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/open-crafters/jobs:/var/lib/open-crafters/jobs
+    networks:
+      - cloudflare-tunnel_default
+
+networks:
+  cloudflare-tunnel_default:
+    external: true
