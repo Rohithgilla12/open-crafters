@@ -19,17 +19,28 @@ const (
 
 // Job is a single remote grading run.
 type Job struct {
-	ID         string    `json:"id"`
-	Status     Status    `json:"status"`
-	Challenge  string    `json:"challenge"`
-	Stage      string    `json:"stage,omitempty"`
-	All        bool      `json:"all"`
-	ExitCode   int       `json:"exit_code,omitempty"`
-	Log        string    `json:"log"`
-	Error      string    `json:"error,omitempty"`
-	CreatedAt  time.Time `json:"created_at"`
-	StartedAt  time.Time `json:"started_at,omitempty"`
-	FinishedAt time.Time `json:"finished_at,omitempty"`
+	ID         string       `json:"id"`
+	Status     Status       `json:"status"`
+	Source     string       `json:"source,omitempty"`
+	Challenge  string       `json:"challenge"`
+	Stage      string       `json:"stage,omitempty"`
+	All        bool         `json:"all"`
+	ExitCode   int          `json:"exit_code,omitempty"`
+	Log        string       `json:"log"`
+	Error      string       `json:"error,omitempty"`
+	GitHub     *GitHubMeta  `json:"github,omitempty"`
+	CreatedAt  time.Time    `json:"created_at"`
+	StartedAt  time.Time    `json:"started_at,omitempty"`
+	FinishedAt time.Time    `json:"finished_at,omitempty"`
+}
+
+// GitHubMeta links a job to a repository push and check run.
+type GitHubMeta struct {
+	Owner      string `json:"owner"`
+	Repo       string `json:"repo"`
+	SHA        string `json:"sha"`
+	Ref        string `json:"ref"`
+	CheckRunID int64  `json:"check_run_id,omitempty"`
 }
 
 // Store tracks in-flight and recent jobs.

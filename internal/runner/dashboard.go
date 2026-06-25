@@ -68,7 +68,7 @@ crafters submit --watch   # re-submit on save</pre>
 <div class="panel">
   <h2>Recent jobs</h2>
   <table>
-    <thead><tr><th>When</th><th>Challenge</th><th>Stage</th><th>Status</th><th></th></tr></thead>
+    <thead><tr><th>When</th><th>Challenge</th><th>Source</th><th>Status</th><th></th></tr></thead>
     <tbody id="jobs"><tr><td colspan="5" class="muted">Loading…</td></tr></tbody>
   </table>
 </div>
@@ -121,9 +121,9 @@ async function loadJobs(){
   if(!r.ok){document.getElementById('jobs').innerHTML='<tr><td colspan="5" class="muted">Unauthorized</td></tr>';return;}
   const data=await r.json();
   const rows=(data.jobs||[]).map(j=>{
-    const stage=j.all?'all':(j.stage||'next');
+    const src=j.github_repo||(j.source||'upload');
     const when=(j.finished_at||j.created_at||'').replace('T',' ').replace('Z',' UTC');
-    return '<tr><td>'+when+'</td><td>'+j.challenge+'</td><td>'+stage+'</td>'+
+    return '<tr><td>'+when+'</td><td>'+j.challenge+'</td><td>'+src+'</td>'+
       '<td class="status '+j.status+'">'+j.status+'</td>'+
       '<td><a href="#" data-id="'+j.id+'">log</a></td></tr>';
   }).join('');
