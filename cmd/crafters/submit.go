@@ -26,6 +26,7 @@ func cmdSubmit(args []string) {
 	stage := ""
 	challenge := ""
 	wait := true
+	watch := false
 
 	for i := 0; i < len(args); i++ {
 		switch a := args[i]; {
@@ -61,6 +62,8 @@ func cmdSubmit(args []string) {
 			challenge = strings.TrimPrefix(a, "--challenge=")
 		case a == "--no-wait":
 			wait = false
+		case a == "--watch":
+			watch = true
 		case a == "-h", a == "--help":
 			printSubmitUsage(os.Stdout)
 			return
@@ -84,10 +87,18 @@ func cmdSubmit(args []string) {
 	if stage != "" && all {
 		die("use either --stage or --all, not both")
 	}
+	if watch && !wait {
+		die("--watch implies waiting for each grade to finish")
+	}
 
 	program := filepath.Join(dir, "your_program.sh")
 	if _, err := os.Stat(program); err != nil {
 		die("%q isn't a solution directory (no your_program.sh)", dir)
+	}
+
+	if watch {
+		watchAndSubmit(dir, url, token, challenge, all, stage)
+		return
 	}
 
 	zipBytes, err := zipSolutionDir(dir)
@@ -141,6 +152,7 @@ Options:
   --challenge <slug>     challenge slug or fuzzy name (default: read from solution)
   --stage <slug>         grade up to this stage (default: resume next stage)
   --all                  grade every stage
+  --watch                re-submit whenever a source file changes
   --no-wait              return immediately with the job id
 
 Examples:

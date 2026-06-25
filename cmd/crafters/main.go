@@ -103,7 +103,7 @@ USAGE
   crafters status [dir]
   crafters list
   crafters grade --challenge <slug> --program <path> [--all|--stage <slug>|--status]
-  crafters submit [dir] [--url <url>] [--token <secret>] [--all|--stage <slug>]
+  crafters submit [dir] [--url <url>] [--token <secret>] [--all|--stage <slug>|--watch]
   crafters site [--out dir]             generate the static showcase site
   crafters update                       self-update to the latest release
   crafters version                      print the version
