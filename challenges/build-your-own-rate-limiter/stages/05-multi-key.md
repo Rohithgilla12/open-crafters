@@ -13,8 +13,7 @@ You already key limiters by `key`; now prove the edges:
    untouched.
 2. `configure` on an existing key **replaces** it and resets its consumption
    (a token bucket goes back to full, window counters clear).
-3. `take` or `peek` on a key that was never configured returns error
-   `KEY_NOT_FOUND`.
+3. `take` on a key that was never configured returns error `KEY_NOT_FOUND`.
 
 ```json
 → {"method":"take","params":{"key":"never-configured"}}
@@ -25,7 +24,7 @@ You already key limiters by `key`; now prove the edges:
 
 - Exhausting key A still leaves key B fully available.
 - Re-`configure`-ing a drained key restores its full budget.
-- `take`/`peek` on an unknown key → `KEY_NOT_FOUND`.
+- `take` on an unknown key → `KEY_NOT_FOUND`.
 
 ## Notes
 

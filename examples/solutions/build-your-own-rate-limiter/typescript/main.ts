@@ -221,7 +221,12 @@ function handleConn(socket: Socket): void {
       const line = buf.slice(0, idx);
       buf = buf.slice(idx + 1);
       if (!line.trim()) continue;
-      const req = JSON.parse(line) as { id?: string; method?: string; params?: Params };
+      let req: { id?: string; method?: string; params?: Params };
+      try {
+        req = JSON.parse(line) as { id?: string; method?: string; params?: Params };
+      } catch {
+        continue; // skip unparseable lines, like the Go reference
+      }
       try {
         const result = engine.handle(req.method, req.params ?? {});
         socket.write(JSON.stringify({ id: req.id, result }) + "\n");

@@ -13,10 +13,6 @@ import (
 	"github.com/Rohithgilla12/open-crafters/internal/harness"
 )
 
-const (
-	pollInterval = 20 * time.Millisecond
-)
-
 type takeResult struct {
 	Allowed      bool  `json:"allowed"`
 	Remaining    int   `json:"remaining"`
@@ -268,7 +264,22 @@ func testSlidingWindow(ctx *harness.Context) error {
 		return err
 	}
 
-	start := time.Now()
+	// Position the burst ~300ms before a fixed-window epoch boundary
+	// (floor(now/window_ms)). A correct sliding window ignores that boundary;
+	// an epoch-aligned fixed-window impl masquerading as sliding would reset
+	// its counter when the boundary passes — and wrongly admit. Forcing the
+	// boundary crossing is what makes this stage reject a fixed-window cheat.
+	now := time.Now().UnixMilli()
+	toBoundary := int64(windowMS) - (now % int64(windowMS))
+	if toBoundary < 350 {
+		// Too close to burst safely before it; skip into the next window.
+		time.Sleep(time.Duration(toBoundary+20) * time.Millisecond)
+		now = time.Now().UnixMilli()
+		toBoundary = int64(windowMS) - (now % int64(windowMS))
+	}
+	time.Sleep(time.Duration(toBoundary-300) * time.Millisecond)
+
+	burst := time.Now()
 	for i := 1; i <= limit; i++ {
 		r, err := take(c, "sw", 0)
 		if err != nil {
@@ -285,23 +296,23 @@ func testSlidingWindow(ctx *harness.Context) error {
 	if r.Allowed {
 		return fmt.Errorf("take %d should be denied: %d already admitted in the trailing %dms", limit+1, limit, windowMS)
 	}
-	ctx.Logf("%d admitted, overflow denied (retry_after_ms=%d)", limit, r.RetryAfterMS)
+	ctx.Logf("%d admitted just before the epoch boundary, overflow denied (retry_after_ms=%d)", limit, r.RetryAfterMS)
 
-	// Half a window later the earliest admissions are still inside the trailing
-	// window, so a fresh take must still be denied — unlike a fixed window,
-	// there is no boundary at which the count resets.
-	time.Sleep(500 * time.Millisecond)
+	// Cross the epoch boundary. The admissions are only ~400ms old — still
+	// inside the trailing window — so a correct sliding window must STILL deny.
+	// A fixed-window impl would have reset at the boundary and admit here.
+	time.Sleep(400 * time.Millisecond)
 	r, err = take(c, "sw", 0)
 	if err != nil {
 		return err
 	}
 	if r.Allowed {
-		return fmt.Errorf("take ~500ms later should still be denied: the %d admissions are still within the trailing %dms (no boundary reset)", limit, windowMS)
+		return fmt.Errorf("take just after the window boundary should still be denied: the %d admissions are %dms old, within the trailing %dms — a sliding window has no boundary reset", limit, time.Since(burst).Milliseconds(), windowMS)
 	}
-	ctx.Logf("still denied mid-window (no boundary burst)")
+	ctx.Logf("still denied after crossing the epoch boundary (no fixed-window reset)")
 
 	// Once the original admissions age past window_ms, capacity returns.
-	time.Sleep(time.Until(start.Add(time.Duration(windowMS+250) * time.Millisecond)))
+	time.Sleep(time.Until(burst.Add(time.Duration(windowMS+250) * time.Millisecond)))
 	r, err = take(c, "sw", 0)
 	if err != nil {
 		return err
@@ -375,14 +386,12 @@ func testMultiKey(ctx *harness.Context) error {
 	}
 	ctx.Logf("reconfigure reset the limiter")
 
-	// Unknown keys error.
+	// take on an unknown key errors. (peek on an unknown key is checked in the
+	// peek stage, since peek is not introduced until then.)
 	if _, err := take(c, "ghost", 0); expectRPCError(err, "KEY_NOT_FOUND", "take on unconfigured key") != nil {
 		return expectRPCError(err, "KEY_NOT_FOUND", "take on unconfigured key")
 	}
-	if _, err := peek(c, "ghost", 0); expectRPCError(err, "KEY_NOT_FOUND", "peek on unconfigured key") != nil {
-		return expectRPCError(err, "KEY_NOT_FOUND", "peek on unconfigured key")
-	}
-	ctx.Logf("unknown keys return KEY_NOT_FOUND")
+	ctx.Logf("unknown key returns KEY_NOT_FOUND")
 	return nil
 }
 
@@ -392,6 +401,11 @@ func testPeek(ctx *harness.Context) error {
 		return err
 	}
 	defer c.Close()
+
+	// peek on an unknown key errors, just like take.
+	if _, err := peek(c, "ghost", 0); expectRPCError(err, "KEY_NOT_FOUND", "peek on unconfigured key") != nil {
+		return expectRPCError(err, "KEY_NOT_FOUND", "peek on unconfigured key")
+	}
 
 	const capacity, refillMS = 3, 200
 	if err := configure(c, map[string]any{

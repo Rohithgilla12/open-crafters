@@ -28,6 +28,7 @@ Implement `peek`:
   `retry_after_ms` that, once waited out, makes the next `take` succeed.
 - A denied `take`'s `retry_after_ms` is a usable lower bound: sleeping that
   long and retrying succeeds.
+- `peek` on a key that was never configured returns `KEY_NOT_FOUND`.
 
 ## Notes
 

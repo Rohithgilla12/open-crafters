@@ -149,12 +149,26 @@ func TestWalkthroughCoverage(t *testing.T) {
 		if !opencrafters.HasWalkthrough(slug) {
 			continue
 		}
-		covered := map[string]bool{}
+		// Build a registered-stage set and a count of how often each appears as
+		// a walkthrough section. The two must correspond exactly: every stage
+		// covered, no duplicate sections, and no stale sections for stages that
+		// no longer exist.
+		registered := map[string]bool{}
+		for _, st := range ch.Stages {
+			registered[st.Slug] = true
+		}
+		seen := map[string]int{}
 		for _, s := range opencrafters.WalkthroughStageSlugs(slug) {
-			covered[s] = true
+			seen[s]++
+			if seen[s] == 1 && !registered[s] {
+				t.Errorf("%s: walkthrough has a section for %q, which is not a registered stage", slug, s)
+			}
+			if seen[s] == 2 {
+				t.Errorf("%s: walkthrough has a duplicate section for stage %q", slug, s)
+			}
 		}
 		for _, st := range ch.Stages {
-			if !covered[st.Slug] {
+			if seen[st.Slug] == 0 {
 				t.Errorf("%s: walkthrough is missing a section for stage %q", slug, st.Slug)
 				continue
 			}

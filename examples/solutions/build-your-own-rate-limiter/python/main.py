@@ -107,6 +107,8 @@ class Engine:
         if key is None:
             raise RateLimiterError("INVALID_PARAMS", "configure requires key")
         if algo == "token_bucket":
+            if any(params.get(k) is None for k in ("capacity", "refill_tokens", "refill_interval_ms")):
+                raise RateLimiterError("INVALID_PARAMS", "token_bucket requires capacity, refill_tokens, refill_interval_ms")
             lim = {
                 "algorithm": algo,
                 "capacity": int(params["capacity"]),
@@ -116,6 +118,8 @@ class Engine:
                 "as_of_ms": now_ms(),
             }
         elif algo in ("fixed_window", "sliding_window"):
+            if params.get("limit") is None or params.get("window_ms") is None:
+                raise RateLimiterError("INVALID_PARAMS", f"{algo} requires limit, window_ms")
             lim = {
                 "algorithm": algo,
                 "limit": int(params["limit"]),
