@@ -2,6 +2,7 @@ package harness
 
 import (
 	"fmt"
+	"net"
 	"os"
 	"path/filepath"
 	"sort"
@@ -20,10 +21,11 @@ type Cluster struct {
 }
 
 type nodeProc struct {
-	id      int
-	port    int
-	dataDir string
-	program *Program
+	id       int
+	port     int
+	portHold net.Listener
+	dataDir  string
+	program  *Program
 }
 
 // NewCluster creates a cluster of size n (node ids 1..n).
@@ -42,7 +44,7 @@ func NewCluster(path string, size int, logf func(string, ...any)) (*Cluster, err
 		switches: make(map[int]map[int]*Switch),
 	}
 	for i := 1; i <= size; i++ {
-		port, err := freePort()
+		port, hold, err := reservePort()
 		if err != nil {
 			c.Cleanup()
 			return nil, err
@@ -52,7 +54,7 @@ func NewCluster(path string, size int, logf func(string, ...any)) (*Cluster, err
 			c.Cleanup()
 			return nil, err
 		}
-		c.nodes = append(c.nodes, &nodeProc{id: i, port: port, dataDir: dataDir})
+		c.nodes = append(c.nodes, &nodeProc{id: i, port: port, portHold: hold, dataDir: dataDir})
 	}
 	return c, nil
 }
@@ -150,6 +152,7 @@ func (c *Cluster) startNode(n *nodeProc) error {
 	if n.program != nil && n.program.cmd != nil {
 		return fmt.Errorf("node %d already running", n.id)
 	}
+	releasePortHold(&n.portHold)
 	peers, err := c.peersFor(n.id)
 	if err != nil {
 		return err
@@ -239,6 +242,7 @@ func (c *Cluster) Cleanup() {
 		if n.program != nil {
 			n.program.Kill()
 		}
+		releasePortHold(&n.portHold)
 		os.RemoveAll(n.dataDir)
 	}
 	for _, m := range c.switches {

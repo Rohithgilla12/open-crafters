@@ -16,11 +16,13 @@ var ChallengeOrder = []string{
 	"build-your-own-wal",
 	"build-your-own-queue",
 	"build-your-own-log",
+	"build-your-own-lsm",
 	"build-your-own-mvcc",
 	"build-your-own-temporal",
 	"build-your-own-workflow-sdk",
 	"build-your-own-raft",
 	"build-your-own-scheduler",
+	"build-your-own-rate-limiter",
 }
 
 // Stage is one step of a challenge.
@@ -31,6 +33,7 @@ type Stage struct {
 	Difficulty   string
 	Instructions string // path relative to challenge root, e.g. stages/01-bind.md
 	HTML         template.HTML
+	Hint         string // spoiler-free nudge from WALKTHROUGH.md, if any
 }
 
 // Challenge is a catalog entry with rendered content.
@@ -90,6 +93,7 @@ func NewCatalog() (*Catalog, error) {
 				Difficulty:   s.Difficulty,
 				Instructions: s.Instructions,
 				HTML:         html,
+				Hint:         stageHint(slug, s.Slug),
 			})
 		}
 		ch.DiffMix = difficultyMix(ch.Stages)
@@ -203,6 +207,14 @@ func difficultyMix(stages []Stage) template.HTML {
 		}
 	}
 	return template.HTML(strings.Join(parts, " ")) //nolint:gosec // fixed, internal strings
+}
+
+func stageHint(challengeSlug, stageSlug string) string {
+	hint, ok := opencrafters.StageHint(challengeSlug, stageSlug)
+	if !ok {
+		return ""
+	}
+	return strings.TrimSpace(hint)
 }
 
 // APIChallenge is the JSON shape for /api/challenges.
