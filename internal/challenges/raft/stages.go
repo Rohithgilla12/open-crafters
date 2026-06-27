@@ -202,6 +202,35 @@ func getKey(c *harness.Client, key string) (found bool, value any, err error) {
 	return res.Found, res.Value, nil
 }
 
+// getKeyEventually polls a node for key until it returns found with the
+// expected value, or commitWait elapses. After a full-cluster restart a
+// follower may not have re-applied a committed entry the instant a new leader
+// is elected; this grants that propagation slack (a generous upper bound),
+// the same discipline as waitForStableLeader/waitForCommitIndex. On timeout it
+// returns the last observed (found, value) so the caller's assertion can still
+// produce a precise message.
+func getKeyEventually(ctx *harness.ClusterContext, nodeID int, key string, want any) (found bool, value any, err error) {
+	deadline := time.Now().Add(commitWait)
+	for {
+		c, derr := ctx.Dial(nodeID)
+		if derr != nil {
+			return false, nil, derr
+		}
+		found, value, err = getKey(c, key)
+		c.Close()
+		if err != nil {
+			return false, nil, err
+		}
+		if found && jsonEq(value, want) {
+			return found, value, nil
+		}
+		if !time.Now().Before(deadline) {
+			return found, value, nil
+		}
+		time.Sleep(pollInterval)
+	}
+}
+
 func waitForCommitIndex(ctx *harness.ClusterContext, want int) error {
 	deadline := time.Now().Add(commitWait)
 	for time.Now().Before(deadline) {
@@ -294,12 +323,10 @@ func testRead(ctx *harness.ClusterContext) error {
 	}
 	ctx.Logf("reading foo from every node")
 	for id := 1; id <= ctx.ClusterSize(); id++ {
-		c, err := ctx.Dial(id)
-		if err != nil {
-			return err
-		}
-		found, val, err := getKey(c, "foo")
-		c.Close()
+		// A committed entry reaches followers' state machines a heartbeat after
+		// the leader advances commit_index, so poll briefly rather than reading
+		// once — "committed" guarantees eventual application, not instant.
+		found, val, err := getKeyEventually(ctx, id, "foo", "bar")
 		if err != nil {
 			return fmt.Errorf("node %d get: %w", id, err)
 		}
@@ -357,12 +384,7 @@ func testLeaderCrash(ctx *harness.ClusterContext) error {
 	if _, err := setOnLeader(ctx, "after", "recovery"); err != nil {
 		return err
 	}
-	c, err := ctx.Dial(newLeader)
-	if err != nil {
-		return err
-	}
-	found, val, err := getKey(c, "before")
-	c.Close()
+	found, val, err := getKeyEventually(ctx, newLeader, "before", "crash")
 	if err != nil {
 		return err
 	}
@@ -392,16 +414,12 @@ func testDurability(ctx *harness.ClusterContext) error {
 	if _, err := waitForStableLeader(ctx); err != nil {
 		return err
 	}
-	c, err := ctx.Dial(1)
+	want := map[string]any{"x": float64(1)}
+	found, val, err := getKeyEventually(ctx, 1, "durable", want)
 	if err != nil {
 		return err
 	}
-	found, val, err := getKey(c, "durable")
-	c.Close()
-	if err != nil {
-		return err
-	}
-	if !found || !jsonEq(val, map[string]any{"x": float64(1)}) {
+	if !found || !jsonEq(val, want) {
 		return fmt.Errorf("after full restart: expected durable={x:1}, got found=%v value=%v", found, val)
 	}
 	ctx.Logf("committed state survived total cluster crash")
@@ -463,13 +481,9 @@ func testGauntlet(ctx *harness.ClusterContext) error {
 	if _, err := waitForStableLeader(ctx); err != nil {
 		return err
 	}
+	wants := map[string]any{"g1": float64(1), "g2": float64(2)}
 	for _, key := range []string{"g1", "g2"} {
-		c, err := ctx.Dial(3)
-		if err != nil {
-			return err
-		}
-		found, _, err := getKey(c, key)
-		c.Close()
+		found, _, err := getKeyEventually(ctx, 3, key, wants[key])
 		if err != nil {
 			return err
 		}
