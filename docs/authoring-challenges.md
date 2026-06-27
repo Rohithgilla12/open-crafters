@@ -64,6 +64,13 @@ Test-writing conventions:
   at the right *design* without handing over code.
 - `starters/<language>/` — must pass exactly stage 1, with TODO markers
   mapping stages to methods.
+- `WALKTHROUGH.md` (optional but encouraged) — one `## <stage-slug> — <title>`
+  section per stage, each opening with a `> **Hint:**` blockquote (a
+  spoiler-free nudge) followed by design-level prose on how the reference
+  solves it. `crafters hint` surfaces the blockquote (and the grader prints it
+  inline on a failed stage); `crafters walkthrough` prints the full sections
+  after a learner passes. If you ship one it must cover **every** stage with a
+  hint — `go test ./cmd/crafters` enforces this.
 
 ## Checklist before merging
 

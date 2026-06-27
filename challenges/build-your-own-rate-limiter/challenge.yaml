@@ -1,0 +1,49 @@
+slug: build-your-own-rate-limiter
+name: Build your own rate limiter
+short_description: >
+  Build a rate-limiting service: fixed windows, token buckets, sliding
+  windows, per-key limits, atomic admission under concurrency, crash-durable
+  state, and a throughput floor — graded over the wire.
+difficulty: medium
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port> --data-dir <path>
+tester:
+  challenge_flag: build-your-own-rate-limiter
+stages:
+  - slug: bind
+    name: Boot the server
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: fixed-window
+    name: Fixed-window counter
+    difficulty: easy
+    instructions: stages/02-fixed-window.md
+  - slug: token-bucket
+    name: Token bucket
+    difficulty: medium
+    instructions: stages/03-token-bucket.md
+  - slug: sliding-window
+    name: Sliding window
+    difficulty: medium
+    instructions: stages/04-sliding-window.md
+  - slug: multi-key
+    name: Independent keys
+    difficulty: easy
+    instructions: stages/05-multi-key.md
+  - slug: peek
+    name: Peek without consuming
+    difficulty: medium
+    instructions: stages/06-peek.md
+  - slug: concurrency
+    name: Atomic admission
+    difficulty: hard
+    instructions: stages/07-concurrency.md
+  - slug: durability
+    name: Survive a crash
+    difficulty: hard
+    instructions: stages/08-durability.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

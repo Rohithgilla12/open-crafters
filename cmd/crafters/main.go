@@ -10,6 +10,8 @@
 //	crafters status [dir]
 //	crafters list
 //	crafters grade --challenge <slug> --program <path> [--all|--stage <slug>|--status]
+//	crafters hint <challenge> [--stage <slug>]
+//	crafters walkthrough <challenge> [--stage <slug>]
 //
 // Progress is tracked in <solution>/.open-crafters/progress.json.
 package main
@@ -29,6 +31,7 @@ import (
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/mvcc"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/queue"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/raft"
+	"github.com/Rohithgilla12/open-crafters/internal/challenges/ratelimiter"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/scheduler"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/temporal"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/wal"
@@ -38,15 +41,16 @@ import (
 )
 
 var challenges = map[string]harness.Challenge{
-	"build-your-own-temporal": temporal.Challenge(),
-	"build-your-own-wal":      wal.Challenge(),
-	"build-your-own-queue":    queue.Challenge(),
-	"build-your-own-mvcc":     mvcc.Challenge(),
-	"build-your-own-log":            logstore.Challenge(),
-	"build-your-own-lsm":            lsm.Challenge(),
+	"build-your-own-temporal":     temporal.Challenge(),
+	"build-your-own-wal":          wal.Challenge(),
+	"build-your-own-queue":        queue.Challenge(),
+	"build-your-own-mvcc":         mvcc.Challenge(),
+	"build-your-own-log":          logstore.Challenge(),
+	"build-your-own-lsm":          lsm.Challenge(),
 	"build-your-own-workflow-sdk": workflowsdk.Challenge(),
 	"build-your-own-raft":         raft.Challenge(),
 	"build-your-own-scheduler":    scheduler.Challenge(),
+	"build-your-own-rate-limiter": ratelimiter.Challenge(),
 }
 
 // challengeOrder is the canonical display order (WAL first — the recommended
@@ -61,6 +65,7 @@ var challengeOrder = []string{
 	"build-your-own-workflow-sdk",
 	"build-your-own-raft",
 	"build-your-own-scheduler",
+	"build-your-own-rate-limiter",
 }
 
 func main() {
@@ -79,6 +84,10 @@ func main() {
 		cmdList()
 	case "grade":
 		cmdGrade(args[1:])
+	case "walkthrough":
+		cmdWalkthrough(args[1:])
+	case "hint":
+		cmdHint(args[1:])
 	case "site":
 		cmdSite(args[1:])
 	case "submit":
@@ -106,6 +115,8 @@ USAGE
   crafters status [dir]
   crafters list
   crafters grade --challenge <slug> --program <path> [--all|--stage <slug>|--status]
+  crafters hint <challenge> [--stage <slug>]            spoiler-free nudge for a stage
+  crafters walkthrough <challenge> [--stage <slug>]     how the reference solves it
   crafters submit [dir] [--url <url>] [--token <secret>] [--all|--stage <slug>|--watch]
   crafters site [--out dir]             generate the static showcase site
   crafters update                       self-update to the latest release
@@ -281,6 +292,120 @@ func cmdGrade(args []string) {
 	os.Exit(runGrade(ch, programPath, "", *all, *stage, *status))
 }
 
+// parseChallengeStageArgs reads `<challenge> [--stage <slug>] [--all]` where
+// the challenge is a leading positional (Go's flag package stops at the first
+// non-flag, so these are parsed by hand, like cmdStart).
+func parseChallengeStageArgs(args []string) (query, stage string, all bool) {
+	for i := 0; i < len(args); i++ {
+		switch a := args[i]; {
+		case a == "--stage":
+			i++
+			if i < len(args) {
+				stage = args[i]
+			}
+		case strings.HasPrefix(a, "--stage="):
+			stage = strings.TrimPrefix(a, "--stage=")
+		case a == "--all":
+			all = true
+		default:
+			if query == "" {
+				query = a
+			}
+		}
+	}
+	return
+}
+
+func shortName(slug string) string { return strings.TrimPrefix(slug, "build-your-own-") }
+
+// cmdWalkthrough prints a challenge's walkthrough — how the reference solves
+// it, design-level. With --stage, only that stage's section.
+func cmdWalkthrough(args []string) {
+	query, stage, _ := parseChallengeStageArgs(args)
+	if query == "" {
+		die("usage: crafters walkthrough <challenge> [--stage <slug>]")
+	}
+	slug, ch := resolveChallenge(query)
+	if stage != "" {
+		section, ok := opencrafters.WalkthroughSection(slug, stage)
+		if !ok {
+			die("no walkthrough for stage %q in %q (try: crafters list)", stage, ch.Name)
+		}
+		fmt.Println(section)
+		return
+	}
+	doc, ok := opencrafters.Walkthrough(slug)
+	if !ok {
+		die("no walkthrough for %q yet", ch.Name)
+	}
+	fmt.Print(doc)
+}
+
+// cmdHint prints a spoiler-free nudge for a stage — the next unpassed one when
+// run inside a solution directory, otherwise the first stage (or --stage).
+func cmdHint(args []string) {
+	query, stage, _ := parseChallengeStageArgs(args)
+	if query == "" {
+		die("usage: crafters hint <challenge> [--stage <slug>]")
+	}
+	slug, ch := resolveChallenge(query)
+	if !opencrafters.HasWalkthrough(slug) {
+		die("no hints for %q yet", ch.Name)
+	}
+	if stage == "" {
+		stage = nextStageSlugForCwd(slug, ch)
+	}
+	if stage == "" && len(ch.Stages) > 0 {
+		stage = ch.Stages[0].Slug
+	}
+	hint, ok := opencrafters.StageHint(slug, stage)
+	if !ok {
+		die("no hint for stage %q in %q", stage, ch.Name)
+	}
+	name := stage
+	for _, s := range ch.Stages {
+		if s.Slug == stage {
+			name = s.Name
+			break
+		}
+	}
+	fmt.Printf("\x1b[1m💡 %s — %s\x1b[0m\n%s\n", stage, name, hint)
+	fmt.Printf("\nStuck deeper? After you pass it: crafters walkthrough %s --stage %s\n", shortName(slug), stage)
+}
+
+// nextStageSlugForCwd returns the next unpassed stage for `ch` if the current
+// directory is a solution for it, else "".
+func nextStageSlugForCwd(slug string, ch harness.Challenge) string {
+	data, err := os.ReadFile(filepath.Join(".open-crafters", "challenge"))
+	if err != nil || strings.TrimSpace(string(data)) != slug {
+		return ""
+	}
+	programPath, err := filepath.Abs("your_program.sh")
+	if err != nil {
+		return ""
+	}
+	prog, err := progress.Load(progress.PathFor(programPath))
+	if err != nil {
+		return ""
+	}
+	if next := firstUnpassed(ch, prog); next != nil {
+		return next.Slug
+	}
+	return ""
+}
+
+// stageBefore returns the slug of the stage immediately before slug, or "".
+func stageBefore(ch harness.Challenge, slug string) string {
+	prev := ""
+	for _, s := range ch.Stages {
+		if s.Slug == slug {
+			return prev
+		}
+		prev = s.Slug
+	}
+	return ""
+}
+
 // runGrade loads progress, runs the grader (or just prints status), saves
 // progress, and prints the next-up pointer. solutionDir is "" for `grade`;
 // when set, instruction paths resolve to the spec copy inside the solution.
@@ -323,13 +448,26 @@ func runGrade(ch harness.Challenge, programPath, solutionDir string, all bool, s
 	})
 
 	logf("")
+	hasWT := opencrafters.HasWalkthrough(ch.Slug)
+	short := shortName(ch.Slug)
 	if next := firstUnpassed(ch, prog); next == nil {
 		logf("\x1b[32;1m🏆 Challenge complete: all %d stages of %q passed.\x1b[0m", len(ch.Stages), ch.Name)
+		if hasWT {
+			logf("📖 See how each stage works: crafters walkthrough %s", short)
+		}
 	} else if runErr == nil {
 		logf("Next up: \x1b[1m%s — %s\x1b[0m", next.Slug, next.Name)
 		logf("Instructions: %s", instructionPath(next, solutionDir))
+		if just := stageBefore(ch, next.Slug); hasWT && just != "" {
+			if _, ok := opencrafters.WalkthroughSection(ch.Slug, just); ok {
+				logf("📖 How %q works: crafters walkthrough %s --stage %s", just, short, just)
+			}
+		}
 	} else {
 		logf("Stuck? Re-read the instructions: %s", instructionPath(next, solutionDir))
+		if hint, ok := opencrafters.StageHint(ch.Slug, next.Slug); ok {
+			logf("\x1b[33m💡 Hint:\x1b[0m %s", hint)
+		}
 	}
 	if runErr != nil {
 		return 1
