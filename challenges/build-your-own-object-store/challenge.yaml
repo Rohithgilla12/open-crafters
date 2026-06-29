@@ -1,0 +1,49 @@
+slug: build-your-own-object-store
+name: Build your own object store
+short_description: >
+  Build the blob store behind every cloud: put/get objects with SHA-256 etags,
+  head metadata, prefix listing, multipart uploads, and crash-durable storage —
+  graded entirely over the wire, crashes included.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port> --data-dir <path>
+tester:
+  challenge_flag: build-your-own-object-store
+stages:
+  - slug: bind
+    name: Boot the server
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: put-get
+    name: Put and get
+    difficulty: easy
+    instructions: stages/02-put-get.md
+  - slug: head
+    name: Head metadata
+    difficulty: easy
+    instructions: stages/03-head.md
+  - slug: overwrite
+    name: Overwrite
+    difficulty: easy
+    instructions: stages/04-overwrite.md
+  - slug: delete
+    name: Delete
+    difficulty: easy
+    instructions: stages/05-delete.md
+  - slug: list
+    name: List by prefix
+    difficulty: medium
+    instructions: stages/06-list.md
+  - slug: multipart
+    name: Multipart upload
+    difficulty: hard
+    instructions: stages/07-multipart.md
+  - slug: durability
+    name: Survive a crash
+    difficulty: medium
+    instructions: stages/08-durability.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md
