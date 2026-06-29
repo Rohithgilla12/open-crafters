@@ -1,9 +1,21 @@
 package learn
 
-import "html/template"
+import (
+	"html/template"
+	"strings"
+)
 
 var tmplFuncs = template.FuncMap{
-	"short": shortSlug,
+	"short":      shortSlug,
+	"stagesCSV":  stagesCSV,
+}
+
+func stagesCSV(stages []Stage) string {
+	var parts []string
+	for _, s := range stages {
+		parts = append(parts, s.Slug)
+	}
+	return strings.Join(parts, ",")
 }
 
 var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!doctype html>
@@ -28,11 +40,11 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
 </header>
 <main class="grid">
 {{range .}}
-  <a class="card" href="/challenges/{{.Slug}}">
+  <a class="card" href="/challenges/{{.Slug}}" data-challenge="{{.Slug}}" data-stages="{{stagesCSV .Stages}}">
     <h2>{{.Name}} <span class="badge diff-{{.Difficulty}}">{{.Difficulty}}</span></h2>
     <p>{{.Tagline}}</p>
     <div class="mix">{{.DiffMix}}</div>
-    <span class="meta">{{len .Stages}} stages →</span>
+    <span class="meta"><span data-progress-label></span>{{len .Stages}} stages →</span>
   </a>
 {{end}}
 </main>
@@ -41,30 +53,43 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
   <a href="https://runner.gilla.fun">hosted runner</a> ·
   graded black-box · any language with a TCP socket
 </footer>
-</div></body></html>`))
+</div><script src="/learn.js"></script></body></html>`))
 
 var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Parse(`<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{.Name}} — open-crafters learn</title>
-<meta name="description" content="{{.Tagline}}">
+<title>{{.Challenge.Name}} — open-crafters learn</title>
+<meta name="description" content="{{.Challenge.Tagline}}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/style.css">
-</head><body><div class="wrap">
+</head><body data-challenge="{{.Challenge.Slug}}" data-stages="{{.StageSlugs}}"><div class="wrap">
 <p class="back"><a href="/">← all challenges</a></p>
 <header class="chead">
-  <h1>{{.Name}} <span class="badge diff-{{.Difficulty}}">{{.Difficulty}}</span></h1>
-  <p class="tag">{{.Tagline}}</p>
-  <div class="install"><code>crafters start {{.Slug | short}}</code></div>
-  <p class="sub">Submit remotely via <code>crafters submit --url https://runner.gilla.fun</code></p>
+  <h1>{{.Challenge.Name}} <span class="badge diff-{{.Challenge.Difficulty}}">{{.Challenge.Difficulty}}</span></h1>
+  <p class="tag">{{.Challenge.Tagline}}</p>
+  <p class="progress-summary"><span data-progress-label></span></p>
+  <div class="install"><code>crafters start {{.Challenge.Slug | short}}</code></div>
 </header>
+
+<h2 class="section">Submit to hosted runner</h2>
+<div class="submit-panel">
+  <p class="submit-help">Zip your solution directory (must include <code>your_program.sh</code>) and grade remotely — same as <code>crafters submit</code>.</p>
+  <form id="submit-form" data-challenge="{{.Challenge.Slug}}">
+    <label class="field">Runner token <input type="password" name="token" autocomplete="off" placeholder="from your runner dashboard"></label>
+    <label class="field">Solution zip <input type="file" name="file" accept=".zip,application/zip"></label>
+    <label class="check"><input type="checkbox" name="all"> Grade all stages</label>
+    <button type="submit" class="btn-submit">Submit for grading</button>
+  </form>
+  <p id="submit-status" class="submit-status" aria-live="polite"></p>
+  <pre id="submit-log" class="submit-log"></pre>
+</div>
 
 <h2 class="section">Stages</h2>
 <ol class="stages">
-{{range .Stages}}
+{{range .Challenge.Stages}}
   <li>
-    <a class="stage-link" href="/challenges/{{$.Slug}}/stages/{{.Slug}}">
+    <a class="stage-link" href="/challenges/{{$.Challenge.Slug}}/stages/{{.Slug}}" data-stage-slug="{{.Slug}}">
       <span class="num">{{.Num}}</span>
       <span class="stage-name">{{.Name}}</span>
       <span class="diff diff-{{.Difficulty}}">{{.Difficulty}}</span>
@@ -74,11 +99,11 @@ var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Par
 {{end}}
 </ol>
 
-<h2 class="section">Protocol</h2>
-<div class="md protocol">{{.ProtocolHTML}}</div>
+<h2 class="section" id="protocol">Protocol</h2>
+<div class="md protocol">{{.Challenge.ProtocolHTML}}</div>
 
 <footer><a href="/">← all challenges</a> · <a href="https://github.com/Rohithgilla12/open-crafters">GitHub</a> · <a href="https://runner.gilla.fun">hosted runner</a></footer>
-</div></body></html>`))
+</div><script src="/learn.js"></script></body></html>`))
 
 var stageTmpl = template.Must(template.New("stage").Funcs(tmplFuncs).Parse(`<!doctype html>
 <html lang="en"><head>
@@ -87,7 +112,7 @@ var stageTmpl = template.Must(template.New("stage").Funcs(tmplFuncs).Parse(`<!do
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/style.css">
-</head><body><div class="wrap stage-layout">
+</head><body class="stage-layout" data-challenge="{{.Challenge.Slug}}" data-stage="{{.Stage.Slug}}" data-stages="{{.StageSlugs}}"><div class="wrap stage-layout">
 <p class="back"><a href="/challenges/{{.Challenge.Slug}}">← {{.Challenge.Name}}</a></p>
 
 <div class="stage-grid">
@@ -95,7 +120,7 @@ var stageTmpl = template.Must(template.New("stage").Funcs(tmplFuncs).Parse(`<!do
   <h2 class="sidebar-title">Stages</h2>
   <nav class="sidebar-nav">
   {{range .Challenge.Stages}}
-    <a class="sidebar-item{{if eq .Slug $.Stage.Slug}} active{{end}}" href="/challenges/{{$.Challenge.Slug}}/stages/{{.Slug}}">
+    <a class="sidebar-item{{if eq .Slug $.Stage.Slug}} active{{end}}" href="/challenges/{{$.Challenge.Slug}}/stages/{{.Slug}}" data-stage-slug="{{.Slug}}">
       <span class="num">{{.Num}}</span>
       <span>{{.Name}}</span>
       <span class="diff diff-{{.Difficulty}}">{{.Difficulty}}</span>
@@ -126,7 +151,7 @@ var stageTmpl = template.Must(template.New("stage").Funcs(tmplFuncs).Parse(`<!do
 </div>
 
 <footer><a href="/">← all challenges</a> · <a href="https://github.com/Rohithgilla12/open-crafters">GitHub</a> · <a href="https://runner.gilla.fun">hosted runner</a></footer>
-</div></body></html>`))
+</div><script src="/learn.js"></script></body></html>`))
 
 // siteCSS matches the aesthetic from cmd/crafters/site.go with learn-app additions.
 const siteCSS = `:root{
@@ -223,4 +248,22 @@ footer{margin-top:3rem;padding-top:1.4rem;border-top:1px solid var(--border);col
   padding-top:1.2rem;border-top:1px solid var(--border)}
 .pager{font-size:.92rem;font-weight:600}
 .pager.next{margin-left:auto;text-align:right}
+.progress-summary{min-height:1.2rem;color:var(--accent);font-size:.9rem;font-family:ui-monospace,monospace;margin:.4rem 0}
+.progress-read .num{border-color:var(--accent2);color:var(--accent2)}
+.progress-passed .num{background:rgba(90,209,179,.15);border-color:var(--accent);color:var(--accent)}
+.progress-passed.stage-link,.progress-passed.sidebar-item{border-color:rgba(90,209,179,.35)}
+.submit-panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem 1.2rem;margin-bottom:.5rem}
+.submit-help{color:var(--dim);font-size:.92rem;margin:0 0 1rem}
+.submit-panel .field{display:block;margin:.6rem 0;font-size:.9rem;color:var(--dim)}
+.submit-panel input[type=file],.submit-panel input[type=password]{display:block;width:100%;margin-top:.35rem;
+  background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:.5rem .7rem;color:var(--fg)}
+.submit-panel .check{display:flex;align-items:center;gap:.5rem;margin:.8rem 0;font-size:.9rem;color:var(--dim)}
+.btn-submit{background:var(--accent);color:#0b0e14;border:none;border-radius:8px;padding:.55rem 1.1rem;
+  font-weight:700;cursor:pointer;font-size:.92rem}
+.btn-submit:hover{filter:brightness(1.05)}
+.submit-status{color:var(--accent2);font-size:.9rem;margin:.8rem 0 .4rem;min-height:1.2rem}
+.submit-log{background:#0d1119;border:1px solid var(--border);border-radius:8px;padding:.8rem 1rem;
+  max-height:16rem;overflow:auto;font-size:.78rem;color:var(--dim);white-space:pre-wrap;margin:0;display:none}
+.submit-log:not(:empty){display:block}
+.card .meta [data-progress-label]:not(:empty)::after{content:" · ";color:var(--dim)}
 `

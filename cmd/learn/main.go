@@ -19,7 +19,7 @@ func main() {
 		log.Fatalf("learn: %v", err)
 	}
 
-	srv := learn.NewServer(catalog)
+	srv := learn.NewServer(catalog, learn.ConfigFromEnv())
 	log.Printf("learn: listening on %s (%d challenges)", listen, len(catalog.Order))
 	if err := http.ListenAndServe(listen, srv.Handler()); err != nil {
 		log.Fatalf("learn: %v", err)

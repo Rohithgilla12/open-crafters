@@ -14,13 +14,15 @@ import (
 type Server struct {
 	catalog *Catalog
 	assets  fs.FS
+	cfg     Config
 }
 
 // NewServer returns an HTTP handler front door for the learn app.
-func NewServer(catalog *Catalog) *Server {
+func NewServer(catalog *Catalog, cfg Config) *Server {
 	return &Server{
 		catalog: catalog,
 		assets:  opencrafters.AssetsFS(),
+		cfg:     cfg,
 	}
 }
 
@@ -29,7 +31,10 @@ func (s *Server) Handler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /health", s.handleHealth)
 	mux.HandleFunc("GET /api/challenges", s.handleAPIChallenges)
+	mux.HandleFunc("POST /api/submit", s.handleSubmit)
+	mux.HandleFunc("GET /api/jobs/{id}", s.handleSubmitJob)
 	mux.HandleFunc("GET /style.css", s.handleCSS)
+	mux.HandleFunc("GET /learn.js", s.handleLearnJS)
 	mux.HandleFunc("GET /{$}", s.handleIndex)
 	mux.HandleFunc("GET /challenges/{slug}", s.handleChallenge)
 	mux.HandleFunc("GET /challenges/{slug}/stages/{stage}", s.handleStage)
@@ -52,6 +57,13 @@ func (s *Server) handleCSS(w http.ResponseWriter, _ *http.Request) {
 	_, _ = w.Write([]byte(siteCSS))
 }
 
+func (s *Server) handleLearnJS(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+	w.Header().Set("Cache-Control", "public, max-age=300")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte(learnJS))
+}
+
 func (s *Server) handleIndex(w http.ResponseWriter, _ *http.Request) {
 	challenges := make([]*Challenge, 0, len(s.catalog.Order))
 	for _, slug := range s.catalog.Order {
@@ -67,7 +79,7 @@ func (s *Server) handleChallenge(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	s.render(w, challengeTmpl, ch)
+	s.render(w, challengeTmpl, challengePageData{Challenge: ch, StageSlugs: stageSlugs(ch)})
 }
 
 func (s *Server) handleStage(w http.ResponseWriter, r *http.Request) {
@@ -79,10 +91,11 @@ func (s *Server) handleStage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data := stagePageData{
-		Challenge: ch,
-		Stage:     stage,
-		Prev:      neighborStage(ch, stage.Num-2),
-		Next:      neighborStage(ch, stage.Num),
+		Challenge:  ch,
+		Stage:      stage,
+		StageSlugs: stageSlugs(ch),
+		Prev:       neighborStage(ch, stage.Num-2),
+		Next:       neighborStage(ch, stage.Num),
 	}
 	s.render(w, stageTmpl, data)
 }
@@ -93,10 +106,24 @@ type stageNavLink struct {
 }
 
 type stagePageData struct {
-	Challenge *Challenge
-	Stage     *Stage
-	Prev      *stageNavLink
-	Next      *stageNavLink
+	Challenge  *Challenge
+	Stage      *Stage
+	StageSlugs string
+	Prev       *stageNavLink
+	Next       *stageNavLink
+}
+
+type challengePageData struct {
+	Challenge  *Challenge
+	StageSlugs string
+}
+
+func stageSlugs(ch *Challenge) string {
+	var parts []string
+	for _, st := range ch.Stages {
+		parts = append(parts, st.Slug)
+	}
+	return strings.Join(parts, ",")
 }
 
 func neighborStage(ch *Challenge, idx int) *stageNavLink {
