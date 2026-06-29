@@ -131,9 +131,19 @@ jobs:
         run: ./crafters grade --challenge build-your-own-rate-limiter --all
           --program examples/solutions/build-your-own-rate-limiter/typescript/your_program.sh
 
+      - name: "Reference: Build your own object store — Python"
+        run: ./crafters grade --challenge build-your-own-object-store --all
+          --program examples/solutions/build-your-own-object-store/python/your_program.sh
+      - name: "Reference: Build your own object store — Go"
+        run: ./crafters grade --challenge build-your-own-object-store --all
+          --program examples/solutions/build-your-own-object-store/go/your_program.sh
+      - name: "Reference: Build your own object store — TypeScript/Bun"
+        run: ./crafters grade --challenge build-your-own-object-store --all
+          --program examples/solutions/build-your-own-object-store/typescript/your_program.sh
+
       - name: "Starters pass stage 1 (Python, Go, TypeScript — all challenges)"
         run: |
-          for ch in build-your-own-temporal build-your-own-wal build-your-own-queue build-your-own-mvcc build-your-own-log build-your-own-lsm build-your-own-workflow-sdk build-your-own-raft build-your-own-scheduler build-your-own-rate-limiter; do
+          for ch in build-your-own-temporal build-your-own-wal build-your-own-queue build-your-own-mvcc build-your-own-log build-your-own-lsm build-your-own-workflow-sdk build-your-own-raft build-your-own-scheduler build-your-own-rate-limiter build-your-own-object-store; do
             for lang in python go typescript; do
               ./crafters grade --challenge "$ch" --stage bind \
                 --program "challenges/$ch/starters/$lang/your_program.sh"

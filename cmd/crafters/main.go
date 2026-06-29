@@ -29,6 +29,7 @@ import (
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/logstore"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/lsm"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/mvcc"
+	"github.com/Rohithgilla12/open-crafters/internal/challenges/objectstore"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/queue"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/raft"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/ratelimiter"
@@ -50,7 +51,8 @@ var challenges = map[string]harness.Challenge{
 	"build-your-own-workflow-sdk": workflowsdk.Challenge(),
 	"build-your-own-raft":         raft.Challenge(),
 	"build-your-own-scheduler":    scheduler.Challenge(),
-	"build-your-own-rate-limiter": ratelimiter.Challenge(),
+	"build-your-own-rate-limiter":  ratelimiter.Challenge(),
+	"build-your-own-object-store": objectstore.Challenge(),
 }
 
 // challengeOrder re-exports the canonical order from the root module.

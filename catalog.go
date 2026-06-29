@@ -13,4 +13,5 @@ var ChallengeOrder = []string{
 	"build-your-own-raft",
 	"build-your-own-scheduler",
 	"build-your-own-rate-limiter",
+	"build-your-own-object-store",
 }
