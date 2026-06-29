@@ -111,6 +111,12 @@ var stageTmpl = template.Must(template.New("stage").Funcs(tmplFuncs).Parse(`<!do
     <span class="diff diff-{{.Stage.Difficulty}}">{{.Stage.Difficulty}}</span>
     <span class="slug mono">{{.Stage.Slug}}</span>
   </header>
+  {{if .Stage.Hint}}
+  <details class="hint-box">
+    <summary>Stuck? Here's a nudge</summary>
+    <p>{{.Stage.Hint}}</p>
+  </details>
+  {{end}}
   <div class="md">{{.Stage.HTML}}</div>
   <nav class="stage-pager">
     {{if .Prev}}<a class="pager prev" href="/challenges/{{.Challenge.Slug}}/stages/{{.Prev.Slug}}">← {{.Prev.Name}}</a>{{else}}<span></span>{{end}}
@@ -209,6 +215,10 @@ footer{margin-top:3rem;padding-top:1.4rem;border-top:1px solid var(--border);col
 .stage-head{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;margin-bottom:1rem;
   padding-bottom:1rem;border-bottom:1px solid var(--border)}
 .stage-head h1{font-size:1.5rem;margin:0;flex:1 1 100%}
+.hint-box{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--accent2);
+  border-radius:10px;padding:.6rem 1rem;margin-bottom:1.2rem}
+.hint-box summary{cursor:pointer;font-weight:600;color:var(--accent2);font-size:.92rem}
+.hint-box p{margin:.6rem 0 0;color:var(--dim);font-size:.93rem}
 .stage-pager{display:flex;justify-content:space-between;gap:1rem;margin-top:2rem;
   padding-top:1.2rem;border-top:1px solid var(--border)}
 .pager{font-size:.92rem;font-weight:600}

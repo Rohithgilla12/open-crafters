@@ -15,10 +15,11 @@ import (
 // It survives restarts within a stage (same data dir, new port allowed but we
 // keep the same port for simplicity).
 type Program struct {
-	path    string
-	port    int
-	dataDir string
-	logf    func(format string, args ...any)
+	path     string
+	port     int
+	dataDir  string
+	logf     func(format string, args ...any)
+	portHold net.Listener // holds the port until StartWithArgs
 
 	cmd *exec.Cmd
 }
@@ -28,7 +29,7 @@ func NewProgram(path string, logf func(string, ...any)) (*Program, error) {
 	if err != nil {
 		return nil, err
 	}
-	port, err := freePort()
+	port, hold, err := reservePort()
 	if err != nil {
 		return nil, fmt.Errorf("allocating port: %w", err)
 	}
@@ -36,7 +37,7 @@ func NewProgram(path string, logf func(string, ...any)) (*Program, error) {
 	if err != nil {
 		return nil, fmt.Errorf("creating data dir: %w", err)
 	}
-	return &Program{path: abs, port: port, dataDir: dataDir, logf: logf}, nil
+	return &Program{path: abs, port: port, dataDir: dataDir, logf: logf, portHold: hold}, nil
 }
 
 func (p *Program) Addr() string { return fmt.Sprintf("127.0.0.1:%d", p.port) }
@@ -57,6 +58,7 @@ func (p *Program) StartWithArgs(extra []string) error {
 	if p.cmd != nil {
 		return fmt.Errorf("program already running")
 	}
+	releasePortHold(&p.portHold)
 	args := append(append([]string{}, extra...), "--port", fmt.Sprint(p.port), "--data-dir", p.dataDir)
 	cmd := exec.Command(p.path, args...)
 	cmd.Dir = filepath.Dir(p.path)
@@ -109,14 +111,25 @@ func (p *Program) Kill() {
 // Cleanup terminates the process and removes the data directory.
 func (p *Program) Cleanup() {
 	p.Kill()
+	releasePortHold(&p.portHold)
 	os.RemoveAll(p.dataDir)
 }
 
-func freePort() (int, error) {
+// reservePort picks a free loopback TCP port and keeps the listener open so
+// nothing else (e.g. a Raft partition switch) can steal the port before the
+// submission process binds it.
+func reservePort() (int, net.Listener, error) {
 	l, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
-		return 0, err
+		return 0, nil, err
 	}
-	defer l.Close()
-	return l.Addr().(*net.TCPAddr).Port, nil
+	return l.Addr().(*net.TCPAddr).Port, l, nil
+}
+
+func releasePortHold(hold *net.Listener) {
+	if hold == nil || *hold == nil {
+		return
+	}
+	(*hold).Close()
+	*hold = nil
 }
