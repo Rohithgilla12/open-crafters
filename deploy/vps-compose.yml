@@ -16,6 +16,7 @@ services:
     restart: unless-stopped
     environment:
       LEARN_LISTEN: ":8081"
+      LEARN_RUNNER_URL: "https://runner.gilla.fun"
     ports:
       - "18081:8081"
     networks:

@@ -55,6 +55,9 @@ The compose file publishes `18081:8081` on the host.
 | `GET /challenges/{slug}` | Challenge overview — stage list + protocol |
 | `GET /challenges/{slug}/stages/{stage}` | Single stage with sidebar navigation |
 | `GET /api/challenges` | JSON challenge list |
+| `POST /api/submit` | Proxy solution zip to hosted runner (`Authorization: Bearer <token>`) |
+| `GET /api/jobs/{id}` | Poll grading job status |
+| `GET /learn.js` | Progress + submit client script |
 | `GET /health` | Health check |
 | `GET /style.css` | Stylesheet |
 
@@ -63,6 +66,18 @@ The compose file publishes `18081:8081` on the host.
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `LEARN_LISTEN` | `:8081` | HTTP listen address |
+| `LEARN_RUNNER_URL` | `https://runner.gilla.fun` | Hosted runner URL for browser submit proxy |
+| `LEARN_MAX_ZIP_BYTES` | `10485760` | Max solution zip upload (10 MiB) |
+
+## Browser submit
+
+Each challenge page includes a **Submit to hosted runner** form. Zip your
+solution directory (must contain `your_program.sh`), enter your runner token
+(saved in browser localStorage), and grade remotely — the learn app proxies to
+the runner API (no CORS issues).
+
+Progress (stages read / passed) is tracked in **localStorage** and shown on
+challenge cards and stage lists.
 
 ## Local development
 

@@ -152,17 +152,18 @@ func (c *Cluster) startNode(n *nodeProc) error {
 	if n.program != nil && n.program.cmd != nil {
 		return fmt.Errorf("node %d already running", n.id)
 	}
-	releasePortHold(&n.portHold)
 	peers, err := c.peersFor(n.id)
 	if err != nil {
 		return err
 	}
 	p := &Program{
-		path:    c.path,
-		port:    n.port,
-		dataDir: n.dataDir,
-		logf:    c.logf,
+		path:     c.path,
+		port:     n.port,
+		dataDir:  n.dataDir,
+		logf:     c.logf,
+		portHold: n.portHold,
 	}
+	n.portHold = nil
 	args := []string{
 		"--node-id", strconv.Itoa(n.id),
 		"--peers", peers,
