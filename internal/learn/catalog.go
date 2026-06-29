@@ -10,20 +10,8 @@ import (
 	opencrafters "github.com/Rohithgilla12/open-crafters"
 )
 
-// ChallengeOrder is the canonical display order (WAL first — the recommended
-// starting challenge). Matches cmd/crafters/main.go challengeOrder.
-var ChallengeOrder = []string{
-	"build-your-own-wal",
-	"build-your-own-queue",
-	"build-your-own-log",
-	"build-your-own-lsm",
-	"build-your-own-mvcc",
-	"build-your-own-temporal",
-	"build-your-own-workflow-sdk",
-	"build-your-own-raft",
-	"build-your-own-scheduler",
-	"build-your-own-rate-limiter",
-}
+// ChallengeOrder is the canonical display order (see opencrafters.ChallengeOrder).
+var ChallengeOrder = opencrafters.ChallengeOrder
 
 // Stage is one step of a challenge.
 type Stage struct {

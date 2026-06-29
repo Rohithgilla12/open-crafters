@@ -53,20 +53,8 @@ var challenges = map[string]harness.Challenge{
 	"build-your-own-rate-limiter": ratelimiter.Challenge(),
 }
 
-// challengeOrder is the canonical display order (WAL first — the recommended
-// starting challenge).
-var challengeOrder = []string{
-	"build-your-own-wal",
-	"build-your-own-queue",
-	"build-your-own-log",
-	"build-your-own-lsm",
-	"build-your-own-mvcc",
-	"build-your-own-temporal",
-	"build-your-own-workflow-sdk",
-	"build-your-own-raft",
-	"build-your-own-scheduler",
-	"build-your-own-rate-limiter",
-}
+// challengeOrder re-exports the canonical order from the root module.
+var challengeOrder = opencrafters.ChallengeOrder
 
 func main() {
 	args := os.Args[1:]
