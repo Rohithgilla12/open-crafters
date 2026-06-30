@@ -14,4 +14,5 @@ var ChallengeOrder = []string{
 	"build-your-own-scheduler",
 	"build-your-own-rate-limiter",
 	"build-your-own-object-store",
+	"build-your-own-bloom-filter",
 }

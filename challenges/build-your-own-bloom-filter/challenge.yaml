@@ -1,0 +1,49 @@
+slug: build-your-own-bloom-filter
+name: Build your own bloom filter
+short_description: >
+  Build a probabilistic set membership service: FNV-1a double hashing, k hash
+  functions, no false negatives, independent filters, and concurrent add/lookup
+  churn — graded entirely over the wire.
+difficulty: medium
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port>
+tester:
+  challenge_flag: build-your-own-bloom-filter
+stages:
+  - slug: bind
+    name: Boot the server
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: create
+    name: Create a filter
+    difficulty: easy
+    instructions: stages/02-create.md
+  - slug: add
+    name: Add an item
+    difficulty: easy
+    instructions: stages/03-add.md
+  - slug: positive
+    name: Positive lookup
+    difficulty: easy
+    instructions: stages/04-positive.md
+  - slug: negative
+    name: Negative lookup
+    difficulty: medium
+    instructions: stages/05-negative.md
+  - slug: no-false-negatives
+    name: No false negatives
+    difficulty: medium
+    instructions: stages/06-no-false-negatives.md
+  - slug: multi-filter
+    name: Independent filters
+    difficulty: easy
+    instructions: stages/07-multi-filter.md
+  - slug: hash-functions
+    name: K hash functions
+    difficulty: hard
+    instructions: stages/08-hash-functions.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md
