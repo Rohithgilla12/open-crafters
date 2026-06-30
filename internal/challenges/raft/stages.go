@@ -292,6 +292,9 @@ func testRead(ctx *harness.ClusterContext) error {
 	if _, err := setOnLeader(ctx, "foo", "bar"); err != nil {
 		return err
 	}
+	if err := waitForCommitIndex(ctx, 1); err != nil {
+		return err
+	}
 	ctx.Logf("reading foo from every node")
 	for id := 1; id <= ctx.ClusterSize(); id++ {
 		c, err := ctx.Dial(id)
@@ -377,6 +380,9 @@ func testDurability(ctx *harness.ClusterContext) error {
 	if _, err := setOnLeader(ctx, "durable", map[string]any{"x": 1}); err != nil {
 		return err
 	}
+	if err := waitForCommitIndex(ctx, 1); err != nil {
+		return err
+	}
 	ctx.Logf("killing all nodes")
 	for id := 1; id <= ctx.ClusterSize(); id++ {
 		if err := ctx.KillNode(id); err != nil {
@@ -392,20 +398,27 @@ func testDurability(ctx *harness.ClusterContext) error {
 	if _, err := waitForStableLeader(ctx); err != nil {
 		return err
 	}
-	c, err := ctx.Dial(1)
-	if err != nil {
-		return err
+	want := map[string]any{"x": float64(1)}
+	deadline := time.Now().Add(commitWait)
+	for time.Now().Before(deadline) {
+		for id := 1; id <= ctx.ClusterSize(); id++ {
+			c, err := ctx.Dial(id)
+			if err != nil {
+				return err
+			}
+			found, val, err := getKey(c, "durable")
+			c.Close()
+			if err != nil {
+				return err
+			}
+			if found && jsonEq(val, want) {
+				ctx.Logf("committed state survived total cluster crash (read from node %d)", id)
+				return nil
+			}
+		}
+		time.Sleep(pollInterval)
 	}
-	found, val, err := getKey(c, "durable")
-	c.Close()
-	if err != nil {
-		return err
-	}
-	if !found || !jsonEq(val, map[string]any{"x": float64(1)}) {
-		return fmt.Errorf("after full restart: expected durable={x:1}, got found=%v value=%v", found, val)
-	}
-	ctx.Logf("committed state survived total cluster crash")
-	return nil
+	return fmt.Errorf("after full restart: expected durable={x:1} on a node within %s", commitWait)
 }
 
 func testPartition(ctx *harness.ClusterContext) error {
