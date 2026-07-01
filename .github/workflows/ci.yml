@@ -151,9 +151,19 @@ jobs:
         run: ./crafters grade --challenge build-your-own-bloom-filter --all
           --program examples/solutions/build-your-own-bloom-filter/typescript/your_program.sh
 
+      - name: "Reference: Build your own hash ring — Python"
+        run: ./crafters grade --challenge build-your-own-hash-ring --all
+          --program examples/solutions/build-your-own-hash-ring/python/your_program.sh
+      - name: "Reference: Build your own hash ring — Go"
+        run: ./crafters grade --challenge build-your-own-hash-ring --all
+          --program examples/solutions/build-your-own-hash-ring/go/your_program.sh
+      - name: "Reference: Build your own hash ring — TypeScript/Bun"
+        run: ./crafters grade --challenge build-your-own-hash-ring --all
+          --program examples/solutions/build-your-own-hash-ring/typescript/your_program.sh
+
       - name: "Starters pass stage 1 (Python, Go, TypeScript — all challenges)"
         run: |
-          for ch in build-your-own-temporal build-your-own-wal build-your-own-queue build-your-own-mvcc build-your-own-log build-your-own-lsm build-your-own-workflow-sdk build-your-own-raft build-your-own-scheduler build-your-own-rate-limiter build-your-own-object-store build-your-own-bloom-filter; do
+          for ch in build-your-own-temporal build-your-own-wal build-your-own-queue build-your-own-mvcc build-your-own-log build-your-own-lsm build-your-own-workflow-sdk build-your-own-raft build-your-own-scheduler build-your-own-rate-limiter build-your-own-object-store build-your-own-bloom-filter build-your-own-hash-ring; do
             for lang in python go typescript; do
               ./crafters grade --challenge "$ch" --stage bind \
                 --program "challenges/$ch/starters/$lang/your_program.sh"

@@ -121,6 +121,7 @@ go build -o crafters ./cmd/crafters
 | [Build your own rate limiter](challenges/build-your-own-rate-limiter/) — a rate-limiting service: fixed windows, token buckets, sliding windows, per-key limits, atomic admission under concurrency, crash-durable state, and a throughput floor | 9 | ✅ ready |
 | [Build your own object store](challenges/build-your-own-object-store/) — a blob storage service: put/get with SHA-256 etags, head metadata, prefix listing, multipart uploads, and crash-durable objects | 9 | ✅ ready |
 | [Build your own bloom filter](challenges/build-your-own-bloom-filter/) — a probabilistic set membership service: FNV-1a double hashing, k hash functions, no false negatives, independent filters, and concurrent lookup churn | 9 | ✅ ready |
+| [Build your own hash ring](challenges/build-your-own-hash-ring/) — a consistent hash ring: FNV-1a vnode placement, clockwise lookup, minimal key movement on add/remove, virtual nodes, and concurrent multi-ring churn | 9 | ✅ ready |
 
 ### Which challenge should I start with?
 

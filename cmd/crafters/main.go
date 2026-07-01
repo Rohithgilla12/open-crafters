@@ -27,6 +27,7 @@ import (
 
 	opencrafters "github.com/Rohithgilla12/open-crafters"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/bloomfilter"
+	"github.com/Rohithgilla12/open-crafters/internal/challenges/hashring"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/logstore"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/lsm"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/mvcc"
@@ -55,6 +56,7 @@ var challenges = map[string]harness.Challenge{
 	"build-your-own-rate-limiter":  ratelimiter.Challenge(),
 	"build-your-own-object-store":  objectstore.Challenge(),
 	"build-your-own-bloom-filter": bloomfilter.Challenge(),
+	"build-your-own-hash-ring":    hashring.Challenge(),
 }
 
 // challengeOrder re-exports the canonical order from the root module.
