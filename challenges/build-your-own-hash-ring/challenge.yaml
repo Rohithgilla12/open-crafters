@@ -1,0 +1,49 @@
+slug: build-your-own-hash-ring
+name: Build your own hash ring
+short_description: >
+  Build a consistent hash ring: FNV-1a vnode placement, clockwise lookup,
+  minimal key movement on add/remove, virtual nodes for load balance, and
+  concurrent multi-ring churn — graded entirely over the wire.
+difficulty: medium
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port>
+tester:
+  challenge_flag: build-your-own-hash-ring
+stages:
+  - slug: bind
+    name: Boot the server
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: create
+    name: Create a ring
+    difficulty: easy
+    instructions: stages/02-create.md
+  - slug: add-node
+    name: Add a node
+    difficulty: easy
+    instructions: stages/03-add-node.md
+  - slug: deterministic
+    name: Deterministic lookup
+    difficulty: easy
+    instructions: stages/04-deterministic.md
+  - slug: spread
+    name: Key spread
+    difficulty: medium
+    instructions: stages/05-spread.md
+  - slug: minimal-move
+    name: Add node (minimal move)
+    difficulty: medium
+    instructions: stages/06-minimal-move.md
+  - slug: remove-node
+    name: Remove a node
+    difficulty: medium
+    instructions: stages/07-remove-node.md
+  - slug: virtual-nodes
+    name: Virtual nodes
+    difficulty: hard
+    instructions: stages/08-virtual-nodes.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md
