@@ -2,6 +2,8 @@ package learn
 
 import (
 	"testing"
+
+	opencrafters "github.com/Rohithgilla12/open-crafters"
 )
 
 func TestCatalogListsAllChallenges(t *testing.T) {
@@ -19,5 +21,8 @@ func TestCatalogListsAllChallenges(t *testing.T) {
 		if _, ok := c.Challenges[slug]; !ok {
 			t.Fatalf("missing challenge %q", slug)
 		}
+	}
+	if len(c.Paths) != len(opencrafters.ChallengePaths) {
+		t.Fatalf("catalog has %d paths, want %d", len(c.Paths), len(opencrafters.ChallengePaths))
 	}
 }

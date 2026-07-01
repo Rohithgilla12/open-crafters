@@ -8,6 +8,7 @@ import (
 var tmplFuncs = template.FuncMap{
 	"short":      shortSlug,
 	"stagesCSV":  stagesCSV,
+	"add":        func(a, b int) int { return a + b },
 }
 
 func stagesCSV(stages []Stage) string {
@@ -35,24 +36,63 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
   <div class="install">
     <code>curl -fsSL https://raw.githubusercontent.com/Rohithgilla12/open-crafters/main/install.sh | sh</code>
   </div>
-  <p class="sub">then <code>crafters start {{(index . 0).Slug | short}}</code> locally, or submit to the
-  <a href="https://runner.gilla.fun">hosted runner</a></p>
+  <p class="sub">then <code>crafters start wal</code> locally, or submit to the
+  <a href="https://runner.gilla.fun">hosted runner</a> · <code>crafters list --paths</code> in the CLI</p>
 </header>
-<main class="grid">
 {{range .}}
-  <a class="card" href="/challenges/{{.Slug}}" data-challenge="{{.Slug}}" data-stages="{{stagesCSV .Stages}}">
-    <h2>{{.Name}} <span class="badge diff-{{.Difficulty}}">{{.Difficulty}}</span></h2>
-    <p>{{.Tagline}}</p>
-    <div class="mix">{{.DiffMix}}</div>
-    <span class="meta"><span data-progress-label></span>{{len .Stages}} stages →</span>
-  </a>
+<section class="path-section" id="path-{{.Slug}}">
+  <div class="path-head">
+    <h2 class="path-title"><a href="/paths/{{.Slug}}">{{.Name}}</a></h2>
+    <p class="path-desc">{{.Description}}</p>
+  </div>
+  <main class="grid">
+  {{range .Challenges}}
+    <a class="card" href="/challenges/{{.Slug}}" data-challenge="{{.Slug}}" data-stages="{{stagesCSV .Stages}}">
+      <h3>{{.Name}} <span class="badge diff-{{.Difficulty}}">{{.Difficulty}}</span></h3>
+      <p>{{.Tagline}}</p>
+      <div class="mix">{{.DiffMix}}</div>
+      <span class="meta"><span data-progress-label></span>{{len .Stages}} stages →</span>
+    </a>
+  {{end}}
+  </main>
+</section>
 {{end}}
-</main>
 <footer>
   <a href="https://github.com/Rohithgilla12/open-crafters">GitHub</a> ·
   <a href="https://runner.gilla.fun">hosted runner</a> ·
   graded black-box · any language with a TCP socket
 </footer>
+</div><script src="/learn.js"></script></body></html>`))
+
+var pathTmpl = template.Must(template.New("path").Funcs(tmplFuncs).Parse(`<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Name}} — open-crafters learn</title>
+<meta name="description" content="{{.Description}}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+</head><body><div class="wrap">
+<p class="back"><a href="/">← all paths</a></p>
+<header class="chead">
+  <h1>{{.Name}}</h1>
+  <p class="tag">{{.Description}}</p>
+</header>
+<ol class="path-challenges">
+{{range $i, $ch := .Challenges}}
+  <li>
+    <a class="card path-card" href="/challenges/{{$ch.Slug}}" data-challenge="{{$ch.Slug}}" data-stages="{{stagesCSV $ch.Stages}}">
+      <span class="path-step">{{add $i 1}}</span>
+      <div class="path-card-body">
+        <h2>{{$ch.Name}} <span class="badge diff-{{$ch.Difficulty}}">{{$ch.Difficulty}}</span></h2>
+        <p>{{$ch.Tagline}}</p>
+        <span class="meta"><span data-progress-label></span>{{len $ch.Stages}} stages →</span>
+      </div>
+    </a>
+  </li>
+{{end}}
+</ol>
+<footer><a href="/">← all paths</a> · <a href="https://github.com/Rohithgilla12/open-crafters">GitHub</a></footer>
 </div><script src="/learn.js"></script></body></html>`))
 
 var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Parse(`<!doctype html>
@@ -64,9 +104,10 @@ var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Par
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/style.css">
 </head><body data-challenge="{{.Challenge.Slug}}" data-stages="{{.StageSlugs}}"><div class="wrap">
-<p class="back"><a href="/">← all challenges</a></p>
+<p class="back"><a href="/">← all challenges</a>{{if .PathSlug}} · <a href="/paths/{{.PathSlug}}">{{.PathName}}</a>{{end}}</p>
 <header class="chead">
   <h1>{{.Challenge.Name}} <span class="badge diff-{{.Challenge.Difficulty}}">{{.Challenge.Difficulty}}</span></h1>
+  {{if .PathName}}<p class="path-crumb">Path: <a href="/paths/{{.PathSlug}}">{{.PathName}}</a></p>{{end}}
   <p class="tag">{{.Challenge.Tagline}}</p>
   <p class="progress-summary"><span data-progress-label></span></p>
   <div class="install"><code>crafters start {{.Challenge.Slug | short}}</code></div>
@@ -183,7 +224,19 @@ h1{font-size:2.1rem;margin:.2rem 0;letter-spacing:-.02em}
 .card{display:block;background:var(--panel);border:1px solid var(--border);border-radius:12px;
   padding:1.2rem 1.3rem;transition:border-color .15s,transform .15s,background .15s}
 .card:hover{border-color:var(--accent);transform:translateY(-2px);background:var(--panel2);text-decoration:none}
-.card h2{margin:.1rem 0 .5rem;font-size:1.2rem;color:var(--fg)}
+.card h2,.card h3{margin:.1rem 0 .5rem;font-size:1.2rem;color:var(--fg)}
+.path-section{margin-bottom:2.5rem}
+.path-head{margin-bottom:1rem}
+.path-title{font-size:1.35rem;margin:0 0 .35rem;letter-spacing:-.01em}
+.path-title a{color:var(--fg)}
+.path-desc{margin:0;color:var(--dim);font-size:.95rem;max-width:62ch}
+.path-crumb{color:var(--dim);font-size:.9rem;margin:.2rem 0 .6rem}
+.path-challenges{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.75rem}
+.path-card{display:flex;align-items:flex-start;gap:1rem}
+.path-step{display:inline-flex;align-items:center;justify-content:center;min-width:2rem;height:2rem;
+  background:var(--panel2);border:1px solid var(--border);border-radius:50%;color:var(--accent);
+  font-size:.9rem;font-family:ui-monospace,monospace;flex-shrink:0;margin-top:.15rem}
+.path-card-body{flex:1}
 .card p{margin:0 0 .9rem;color:var(--dim);font-size:.93rem}
 .card .meta{color:var(--accent);font-size:.85rem;font-family:ui-monospace,monospace}
 .back{margin:0 0 1rem;font-size:.9rem}

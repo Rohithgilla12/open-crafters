@@ -39,6 +39,16 @@ type Challenge struct {
 type Catalog struct {
 	Order      []string
 	Challenges map[string]*Challenge
+	Paths      []Path
+}
+
+// Path is a curated learning track with rendered challenge entries.
+type Path struct {
+	Slug         string
+	Name         string
+	Description  string
+	Challenges   []*Challenge
+	ChallengeIDs []string
 }
 
 // NewCatalog builds the challenge catalog from the embedded challenges FS.
@@ -89,12 +99,47 @@ func NewCatalog() (*Catalog, error) {
 		c.Order = append(c.Order, slug)
 	}
 
+	for _, p := range opencrafters.ChallengePaths {
+		lp := Path{
+			Slug:         p.Slug,
+			Name:         p.Name,
+			Description:  p.Description,
+			ChallengeIDs: append([]string(nil), p.Challenges...),
+		}
+		for _, slug := range p.Challenges {
+			if ch, ok := c.Challenges[slug]; ok {
+				lp.Challenges = append(lp.Challenges, ch)
+			}
+		}
+		c.Paths = append(c.Paths, lp)
+	}
+
 	return c, nil
 }
 
 func (c *Catalog) Get(slug string) (*Challenge, bool) {
 	ch, ok := c.Challenges[slug]
 	return ch, ok
+}
+
+func (c *Catalog) GetPath(slug string) (*Path, bool) {
+	for i := range c.Paths {
+		if c.Paths[i].Slug == slug {
+			return &c.Paths[i], true
+		}
+	}
+	return nil, false
+}
+
+func (c *Catalog) PathForChallenge(slug string) string {
+	for _, p := range c.Paths {
+		for _, id := range p.ChallengeIDs {
+			if id == slug {
+				return p.Slug
+			}
+		}
+	}
+	return ""
 }
 
 func (c *Catalog) Stage(slug, stageSlug string) (*Challenge, *Stage, bool) {
@@ -241,6 +286,27 @@ func (c *Catalog) APIList() []APIChallenge {
 			})
 		}
 		out = append(out, ac)
+	}
+	return out
+}
+
+// APIPath is a learning path in the JSON API.
+type APIPath struct {
+	Slug        string   `json:"slug"`
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Challenges  []string `json:"challenges"`
+}
+
+func (c *Catalog) APIPaths() []APIPath {
+	out := make([]APIPath, 0, len(c.Paths))
+	for _, p := range c.Paths {
+		out = append(out, APIPath{
+			Slug:        p.Slug,
+			Name:        p.Name,
+			Description: p.Description,
+			Challenges:  append([]string(nil), p.ChallengeIDs...),
+		})
 	}
 	return out
 }

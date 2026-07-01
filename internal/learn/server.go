@@ -31,11 +31,13 @@ func (s *Server) Handler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /health", s.handleHealth)
 	mux.HandleFunc("GET /api/challenges", s.handleAPIChallenges)
+	mux.HandleFunc("GET /api/paths", s.handleAPIPaths)
 	mux.HandleFunc("POST /api/submit", s.handleSubmit)
 	mux.HandleFunc("GET /api/jobs/{id}", s.handleSubmitJob)
 	mux.HandleFunc("GET /style.css", s.handleCSS)
 	mux.HandleFunc("GET /learn.js", s.handleLearnJS)
 	mux.HandleFunc("GET /{$}", s.handleIndex)
+	mux.HandleFunc("GET /paths/{slug}", s.handlePath)
 	mux.HandleFunc("GET /challenges/{slug}", s.handleChallenge)
 	mux.HandleFunc("GET /challenges/{slug}/stages/{stage}", s.handleStage)
 	mux.Handle("GET /favicon.svg", http.FileServer(http.FS(s.assets)))
@@ -49,6 +51,10 @@ func (s *Server) handleHealth(w http.ResponseWriter, _ *http.Request) {
 
 func (s *Server) handleAPIChallenges(w http.ResponseWriter, _ *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]any{"challenges": s.catalog.APIList()})
+}
+
+func (s *Server) handleAPIPaths(w http.ResponseWriter, _ *http.Request) {
+	writeJSON(w, http.StatusOK, map[string]any{"paths": s.catalog.APIPaths()})
 }
 
 func (s *Server) handleCSS(w http.ResponseWriter, _ *http.Request) {
@@ -65,11 +71,17 @@ func (s *Server) handleLearnJS(w http.ResponseWriter, _ *http.Request) {
 }
 
 func (s *Server) handleIndex(w http.ResponseWriter, _ *http.Request) {
-	challenges := make([]*Challenge, 0, len(s.catalog.Order))
-	for _, slug := range s.catalog.Order {
-		challenges = append(challenges, s.catalog.Challenges[slug])
+	s.render(w, indexTmpl, s.catalog.Paths)
+}
+
+func (s *Server) handlePath(w http.ResponseWriter, r *http.Request) {
+	slug := r.PathValue("slug")
+	p, ok := s.catalog.GetPath(slug)
+	if !ok {
+		http.NotFound(w, r)
+		return
 	}
-	s.render(w, indexTmpl, challenges)
+	s.render(w, pathTmpl, p)
 }
 
 func (s *Server) handleChallenge(w http.ResponseWriter, r *http.Request) {
@@ -79,7 +91,12 @@ func (s *Server) handleChallenge(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	s.render(w, challengeTmpl, challengePageData{Challenge: ch, StageSlugs: stageSlugs(ch)})
+	s.render(w, challengeTmpl, challengePageData{
+		Challenge:  ch,
+		StageSlugs: stageSlugs(ch),
+		PathSlug:   s.catalog.PathForChallenge(slug),
+		PathName:   pathName(s.catalog, slug),
+	})
 }
 
 func (s *Server) handleStage(w http.ResponseWriter, r *http.Request) {
@@ -116,6 +133,8 @@ type stagePageData struct {
 type challengePageData struct {
 	Challenge  *Challenge
 	StageSlugs string
+	PathSlug   string
+	PathName   string
 }
 
 func stageSlugs(ch *Challenge) string {
@@ -150,4 +169,11 @@ func writeJSON(w http.ResponseWriter, status int, v any) {
 // shortSlug strips the build-your-own- prefix for display.
 func shortSlug(slug string) string {
 	return strings.TrimPrefix(slug, "build-your-own-")
+}
+
+func pathName(c *Catalog, challengeSlug string) string {
+	if p, ok := c.GetPath(c.PathForChallenge(challengeSlug)); ok {
+		return p.Name
+	}
+	return ""
 }

@@ -122,6 +122,18 @@ go build -o crafters ./cmd/crafters
 | [Build your own object store](challenges/build-your-own-object-store/) — a blob storage service: put/get with SHA-256 etags, head metadata, prefix listing, multipart uploads, and crash-durable objects | 9 | ✅ ready |
 | [Build your own bloom filter](challenges/build-your-own-bloom-filter/) — a probabilistic set membership service: FNV-1a double hashing, k hash functions, no false negatives, independent filters, and concurrent lookup churn | 9 | ✅ ready |
 | [Build your own hash ring](challenges/build-your-own-hash-ring/) — a consistent hash ring: FNV-1a vnode placement, clockwise lookup, minimal key movement on add/remove, virtual nodes, and concurrent multi-ring churn | 9 | ✅ ready |
+| [Build your own distributed lock](challenges/build-your-own-distributed-lock/) — a distributed lock service: exclusive acquire with leases, try-acquire without blocking, token-gated release and renew, crash-durable state, and concurrent multi-lock churn | 9 | ✅ ready |
+
+### Learning paths
+
+Four curated tracks group the challenges by theme (`crafters list --paths` or [learn.gilla.fun](https://learn.gilla.fun)):
+
+| Path | Challenges |
+|---|---|
+| **Durability & storage** | WAL → Queue → Log → LSM → MVCC → Object store |
+| **Workflow engines** | Temporal → Workflow SDK |
+| **Distributed systems** | Raft → Hash ring → Bloom filter |
+| **Coordination & control** | Scheduler → Rate limiter → Distributed lock |
 
 ### Which challenge should I start with?
 

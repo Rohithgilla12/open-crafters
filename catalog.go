@@ -16,4 +16,5 @@ var ChallengeOrder = []string{
 	"build-your-own-object-store",
 	"build-your-own-bloom-filter",
 	"build-your-own-hash-ring",
+	"build-your-own-distributed-lock",
 }
