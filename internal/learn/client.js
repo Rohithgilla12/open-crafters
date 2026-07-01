@@ -2,21 +2,56 @@
 (function () {
   const STORAGE_KEY = "open-crafters-progress";
   const TOKEN_KEY = "crafters-runner-token";
+  const FORMAT_VERSION = 1;
 
   function loadProgress() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return { challenges: {} };
+      if (!raw) return { version: FORMAT_VERSION, challenges: {} };
       const p = JSON.parse(raw);
       if (!p.challenges) p.challenges = {};
+      if (!p.version) p.version = FORMAT_VERSION;
       return p;
     } catch {
-      return { challenges: {} };
+      return { version: FORMAT_VERSION, challenges: {} };
     }
   }
 
   function saveProgress(p) {
+    p.version = FORMAT_VERSION;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+  }
+
+  function mergeTimestamps(dst, src) {
+    if (!dst || !src) return;
+    for (const [k, v] of Object.entries(src)) {
+      if (!v) continue;
+      if (!dst[k] || v < dst[k]) dst[k] = v;
+    }
+  }
+
+  function mergeProgress(incoming) {
+    if (!incoming || !incoming.challenges) return loadProgress();
+    const p = loadProgress();
+    for (const [slug, sc] of Object.entries(incoming.challenges)) {
+      const c = ensureChallenge(p, slug);
+      mergeTimestamps(c.passed, sc.passed || {});
+      mergeTimestamps(c.read, sc.read || {});
+    }
+    saveProgress(p);
+    return p;
+  }
+
+  function exportProgress() {
+    const p = loadProgress();
+    const blob = new Blob([JSON.stringify(p, null, 2) + "\n"], {
+      type: "application/json",
+    });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "progress.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
   }
 
   function ensureChallenge(p, slug) {
@@ -220,9 +255,39 @@
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  function initProgressSync() {
+    const exportBtn = document.getElementById("progress-export");
+    const importInput = document.getElementById("progress-import");
+    const statusEl = document.getElementById("progress-sync-status");
+
+    if (exportBtn) {
+      exportBtn.addEventListener("click", () => {
+        exportProgress();
+        if (statusEl) statusEl.textContent = "Downloaded progress.json";
+      });
+    }
+    if (importInput) {
+      importInput.addEventListener("change", async () => {
+        const file = importInput.files && importInput.files[0];
+        importInput.value = "";
+        if (!file) return;
+        try {
+          const text = await file.text();
+          const incoming = JSON.parse(text);
+          mergeProgress(incoming);
+          applyProgressUI();
+          if (statusEl) statusEl.textContent = "Imported " + file.name;
+        } catch (err) {
+          if (statusEl) statusEl.textContent = "Import failed: " + err.message;
+        }
+      });
+    }
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     initStagePage();
     applyProgressUI();
     initSubmitForm();
+    initProgressSync();
   });
 })();

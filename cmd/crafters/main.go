@@ -84,6 +84,8 @@ func main() {
 		cmdWalkthrough(args[1:])
 	case "hint":
 		cmdHint(args[1:])
+	case "progress":
+		cmdProgress(args[1:])
 	case "site":
 		cmdSite(args[1:])
 	case "submit":
@@ -114,6 +116,9 @@ USAGE
   crafters grade --challenge <slug> --program <path> [--all|--stage <slug>|--status]
   crafters hint <challenge> [--stage <slug>]            spoiler-free nudge for a stage
   crafters walkthrough <challenge> [--stage <slug>]     how the reference solves it
+  crafters progress export [dir] [--all] [--out file]   export progress.json (learn app sync)
+  crafters progress import <file> [dir]                 merge progress into a solution
+  crafters progress show [dir]                          progress checklist for a solution
   crafters submit [dir] [--url <url>] [--token <secret>] [--all|--stage <slug>|--watch]
   crafters site [--out dir]             generate the static showcase site
   crafters update                       self-update to the latest release

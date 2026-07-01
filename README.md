@@ -70,6 +70,9 @@ crafters start <challenge> [dir] [--lang python|go|typescript]   # scaffold a so
 crafters test  [dir] [--all] [--stage <slug>]         # re-grade (resume)
 crafters status [dir]                                 # progress checklist
 crafters list                                         # all challenges and stages
+crafters list --paths                                 # learning paths (curated tracks)
+crafters progress export [dir] [--all]                # export progress.json (sync with learn app)
+crafters progress import <file> [dir]                 # merge progress into a solution
 crafters grade --challenge <slug> --program <path>    # grade an arbitrary program (CI/scripts)
 ```
 
@@ -77,7 +80,8 @@ crafters grade --challenge <slug> --program <path>    # grade an arbitrary progr
 Name the solution directory yourself by passing it as the second argument
 (`crafters start wal my-cool-name`) — the dashboard prompts for it too.
 Progress is saved in `<solution>/.open-crafters/progress.json`, so it travels
-with your solution — stop and resume whenever.
+with your solution — stop and resume whenever. Import the same file on
+[learn.gilla.fun](https://learn.gilla.fun) via **Export / Import progress.json**.
 
 Your submission is just an executable the grader runs as
 `./your_program.sh --port <port> --data-dir <path>`. The grader spawns it,
