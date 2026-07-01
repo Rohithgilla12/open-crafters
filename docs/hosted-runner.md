@@ -168,7 +168,22 @@ Web dashboard — enter your token to browse job history and logs. Or open
 
 ## Updating
 
-After pulling new code:
+After pulling new code on the VPS:
+
+```bash
+./scripts/vps-deploy.sh
+```
+
+From your laptop (repo root):
+
+```bash
+SSH_HOST=ubuntu@150.230.131.66 ./scripts/vps-deploy.sh
+```
+
+Options: `--learn-only`, `--runner-only`, `--cache-learn`. The script runs
+`git pull`, rebuilds images, and `docker compose up -d`.
+
+Manual equivalent:
 
 ```bash
 docker build -t open-crafters-grade:latest -f docker/grade/Dockerfile .

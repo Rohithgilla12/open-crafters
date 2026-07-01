@@ -38,6 +38,18 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
   </div>
   <p class="sub">then <code>crafters start wal</code> locally, or submit to the
   <a href="https://runner.gilla.fun">hosted runner</a> · <code>crafters list --paths</code> in the CLI</p>
+  <section class="progress-sync">
+    <h2 class="progress-sync-title">Progress sync</h2>
+    <p class="progress-sync-help">Sync with local <code>crafters test</code> via <code>progress.json</code> —
+    export from the CLI (<code>crafters progress export</code>) and import here, or export to back up browser progress.</p>
+    <div class="progress-sync-actions">
+      <button type="button" class="btn-progress" id="progress-export">Export progress.json</button>
+      <label class="btn-progress btn-progress-file">Import progress.json
+        <input type="file" id="progress-import" accept="application/json,.json" hidden>
+      </label>
+    </div>
+    <p id="progress-sync-status" class="progress-sync-status" aria-live="polite"></p>
+  </section>
 </header>
 {{range .}}
 <section class="path-section" id="path-{{.Slug}}">
@@ -219,6 +231,17 @@ h1{font-size:2.1rem;margin:.2rem 0;letter-spacing:-.02em}
   color:var(--code);overflow-x:auto;font-size:.92rem}
 .sub{color:var(--dim);font-size:.92rem}
 .sub code{color:var(--accent)}
+.progress-sync{margin:1.5rem 0 0;padding:1rem 1.2rem;background:var(--panel);border:1px solid var(--border);
+  border-radius:12px;max-width:52rem}
+.progress-sync-title{font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);
+  margin:0 0 .5rem}
+.progress-sync-help{margin:0 0 .9rem;color:var(--dim);font-size:.9rem;line-height:1.5}
+.progress-sync-actions{display:flex;flex-wrap:wrap;gap:.6rem}
+.btn-progress{background:var(--panel2);color:var(--fg);border:1px solid var(--border);border-radius:8px;
+  padding:.45rem .9rem;font-size:.88rem;font-weight:600;cursor:pointer}
+.btn-progress:hover{border-color:var(--accent2)}
+.btn-progress-file{display:inline-flex;align-items:center}
+.progress-sync-status{min-height:1.1rem;margin:.6rem 0 0;color:var(--accent2);font-size:.85rem}
 .grid{display:grid;grid-template-columns:1fr;gap:1rem}
 @media(min-width:640px){.grid{grid-template-columns:1fr 1fr}}
 .card{display:block;background:var(--panel);border:1px solid var(--border);border-radius:12px;

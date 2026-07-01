@@ -38,6 +38,16 @@ Recommended hostname: **`https://learn.gilla.fun`**
 ## VPS deployment
 
 ```bash
+# From your machine (repo root)
+./scripts/vps-deploy.sh
+
+# Or on the VPS directly
+cd ~/open-crafters && ./scripts/vps-deploy.sh
+```
+
+Build the learn image manually:
+
+```bash
 # Build the image (from repo root)
 docker build -f docker/learn/Dockerfile -t open-crafters-learn:latest .
 
@@ -79,7 +89,14 @@ solution directory (must contain `your_program.sh`), enter your runner token
 the runner API (no CORS issues).
 
 Progress (stages read / passed) is tracked in **localStorage** and shown on
-challenge cards and stage lists.
+challenge cards and stage lists. Sync with the CLI:
+
+1. Locally: `cd my-wal && crafters progress export > progress.json`
+2. On this site: use **Export / Import progress.json** on the home page
+3. Back to CLI: `crafters progress import progress.json my-wal`
+
+Use `crafters progress export --all` from a parent directory to merge every
+solution's `.open-crafters/progress.json` into one file.
 
 ## Local development
 
