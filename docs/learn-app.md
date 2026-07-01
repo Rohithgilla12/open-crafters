@@ -51,10 +51,12 @@ The compose file publishes `18081:8081` on the host.
 
 | Route | Description |
 |-------|-------------|
-| `GET /` | Challenge catalog (HTML) |
+| `GET /` | Challenge catalog grouped by learning path (HTML) |
+| `GET /paths/{slug}` | Single path — ordered challenge list |
 | `GET /challenges/{slug}` | Challenge overview — stage list + protocol |
 | `GET /challenges/{slug}/stages/{stage}` | Single stage with sidebar navigation |
 | `GET /api/challenges` | JSON challenge list |
+| `GET /api/paths` | JSON learning paths (`slug`, `name`, `description`, `challenges[]`) |
 | `POST /api/submit` | Proxy solution zip to hosted runner (`Authorization: Bearer <token>`) |
 | `GET /api/jobs/{id}` | Poll grading job status |
 | `GET /learn.js` | Progress + submit client script |

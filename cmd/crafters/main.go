@@ -27,6 +27,7 @@ import (
 
 	opencrafters "github.com/Rohithgilla12/open-crafters"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/bloomfilter"
+	"github.com/Rohithgilla12/open-crafters/internal/challenges/distlock"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/hashring"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/logstore"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/lsm"
@@ -56,7 +57,8 @@ var challenges = map[string]harness.Challenge{
 	"build-your-own-rate-limiter":  ratelimiter.Challenge(),
 	"build-your-own-object-store":  objectstore.Challenge(),
 	"build-your-own-bloom-filter": bloomfilter.Challenge(),
-	"build-your-own-hash-ring":    hashring.Challenge(),
+	"build-your-own-hash-ring":         hashring.Challenge(),
+	"build-your-own-distributed-lock": distlock.Challenge(),
 }
 
 // challengeOrder re-exports the canonical order from the root module.
@@ -108,6 +110,7 @@ USAGE
   crafters test  [dir] [--all] [--stage <slug>]
   crafters status [dir]
   crafters list
+  crafters list --paths                                 # learning paths (curated tracks)
   crafters grade --challenge <slug> --program <path> [--all|--stage <slug>|--status]
   crafters hint <challenge> [--stage <slug>]            spoiler-free nudge for a stage
   crafters walkthrough <challenge> [--stage <slug>]     how the reference solves it
@@ -240,6 +243,23 @@ func cmdStatus(args []string) {
 }
 
 func cmdList() {
+	showPaths := false
+	for _, a := range os.Args[2:] {
+		if a == "--paths" {
+			showPaths = true
+		}
+	}
+	if showPaths {
+		for _, p := range opencrafters.ChallengePaths {
+			fmt.Printf("\x1b[1m%s\x1b[0m — %s\n", p.Slug, p.Name)
+			fmt.Printf("  %s\n", p.Description)
+			for i, slug := range p.Challenges {
+				ch := challenges[slug]
+				fmt.Printf("  %2d. %s — %s\n", i+1, slug, ch.Name)
+			}
+		}
+		return
+	}
 	for _, slug := range orderedSlugs() {
 		ch := challenges[slug]
 		fmt.Printf("%s — %s\n", slug, ch.Name)

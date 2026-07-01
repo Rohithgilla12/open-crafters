@@ -1,0 +1,49 @@
+slug: build-your-own-distributed-lock
+name: Build your own distributed lock
+short_description: >
+  Build a distributed lock service: exclusive acquire with leases, try-acquire
+  without blocking, token-gated release and renew, crash-durable state, and
+  concurrent multi-lock churn — graded over the wire.
+difficulty: medium
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port> --data-dir <path>
+tester:
+  challenge_flag: build-your-own-distributed-lock
+stages:
+  - slug: bind
+    name: Boot the server
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: acquire
+    name: Acquire a lock
+    difficulty: easy
+    instructions: stages/02-acquire.md
+  - slug: release
+    name: Release a lock
+    difficulty: easy
+    instructions: stages/03-release.md
+  - slug: conflict
+    name: Lock contention
+    difficulty: easy
+    instructions: stages/04-conflict.md
+  - slug: try-acquire
+    name: Try without blocking
+    difficulty: easy
+    instructions: stages/05-try-acquire.md
+  - slug: expiry
+    name: Lease expiry
+    difficulty: medium
+    instructions: stages/06-expiry.md
+  - slug: renew
+    name: Renew a lease
+    difficulty: medium
+    instructions: stages/07-renew.md
+  - slug: durability
+    name: Survive a crash
+    difficulty: hard
+    instructions: stages/08-durability.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md
