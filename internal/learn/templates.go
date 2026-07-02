@@ -37,7 +37,7 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
     <code>curl -fsSL https://raw.githubusercontent.com/Rohithgilla12/open-crafters/main/install.sh | sh</code>
   </div>
   <p class="sub">then <code>crafters start wal</code> locally, or submit to the
-  <a href="https://runner.gilla.fun">hosted runner</a> · <code>crafters list --paths</code> in the CLI</p>
+  <a href="https://runner.gilla.fun">hosted runner</a> · <a href="/roadmaps">roadmaps</a> · <code>crafters roadmap</code></p>
   <section class="progress-sync">
     <h2 class="progress-sync-title">Progress sync</h2>
     <p class="progress-sync-help">Sync with local <code>crafters test</code> via <code>progress.json</code> —
@@ -51,10 +51,26 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
     <p id="progress-sync-status" class="progress-sync-status" aria-live="polite"></p>
   </section>
 </header>
-{{range .}}
+<section class="roadmap-strip">
+  <div class="roadmap-strip-head">
+    <h2 class="section">Learning roadmaps</h2>
+    <a class="roadmap-all" href="/roadmaps">View all →</a>
+  </div>
+  <div class="roadmap-cards">
+  {{range .Roadmaps}}
+    <a class="roadmap-card" href="/roadmaps/{{.Slug}}" data-roadmap-card data-challenges="{{.ChallengeCSV}}" data-total-stages="{{.TotalStages}}">
+      <h3>{{.Name}}</h3>
+      <p>{{.Tagline}}</p>
+      <span class="roadmap-meta"><span data-roadmap-progress-label></span>{{.TotalStages}} stages</span>
+      <span class="roadmap-bar"><span class="roadmap-bar-fill"></span></span>
+    </a>
+  {{end}}
+  </div>
+</section>
+{{range .Paths}}
 <section class="path-section" id="path-{{.Slug}}">
   <div class="path-head">
-    <h2 class="path-title"><a href="/paths/{{.Slug}}">{{.Name}}</a></h2>
+    <h2 class="path-title"><a href="/roadmaps/{{.Slug}}">{{.Name}}</a></h2>
     <p class="path-desc">{{.Description}}</p>
   </div>
   <main class="grid">
@@ -74,6 +90,85 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
   <a href="https://runner.gilla.fun">hosted runner</a> ·
   graded black-box · any language with a TCP socket
 </footer>
+</div><script src="/learn.js"></script></body></html>`))
+
+var roadmapsIndexTmpl = template.Must(template.New("roadmaps").Funcs(tmplFuncs).Parse(`<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roadmaps — open-crafters learn</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/style.css">
+</head><body><div class="wrap">
+<p class="back"><a href="/">← home</a></p>
+<header class="chead">
+  <h1>Learning roadmaps</h1>
+  <p class="tag">Curated journeys through the catalog — each with outcomes, milestones, and suggested order.</p>
+</header>
+<div class="roadmap-cards roadmap-cards-page">
+{{range .}}
+  <a class="roadmap-card" href="/roadmaps/{{.Slug}}" data-roadmap-card data-challenges="{{.ChallengeCSV}}" data-total-stages="{{.TotalStages}}">
+    <h2>{{.Name}}</h2>
+    <p>{{.Tagline}}</p>
+    <p class="roadmap-desc">{{.Description}}</p>
+    <span class="roadmap-meta"><span data-roadmap-progress-label></span>{{.TotalStages}} stages · {{len .Milestones}} milestones</span>
+    <span class="roadmap-bar"><span class="roadmap-bar-fill"></span></span>
+  </a>
+{{end}}
+</div>
+<footer><a href="/">← home</a></footer>
+</div><script src="/learn.js"></script></body></html>`))
+
+var roadmapTmpl = template.Must(template.New("roadmap").Funcs(tmplFuncs).Parse(`<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Name}} — open-crafters roadmap</title>
+<meta name="description" content="{{.Tagline}}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/style.css">
+</head><body data-roadmap-page data-challenges="{{.ChallengeCSV}}"><div class="wrap">
+<p class="back"><a href="/roadmaps">← all roadmaps</a></p>
+<header class="chead">
+  <h1>{{.Name}}</h1>
+  <p class="tag">{{.Description}}</p>
+  {{if .StartCommand}}<div class="install"><code>{{.StartCommand}}</code></div>{{end}}
+  <div class="roadmap-progress-head" data-roadmap-bar data-total-stages="{{.TotalStages}}">
+    <span data-roadmap-progress-label class="roadmap-progress-label">0/{{.TotalStages}} stages</span>
+    <span class="roadmap-bar roadmap-bar-lg"><span class="roadmap-bar-fill"></span></span>
+  </div>
+</header>
+{{if .Outcomes}}
+<h2 class="section">What you'll learn</h2>
+<ul class="roadmap-outcomes">
+{{range .Outcomes}}<li>{{.}}</li>{{end}}
+</ul>
+{{end}}
+<h2 class="section">Milestones</h2>
+<ol class="roadmap-timeline">
+{{range .Milestones}}
+  <li class="roadmap-milestone">
+    {{if .PathSlug}}
+    <a class="card path-card" href="/roadmaps/{{.PathSlug}}" data-roadmap-milestone>
+      <span class="path-step">{{.Num}}</span>
+      <div class="path-card-body">
+        <h2>{{.PathName}}</h2>
+        <p>{{.Blurb}}</p>
+        <span class="meta">Open roadmap →</span>
+      </div>
+    </a>
+    {{else}}
+    <a class="card path-card" href="/challenges/{{.Challenge.Slug}}" data-challenge="{{.Challenge.Slug}}" data-stages="{{.StageCSV}}" data-roadmap-milestone>
+      <span class="path-step">{{.Num}}</span>
+      <div class="path-card-body">
+        <h2>{{.Challenge.Name}} <span class="badge diff-{{.Challenge.Difficulty}}">{{.Challenge.Difficulty}}</span></h2>
+        <p>{{.Blurb}}</p>
+        <span class="meta"><span data-progress-label></span>{{len .Challenge.Stages}} stages →</span>
+      </div>
+    </a>
+    {{end}}
+  </li>
+{{end}}
+</ol>
+<footer><a href="/roadmaps">← all roadmaps</a></footer>
 </div><script src="/learn.js"></script></body></html>`))
 
 var pathTmpl = template.Must(template.New("path").Funcs(tmplFuncs).Parse(`<!doctype html>
@@ -116,10 +211,10 @@ var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Par
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/style.css">
 </head><body data-challenge="{{.Challenge.Slug}}" data-stages="{{.StageSlugs}}"><div class="wrap">
-<p class="back"><a href="/">← all challenges</a>{{if .PathSlug}} · <a href="/paths/{{.PathSlug}}">{{.PathName}}</a>{{end}}</p>
+<p class="back"><a href="/">← all challenges</a>{{if .RoadmapSlug}} · <a href="/roadmaps/{{.RoadmapSlug}}">{{.RoadmapName}}</a>{{end}}</p>
 <header class="chead">
   <h1>{{.Challenge.Name}} <span class="badge diff-{{.Challenge.Difficulty}}">{{.Challenge.Difficulty}}</span></h1>
-  {{if .PathName}}<p class="path-crumb">Path: <a href="/paths/{{.PathSlug}}">{{.PathName}}</a></p>{{end}}
+  {{if .RoadmapName}}<p class="path-crumb">Roadmap: <a href="/roadmaps/{{.RoadmapSlug}}">{{.RoadmapName}}</a></p>{{end}}
   <p class="tag">{{.Challenge.Tagline}}</p>
   <p class="progress-summary"><span data-progress-label></span></p>
   <div class="install"><code>crafters start {{.Challenge.Slug | short}}</code></div>
@@ -260,6 +355,29 @@ h1{font-size:2.1rem;margin:.2rem 0;letter-spacing:-.02em}
   background:var(--panel2);border:1px solid var(--border);border-radius:50%;color:var(--accent);
   font-size:.9rem;font-family:ui-monospace,monospace;flex-shrink:0;margin-top:.15rem}
 .path-card-body{flex:1}
+.roadmap-strip{margin-bottom:2.5rem}
+.roadmap-strip-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+.roadmap-all{font-size:.9rem}
+.roadmap-cards{display:grid;grid-template-columns:1fr;gap:1rem}
+@media(min-width:640px){.roadmap-cards{grid-template-columns:1fr 1fr}}
+.roadmap-cards-page{grid-template-columns:1fr}
+@media(min-width:720px){.roadmap-cards-page{grid-template-columns:1fr 1fr}}
+.roadmap-card{display:block;background:var(--panel);border:1px solid var(--border);border-radius:12px;
+  padding:1.1rem 1.2rem;color:var(--fg);transition:border-color .15s,transform .15s}
+.roadmap-card:hover{border-color:var(--accent2);transform:translateY(-2px);text-decoration:none}
+.roadmap-card h2,.roadmap-card h3{margin:.1rem 0 .4rem;font-size:1.1rem;color:var(--fg)}
+.roadmap-card p{margin:0 0 .6rem;color:var(--dim);font-size:.9rem}
+.roadmap-desc{font-size:.88rem}
+.roadmap-meta{display:block;font-size:.82rem;color:var(--accent);font-family:ui-monospace,monospace;margin-bottom:.5rem}
+.roadmap-bar{display:block;height:4px;background:var(--panel2);border-radius:999px;overflow:hidden}
+.roadmap-bar-lg{height:6px;margin-top:.35rem}
+.roadmap-bar-fill{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px;transition:width .25s}
+.roadmap-progress-head{margin-top:1rem}
+.roadmap-progress-label{display:block;font-size:.88rem;color:var(--accent);font-family:ui-monospace,monospace;margin-bottom:.25rem}
+.roadmap-outcomes{margin:0 0 1.5rem;padding-left:1.2rem;color:var(--dim)}
+.roadmap-outcomes li{margin:.35rem 0}
+.roadmap-timeline{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.75rem}
+.roadmap-milestone{position:relative}
 .card p{margin:0 0 .9rem;color:var(--dim);font-size:.93rem}
 .card .meta{color:var(--accent);font-size:.85rem;font-family:ui-monospace,monospace}
 .back{margin:0 0 1rem;font-size:.9rem}

@@ -25,4 +25,7 @@ func TestCatalogListsAllChallenges(t *testing.T) {
 	if len(c.Paths) != len(opencrafters.ChallengePaths) {
 		t.Fatalf("catalog has %d paths, want %d", len(c.Paths), len(opencrafters.ChallengePaths))
 	}
+	if len(c.Roadmaps) != len(opencrafters.Roadmaps) {
+		t.Fatalf("catalog has %d roadmaps, want %d", len(c.Roadmaps), len(opencrafters.Roadmaps))
+	}
 }

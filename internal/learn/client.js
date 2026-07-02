@@ -90,6 +90,53 @@
     return raw.split(",").filter(Boolean);
   }
 
+  function roadmapPassedStages(p, challengesCSV) {
+    let total = 0;
+    let passed = 0;
+    for (const slug of challengesCSV.split(",").filter(Boolean)) {
+      const el = document.querySelector('[data-challenge="' + slug + '"]');
+      const stages = el
+        ? (el.dataset.stages || "").split(",").filter(Boolean)
+        : [];
+      const c = p.challenges[slug] || { read: {}, passed: {} };
+      total += stages.length;
+      passed += stages.filter((s) => c.passed && c.passed[s]).length;
+    }
+    return { total, passed };
+  }
+
+  function applyRoadmapProgress() {
+    const p = loadProgress();
+
+    document.querySelectorAll("[data-roadmap-card]").forEach((card) => {
+      const csv = card.dataset.challenges || "";
+      const total = parseInt(card.dataset.totalStages || "0", 10);
+      const { passed } = roadmapPassedStages(p, csv);
+      const pct = total > 0 ? Math.round((passed / total) * 100) : 0;
+      const fill = card.querySelector(".roadmap-bar-fill");
+      if (fill) fill.style.width = pct + "%";
+      card.querySelectorAll("[data-roadmap-progress-label]").forEach((el) => {
+        if (passed === total && total > 0) el.textContent = "complete · ";
+        else if (passed > 0) el.textContent = passed + "/" + total + " stages · ";
+        else el.textContent = "";
+      });
+    });
+
+    const bar = document.querySelector("[data-roadmap-bar]");
+    if (bar) {
+      const csv = document.body.dataset.challenges || "";
+      const total = parseInt(bar.dataset.totalStages || "0", 10);
+      const { passed } = roadmapPassedStages(p, csv);
+      const pct = total > 0 ? Math.round((passed / total) * 100) : 0;
+      const fill = bar.querySelector(".roadmap-bar-fill");
+      if (fill) fill.style.width = pct + "%";
+      document.querySelectorAll("[data-roadmap-progress-label]").forEach((el) => {
+        if (passed === total && total > 0) el.textContent = "complete — " + total + " stages";
+        else el.textContent = passed + "/" + total + " stages passed";
+      });
+    }
+  }
+
   function applyProgressUI() {
     const p = loadProgress();
 
@@ -235,6 +282,7 @@
         if (passed.length) markPassed(slug, passed);
         else if (job.all) markPassed(slug, stageList());
         applyProgressUI();
+        applyRoadmapProgress();
         if (statusEl) statusEl.textContent = "Passed";
         return;
       }
@@ -244,6 +292,7 @@
         if (passed.length) {
           markPassed(slug, passed);
           applyProgressUI();
+          applyRoadmapProgress();
         }
         return;
       }
@@ -276,6 +325,7 @@
           const incoming = JSON.parse(text);
           mergeProgress(incoming);
           applyProgressUI();
+          applyRoadmapProgress();
           if (statusEl) statusEl.textContent = "Imported " + file.name;
         } catch (err) {
           if (statusEl) statusEl.textContent = "Import failed: " + err.message;
@@ -287,6 +337,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     initStagePage();
     applyProgressUI();
+    applyRoadmapProgress();
     initSubmitForm();
     initProgressSync();
   });

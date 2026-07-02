@@ -40,6 +40,31 @@ type Catalog struct {
 	Order      []string
 	Challenges map[string]*Challenge
 	Paths      []Path
+	Roadmaps   []RoadmapView
+}
+
+// RoadmapMilestoneView is one step on a roadmap page.
+type RoadmapMilestoneView struct {
+	Num       int
+	Blurb     string
+	PathSlug  string // sub-roadmap link (platform roadmap)
+	PathName  string
+	Challenge *Challenge
+	StageCSV  string
+}
+
+// RoadmapView is a rendered learning roadmap.
+type RoadmapView struct {
+	Slug           string
+	Name           string
+	Tagline        string
+	Description    string
+	Outcomes       []string
+	Milestones     []RoadmapMilestoneView
+	TotalStages    int
+	ChallengeCSV   string
+	StartChallenge string
+	StartCommand   string
 }
 
 // Path is a curated learning track with rendered challenge entries.
@@ -114,6 +139,49 @@ func NewCatalog() (*Catalog, error) {
 		c.Paths = append(c.Paths, lp)
 	}
 
+	for _, def := range opencrafters.Roadmaps {
+		rv := RoadmapView{
+			Slug:        def.Slug,
+			Name:        def.Name,
+			Tagline:     def.Tagline,
+			Description: def.Description,
+			Outcomes:    append([]string(nil), def.Outcomes...),
+		}
+		challengeSlugs := opencrafters.ChallengesForRoadmap(def)
+		rv.ChallengeCSV = strings.Join(challengeSlugs, ",")
+		if len(challengeSlugs) > 0 {
+			rv.StartChallenge = challengeSlugs[0]
+			rv.StartCommand = "crafters start " + strings.TrimPrefix(challengeSlugs[0], "build-your-own-")
+		}
+		for _, slug := range challengeSlugs {
+			if ch, ok := c.Challenges[slug]; ok {
+				rv.TotalStages += len(ch.Stages)
+			}
+		}
+		for i, m := range def.Milestones {
+			mv := RoadmapMilestoneView{Num: i + 1, Blurb: m.Blurb}
+			if strings.HasPrefix(m.Challenge, "__path:") {
+				pathSlug := m.Challenge[7 : len(m.Challenge)-2]
+				mv.PathSlug = pathSlug
+				for _, p := range c.Paths {
+					if p.Slug == pathSlug {
+						mv.PathName = p.Name
+						break
+					}
+				}
+			} else if ch, ok := c.Challenges[m.Challenge]; ok {
+				mv.Challenge = ch
+				var parts []string
+				for _, st := range ch.Stages {
+					parts = append(parts, st.Slug)
+				}
+				mv.StageCSV = strings.Join(parts, ",")
+			}
+			rv.Milestones = append(rv.Milestones, mv)
+		}
+		c.Roadmaps = append(c.Roadmaps, rv)
+	}
+
 	return c, nil
 }
 
@@ -131,7 +199,33 @@ func (c *Catalog) GetPath(slug string) (*Path, bool) {
 	return nil, false
 }
 
+func (c *Catalog) GetRoadmap(slug string) (*RoadmapView, bool) {
+	for i := range c.Roadmaps {
+		if c.Roadmaps[i].Slug == slug {
+			return &c.Roadmaps[i], true
+		}
+	}
+	return nil, false
+}
+
+func (c *Catalog) RoadmapForChallenge(slug string) string {
+	for _, r := range c.Roadmaps {
+		if r.Slug == "platform" {
+			continue
+		}
+		for _, id := range strings.Split(r.ChallengeCSV, ",") {
+			if id == slug {
+				return r.Slug
+			}
+		}
+	}
+	return ""
+}
+
 func (c *Catalog) PathForChallenge(slug string) string {
+	if rs := c.RoadmapForChallenge(slug); rs != "" {
+		return rs
+	}
 	for _, p := range c.Paths {
 		for _, id := range p.ChallengeIDs {
 			if id == slug {
@@ -306,6 +400,39 @@ func (c *Catalog) APIPaths() []APIPath {
 			Name:        p.Name,
 			Description: p.Description,
 			Challenges:  append([]string(nil), p.ChallengeIDs...),
+		})
+	}
+	return out
+}
+
+// APIRoadmap is a roadmap in the JSON API.
+type APIRoadmap struct {
+	Slug         string   `json:"slug"`
+	Name         string   `json:"name"`
+	Tagline      string   `json:"tagline"`
+	Description  string   `json:"description"`
+	Outcomes     []string `json:"outcomes"`
+	Challenges   []string `json:"challenges"`
+	TotalStages  int      `json:"total_stages"`
+	StartCommand string   `json:"start_command,omitempty"`
+}
+
+func (c *Catalog) APIRoadmaps() []APIRoadmap {
+	out := make([]APIRoadmap, 0, len(c.Roadmaps))
+	for _, r := range c.Roadmaps {
+		var challenges []string
+		if r.ChallengeCSV != "" {
+			challenges = strings.Split(r.ChallengeCSV, ",")
+		}
+		out = append(out, APIRoadmap{
+			Slug:         r.Slug,
+			Name:         r.Name,
+			Tagline:      r.Tagline,
+			Description:  r.Description,
+			Outcomes:     append([]string(nil), r.Outcomes...),
+			Challenges:   challenges,
+			TotalStages:  r.TotalStages,
+			StartCommand: r.StartCommand,
 		})
 	}
 	return out
