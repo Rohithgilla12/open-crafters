@@ -78,6 +78,8 @@ func main() {
 		cmdStatus(args[1:])
 	case "list":
 		cmdList()
+	case "roadmap":
+		cmdRoadmap(args[1:])
 	case "grade":
 		cmdGrade(args[1:])
 	case "walkthrough":
@@ -113,6 +115,7 @@ USAGE
   crafters status [dir]
   crafters list
   crafters list --paths                                 # learning paths (curated tracks)
+  crafters roadmap [slug]                               # learning roadmaps (journeys + outcomes)
   crafters grade --challenge <slug> --program <path> [--all|--stage <slug>|--status]
   crafters hint <challenge> [--stage <slug>]            spoiler-free nudge for a stage
   crafters walkthrough <challenge> [--stage <slug>]     how the reference solves it

@@ -61,12 +61,15 @@ The compose file publishes `18081:8081` on the host.
 
 | Route | Description |
 |-------|-------------|
-| `GET /` | Challenge catalog grouped by learning path (HTML) |
-| `GET /paths/{slug}` | Single path — ordered challenge list |
+| `GET /` | Challenge catalog grouped by learning path + roadmap cards (HTML) |
+| `GET /roadmaps` | All learning roadmaps |
+| `GET /roadmaps/{slug}` | Single roadmap — outcomes, timeline, progress bar |
+| `GET /paths/{slug}` | Redirects to `/roadmaps/{slug}` |
 | `GET /challenges/{slug}` | Challenge overview — stage list + protocol |
 | `GET /challenges/{slug}/stages/{stage}` | Single stage with sidebar navigation |
 | `GET /api/challenges` | JSON challenge list |
 | `GET /api/paths` | JSON learning paths (`slug`, `name`, `description`, `challenges[]`) |
+| `GET /api/roadmaps` | JSON roadmaps (`slug`, `name`, `tagline`, `milestones[]`, …) |
 | `POST /api/submit` | Proxy solution zip to hosted runner (`Authorization: Bearer <token>`) |
 | `GET /api/jobs/{id}` | Poll grading job status |
 | `GET /learn.js` | Progress + submit client script |

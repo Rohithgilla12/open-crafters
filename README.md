@@ -71,6 +71,7 @@ crafters test  [dir] [--all] [--stage <slug>]         # re-grade (resume)
 crafters status [dir]                                 # progress checklist
 crafters list                                         # all challenges and stages
 crafters list --paths                                 # learning paths (curated tracks)
+crafters roadmap [slug]                               # learning roadmaps (journeys + outcomes)
 crafters progress export [dir] [--all]                # export progress.json (sync with learn app)
 crafters progress import <file> [dir]                 # merge progress into a solution
 crafters grade --challenge <slug> --program <path>    # grade an arbitrary program (CI/scripts)
@@ -128,9 +129,25 @@ go build -o crafters ./cmd/crafters
 | [Build your own hash ring](challenges/build-your-own-hash-ring/) — a consistent hash ring: FNV-1a vnode placement, clockwise lookup, minimal key movement on add/remove, virtual nodes, and concurrent multi-ring churn | 9 | ✅ ready |
 | [Build your own distributed lock](challenges/build-your-own-distributed-lock/) — a distributed lock service: exclusive acquire with leases, try-acquire without blocking, token-gated release and renew, crash-durable state, and concurrent multi-lock churn | 9 | ✅ ready |
 
+### Learning roadmaps
+
+Five curated journeys add narrative, outcomes, and milestone blurbs on top of the
+paths (`crafters roadmap` or [learn.gilla.fun/roadmaps](https://learn.gilla.fun/roadmaps)):
+
+| Roadmap | What you'll build |
+|---|---|
+| **Durability & storage** | WAL → Queue → Log → LSM → MVCC → Object store |
+| **Workflow engines** | Temporal → Workflow SDK |
+| **Distributed systems** | Raft → Hash ring → Bloom filter |
+| **Coordination & control** | Scheduler → Rate limiter → Distributed lock |
+| **Full platform** | All four tracks in suggested order |
+
+`crafters list --paths` still lists the four thematic paths. Roadmap pages show
+progress bars synced from browser localStorage (or import `progress.json`).
+
 ### Learning paths
 
-Four curated tracks group the challenges by theme (`crafters list --paths` or [learn.gilla.fun](https://learn.gilla.fun)):
+Four curated tracks group the challenges by theme (`crafters list --paths`):
 
 | Path | Challenges |
 |---|---|

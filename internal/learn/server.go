@@ -32,12 +32,15 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET /health", s.handleHealth)
 	mux.HandleFunc("GET /api/challenges", s.handleAPIChallenges)
 	mux.HandleFunc("GET /api/paths", s.handleAPIPaths)
+	mux.HandleFunc("GET /api/roadmaps", s.handleAPIRoadmaps)
 	mux.HandleFunc("POST /api/submit", s.handleSubmit)
 	mux.HandleFunc("GET /api/jobs/{id}", s.handleSubmitJob)
 	mux.HandleFunc("GET /style.css", s.handleCSS)
 	mux.HandleFunc("GET /learn.js", s.handleLearnJS)
 	mux.HandleFunc("GET /{$}", s.handleIndex)
-	mux.HandleFunc("GET /paths/{slug}", s.handlePath)
+	mux.HandleFunc("GET /roadmaps", s.handleRoadmapsIndex)
+	mux.HandleFunc("GET /roadmaps/{slug}", s.handleRoadmap)
+	mux.HandleFunc("GET /paths/{slug}", s.handlePathRedirect)
 	mux.HandleFunc("GET /challenges/{slug}", s.handleChallenge)
 	mux.HandleFunc("GET /challenges/{slug}/stages/{stage}", s.handleStage)
 	mux.Handle("GET /favicon.svg", http.FileServer(http.FS(s.assets)))
@@ -57,6 +60,10 @@ func (s *Server) handleAPIPaths(w http.ResponseWriter, _ *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]any{"paths": s.catalog.APIPaths()})
 }
 
+func (s *Server) handleAPIRoadmaps(w http.ResponseWriter, _ *http.Request) {
+	writeJSON(w, http.StatusOK, map[string]any{"roadmaps": s.catalog.APIRoadmaps()})
+}
+
 func (s *Server) handleCSS(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "text/css; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
@@ -70,18 +77,35 @@ func (s *Server) handleLearnJS(w http.ResponseWriter, _ *http.Request) {
 	_, _ = w.Write([]byte(learnJS))
 }
 
-func (s *Server) handleIndex(w http.ResponseWriter, _ *http.Request) {
-	s.render(w, indexTmpl, s.catalog.Paths)
+type indexPageData struct {
+	Roadmaps []RoadmapView
+	Paths    []Path
 }
 
-func (s *Server) handlePath(w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleIndex(w http.ResponseWriter, _ *http.Request) {
+	s.render(w, indexTmpl, indexPageData{
+		Roadmaps: s.catalog.Roadmaps,
+		Paths:    s.catalog.Paths,
+	})
+}
+
+func (s *Server) handleRoadmapsIndex(w http.ResponseWriter, _ *http.Request) {
+	s.render(w, roadmapsIndexTmpl, s.catalog.Roadmaps)
+}
+
+func (s *Server) handleRoadmap(w http.ResponseWriter, r *http.Request) {
 	slug := r.PathValue("slug")
-	p, ok := s.catalog.GetPath(slug)
+	rm, ok := s.catalog.GetRoadmap(slug)
 	if !ok {
 		http.NotFound(w, r)
 		return
 	}
-	s.render(w, pathTmpl, p)
+	s.render(w, roadmapTmpl, rm)
+}
+
+func (s *Server) handlePathRedirect(w http.ResponseWriter, r *http.Request) {
+	slug := r.PathValue("slug")
+	http.Redirect(w, r, "/roadmaps/"+slug, http.StatusMovedPermanently)
 }
 
 func (s *Server) handleChallenge(w http.ResponseWriter, r *http.Request) {
@@ -94,8 +118,8 @@ func (s *Server) handleChallenge(w http.ResponseWriter, r *http.Request) {
 	s.render(w, challengeTmpl, challengePageData{
 		Challenge:  ch,
 		StageSlugs: stageSlugs(ch),
-		PathSlug:   s.catalog.PathForChallenge(slug),
-		PathName:   pathName(s.catalog, slug),
+		RoadmapSlug: s.catalog.RoadmapForChallenge(slug),
+		RoadmapName: roadmapName(s.catalog, slug),
 	})
 }
 
@@ -131,10 +155,10 @@ type stagePageData struct {
 }
 
 type challengePageData struct {
-	Challenge  *Challenge
-	StageSlugs string
-	PathSlug   string
-	PathName   string
+	Challenge   *Challenge
+	StageSlugs  string
+	RoadmapSlug string
+	RoadmapName string
 }
 
 func stageSlugs(ch *Challenge) string {
@@ -171,9 +195,9 @@ func shortSlug(slug string) string {
 	return strings.TrimPrefix(slug, "build-your-own-")
 }
 
-func pathName(c *Catalog, challengeSlug string) string {
-	if p, ok := c.GetPath(c.PathForChallenge(challengeSlug)); ok {
-		return p.Name
+func roadmapName(c *Catalog, challengeSlug string) string {
+	if rm, ok := c.GetRoadmap(c.RoadmapForChallenge(challengeSlug)); ok {
+		return rm.Name
 	}
 	return ""
 }
