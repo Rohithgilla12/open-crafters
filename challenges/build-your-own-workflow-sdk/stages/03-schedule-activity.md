@@ -27,3 +27,16 @@ When history ends at `WORKFLOW_EXECUTION_STARTED`, return:
   already scheduled this activity in a previous task — don't schedule again.
 - This stage only tests the "just started" case; the next stage handles
   activity completion.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** For `fetch` at the start, history has only `WORKFLOW_EXECUTION_STARTED`. Return `SCHEDULE_ACTIVITY` — you're at the "need to run side effect" point. Don't complete yet; the activity hasn't run.
+
+Or run: <code>crafters hint workflow-sdk --stage schedule-activity</code>
+</details>
+<!-- /crafters-stage-hint -->

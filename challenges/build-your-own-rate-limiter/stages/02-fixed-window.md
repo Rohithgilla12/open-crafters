@@ -33,3 +33,16 @@ ends.
 - Align windows to the epoch (`floor(now / window_ms)`), not to the time of the
   first request — the tester relies on the boundary being predictable.
 - Keep the limiter keyed; you'll add more keys and algorithms next.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** The window for a timestamp is `floor(now / window_ms)`. Store that index alongside a count; when the index you compute differs from the one you stored, the window rolled over — zero the count.
+
+Or run: <code>crafters hint rate-limiter --stage fixed-window</code>
+</details>
+<!-- /crafters-stage-hint -->

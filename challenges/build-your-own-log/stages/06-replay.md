@@ -23,3 +23,16 @@ in a row, unchanged.
 - `next_offset = offset + len(returned)`. Paging is just calling `read` again
   with the previous `next_offset`.
 - No new storage — this is the read path you already have, plus a limit.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `read` with `max > 1` returns up to `max` values in one RPC. `next_offset` tells the client where to continue. Same data can be read again — reads are idempotent.
+
+Or run: <code>crafters hint log --stage replay</code>
+</details>
+<!-- /crafters-stage-hint -->

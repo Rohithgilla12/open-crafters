@@ -23,3 +23,16 @@ every group's committed offset.
   out of order.
 - Pass this and you've built the log abstraction the entire event-streaming
   world is made of.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Compose everything: durable appends, absolute offsets, retention with a rising base, consumer groups, batch reads. Never renumber offsets; persist on every mutation.
+
+Or run: <code>crafters hint log --stage gauntlet</code>
+</details>
+<!-- /crafters-stage-hint -->

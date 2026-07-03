@@ -25,3 +25,16 @@ every SST file to cross-check your served state.
 
 - Only flushed data survives a crash — the tester flushes before each kill.
 - If you've made it here, you have a working LSM-tree. Nice work.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Interleave put/get/del/flush/scan/compact across restarts. The invariants: newest wins on conflicts, tombstones hide old values, filenames define age order, compaction preserves the merged view.
+
+Or run: <code>crafters hint lsm --stage gauntlet</code>
+</details>
+<!-- /crafters-stage-hint -->

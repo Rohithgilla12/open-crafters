@@ -25,3 +25,16 @@ k bit positions are set.
 
 - The field is `maybe_present`, not `present` — bloom filters can false-positive
   but never false-negative on items that were added.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `contains` checks that **all** k bit positions are set. An item you added must return `maybe_present: true` — bloom filters never lie about membership in the positive direction.
+
+Or run: <code>crafters hint bloom-filter --stage positive</code>
+</details>
+<!-- /crafters-stage-hint -->

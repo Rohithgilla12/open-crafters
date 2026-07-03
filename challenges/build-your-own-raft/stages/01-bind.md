@@ -34,3 +34,16 @@ independently (threads, goroutines, or an async event loop).
 
 - Be accepting connections within 10 seconds of starting.
 - Write each response with a trailing `\n` and flush — don't buffer.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Parse `--node-id`, `--peers`, `--port`, `--data-dir`. Listen on the port and answer `ping` with your `node_id`. Peer addresses come from the `--peers` list (`1=host:port,2=host:port,…`).
+
+Or run: <code>crafters hint raft --stage bind</code>
+</details>
+<!-- /crafters-stage-hint -->

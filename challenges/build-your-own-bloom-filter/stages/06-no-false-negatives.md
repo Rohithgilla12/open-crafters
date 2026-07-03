@@ -18,3 +18,16 @@ volume.
 - A single wrong bit index or off-by-one in the hash loop will fail one of the
   200 probes.
 - Idempotent adds (adding the same item twice) must not break anything.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** This is the contract that makes bloom filters useful: if you added it, `contains` must say true — always, even after hundreds of inserts.
+
+Or run: <code>crafters hint bloom-filter --stage no-false-negatives</code>
+</details>
+<!-- /crafters-stage-hint -->

@@ -17,3 +17,16 @@ etag reflecting the new body.
 ## Notes
 
 - This is just map assignment — but the etag must change with the content.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `put` is upsert — same key replaces the previous body and returns a fresh etag. No versioning required.
+
+Or run: <code>crafters hint object-store --stage overwrite</code>
+</details>
+<!-- /crafters-stage-hint -->

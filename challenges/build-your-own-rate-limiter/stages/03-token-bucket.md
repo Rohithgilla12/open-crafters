@@ -37,3 +37,16 @@ Implement `configure`/`take` for `algorithm: "token_bucket"`:
 - Don't refill on a timer — compute accrued tokens lazily from the elapsed
   wall-clock time on each `take`/`peek`. That single trick is also what makes
   durability easy later.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Don't run a refill timer. Store `(tokens, as_of_ms)`; on each access add `(now - as_of) / refill_interval_ms * refill_tokens`, cap at capacity, and set `as_of = now`. Then decide.
+
+Or run: <code>crafters hint rate-limiter --stage token-bucket</code>
+</details>
+<!-- /crafters-stage-hint -->

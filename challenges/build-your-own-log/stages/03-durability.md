@@ -28,3 +28,16 @@ including the post-recovery append, survives.
   boot to rebuild each topic. (Yes — you're building a write-ahead log for your
   log.)
 - Restore the per-topic next-offset on recovery, not just the data.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Persist every append (and later every offset commit) to `--data-dir` before acknowledging. On startup replay the log into in-memory topics. Unacked appends must not exist; acked appends must survive `SIGKILL`.
+
+Or run: <code>crafters hint log --stage durability</code>
+</details>
+<!-- /crafters-stage-hint -->

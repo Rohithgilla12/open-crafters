@@ -33,3 +33,16 @@ this transaction's snapshot**, abort the entire commit with error code
   version list and the snapshot from the previous stages.
 - An aborted transaction must leave **no** versions behind, and its id becomes
   invalid (a later `commit`/`get` on it is `UNKNOWN_TXN`).
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** If txn A read key K at snapshot S, and txn B committed a write to K after S before A commits, A's commit must fail with `CONFLICT`. First committer wins on overlapping keys.
+
+Or run: <code>crafters hint mvcc --stage conflicts</code>
+</details>
+<!-- /crafters-stage-hint -->

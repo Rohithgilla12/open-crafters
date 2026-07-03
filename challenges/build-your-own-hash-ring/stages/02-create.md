@@ -26,3 +26,16 @@ Implement `create_ring`:
 
 - Store `replicas` on the ring; vnodes are derived at lookup time from
   `node_id + "#" + replica index per [PROTOCOL.md](../PROTOCOL.md).
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `map[ring_id]*ring` where each ring stores `replicas` and a set of physical node IDs. Reject duplicates with `RING_EXISTS`; validate `replicas >= 1` with `INVALID_PARAMS`.
+
+Or run: <code>crafters hint hash-ring --stage create</code>
+</details>
+<!-- /crafters-stage-hint -->

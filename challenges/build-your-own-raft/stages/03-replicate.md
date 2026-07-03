@@ -29,3 +29,16 @@ The tester writes via the leader, then waits until **every running node** report
 
 - Log entries carry `index`, `term`, `key`, and `value` (see PROTOCOL.md).
 - This is the same write-before-ack discipline as [Build your own WAL](../../build-your-own-wal/) — but replicated.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Only the leader accepts `set`. Append to the local log, replicate via `append_entries` to followers, advance `commit_index` when a majority has replicated an entry, then apply to the state machine.
+
+Or run: <code>crafters hint raft --stage replicate</code>
+</details>
+<!-- /crafters-stage-hint -->

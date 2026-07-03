@@ -29,3 +29,16 @@ Respond to any unknown method with an error:
 - The starter already passes this stage — run `crafters test` to confirm, then
   start on stage 2.
 - You won't need `--data-dir` until the Durability stage; accept it now.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** A line-delimited JSON server is a `for` loop over lines: read one, decode, dispatch on `method`, write one line back. Get the envelope right and every later stage is just a new `case`.
+
+Or run: <code>crafters hint distributed-lock --stage bind</code>
+</details>
+<!-- /crafters-stage-hint -->

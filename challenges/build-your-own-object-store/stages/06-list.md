@@ -27,3 +27,16 @@ Implement `list`.
 ## Notes
 
 - Lexicographic order is byte/string order, not numeric — `10` sorts before `2`.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Filter keys with `strings.HasPrefix` (or `key.startswith`), sort lexicographically, return `{"keys": [...]}`. Empty prefix lists everything.
+
+Or run: <code>crafters hint object-store --stage list</code>
+</details>
+<!-- /crafters-stage-hint -->

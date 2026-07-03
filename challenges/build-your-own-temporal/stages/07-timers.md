@@ -38,3 +38,16 @@ The tester starts a 500ms timer and verifies:
 - A simple background ticker (check all pending timers every ~50ms) is
   perfectly adequate. Resist the urge for a fancy timer wheel — that's not
   what this stage grades.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `START_TIMER` command appends a timer event with `fire_at`. A background tick or heap wakes timers; when due, append `TIMER_FIRED` and enqueue a workflow task. Timers must survive if you kill the process after scheduling.
+
+Or run: <code>crafters hint temporal --stage timers</code>
+</details>
+<!-- /crafters-stage-hint -->

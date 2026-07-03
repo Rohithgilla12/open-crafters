@@ -26,3 +26,16 @@ Implement **`schedule`** and **`poll`**:
 - Use wall-clock time for `delay_ms`.
 - The tester checks the job is **not** pollable too early, and **is** pollable
   after the delay (with generous slack for slow CI).
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `schedule` takes `run_at_ms` (epoch ms) and payload. Store the job as `pending` with a unique `job_id`. `poll` returns nothing until `now >= run_at_ms`.
+
+Or run: <code>crafters hint scheduler --stage schedule</code>
+</details>
+<!-- /crafters-stage-hint -->

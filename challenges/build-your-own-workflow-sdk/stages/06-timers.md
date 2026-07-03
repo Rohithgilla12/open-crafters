@@ -21,3 +21,16 @@ Implement **`timer_wait`** (see [PROTOCOL.md](../PROTOCOL.md)):
   *would* emit at each point.
 - `duration_ms` in `START_TIMER` is metadata for the server; replay just
   emits the command when the workflow code calls `sleep()`.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `timer_wait` workflow: before `TIMER_FIRED` in history, return empty commands; after it fires, return `COMPLETE_WORKFLOW`. Timers are just events you haven't seen yet.
+
+Or run: <code>crafters hint workflow-sdk --stage timers</code>
+</details>
+<!-- /crafters-stage-hint -->

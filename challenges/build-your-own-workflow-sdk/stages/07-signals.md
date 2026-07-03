@@ -26,3 +26,16 @@ history: [STARTED, SIGNALED{signal_name:"go", input:{value:42}}]
   activity completions and timer fires.
 - The workflow doesn't poll for signals; replay sees them in history when the
   worker task arrives.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `signal_wait` blocks until `WORKFLOW_EXECUTION_SIGNALED` appears. Before the signal event → empty commands. After → complete with the signal payload.
+
+Or run: <code>crafters hint workflow-sdk --stage signals</code>
+</details>
+<!-- /crafters-stage-hint -->

@@ -14,3 +14,16 @@ Persist jobs to `--data-dir`. The tester will:
    after restart), not 2s after restart.
 
 Only acknowledge `schedule` after durable write (write-before-ack).
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Persist the full job table to `--data-dir` after every schedule, complete, fail, or cancel. On boot reload and resume — due jobs pollable, leases expired jobs back to pending.
+
+Or run: <code>crafters hint scheduler --stage durability</code>
+</details>
+<!-- /crafters-stage-hint -->

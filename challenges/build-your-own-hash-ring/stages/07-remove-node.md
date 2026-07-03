@@ -22,3 +22,16 @@ match the reference oracle on remaining nodes.
 ## Notes
 
 - `removed: false` if the node wasn't on the ring (no error).
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Drop the physical node and its vnodes. Lookups must never return the removed ID; surviving keys remap via the same clockwise walk on the smaller ring.
+
+Or run: <code>crafters hint hash-ring --stage remove-node</code>
+</details>
+<!-- /crafters-stage-hint -->

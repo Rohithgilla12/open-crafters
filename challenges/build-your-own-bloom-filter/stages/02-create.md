@@ -27,3 +27,16 @@ Implement `create`:
 
 - Allocate the bit array now; you'll hash into it in the next stage.
 - See [PROTOCOL.md](../PROTOCOL.md) for the exact hash specification.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `map[filter_id]*filter` where each filter holds an `m`-bit array and `k`. Reject duplicates with `FILTER_EXISTS`; validate `m >= 8` and `k >= 1` with `INVALID_PARAMS`.
+
+Or run: <code>crafters hint bloom-filter --stage create</code>
+</details>
+<!-- /crafters-stage-hint -->

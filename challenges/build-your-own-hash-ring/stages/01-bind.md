@@ -30,3 +30,16 @@ seconds of starting.
   once. A thread (or goroutine, or async task) per connection is the simplest
   thing that works.
 - The starter templates already pass this stage. Start from one.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Same newline-delimited JSON loop as every challenge: read line, decode, dispatch, respond, flush. `ping` returns `pong` — wire up transport once, then add hash-ring methods stage by stage.
+
+Or run: <code>crafters hint hash-ring --stage bind</code>
+</details>
+<!-- /crafters-stage-hint -->

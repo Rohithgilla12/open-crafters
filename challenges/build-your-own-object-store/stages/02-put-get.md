@@ -40,3 +40,16 @@ A missing key is an error:
   exact digest.
 - Guard shared state with a lock if connections run concurrently — you'll need
   it later anyway.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `map[key]body` in memory. Etag is `sha256(body).hexdigest()` — lowercase hex, no prefix. `get` on a missing key returns `NOT_FOUND`, not an empty result.
+
+Or run: <code>crafters hint object-store --stage put-get</code>
+</details>
+<!-- /crafters-stage-hint -->

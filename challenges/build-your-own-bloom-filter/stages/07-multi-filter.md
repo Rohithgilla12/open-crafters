@@ -19,3 +19,16 @@ affect another.
 
 - A single global bit array keyed only by hash position would fail this stage.
 - `FILTER_NOT_FOUND` still applies when the filter ID doesn't exist.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Each `filter_id` gets its own bit array. Adding to filter `a` must not flip bits in filter `b`.
+
+Or run: <code>crafters hint bloom-filter --stage multi-filter</code>
+</details>
+<!-- /crafters-stage-hint -->

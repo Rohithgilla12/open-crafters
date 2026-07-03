@@ -33,3 +33,16 @@ and another kill to prove the new write was durable.
 - The failure mode this stage catches: skipping the bad record and continuing
   to replay (`k4`, `k5` present = fail), or crashing on boot instead of
   recovering.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** When CRC fails mid-log, stop replay and truncate — same as torn writes, but the corruption can be anywhere. Never apply a record you can't verify.
+
+Or run: <code>crafters hint wal --stage checksums</code>
+</details>
+<!-- /crafters-stage-hint -->

@@ -36,3 +36,16 @@ each result matches.
   sequel challenge, *Build your own workflow SDK*, puts you on the other
   side of this protocol: deterministic replay against the histories your
   server just learned to serve.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Many `workflow_id`s in flight at once — isolate state per workflow. Task tokens must be single-use and scoped to one workflow/run. Poll fairly or FIFO; never mix histories between workflows.
+
+Or run: <code>crafters hint temporal --stage concurrency</code>
+</details>
+<!-- /crafters-stage-hint -->

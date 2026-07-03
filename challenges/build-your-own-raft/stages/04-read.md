@@ -23,3 +23,16 @@ and expects the same value.
 
 - Reads may hit followers — they must still reflect committed state.
 - Uncommitted leader writes must not appear in `get` results.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `get` on the leader reads from the applied state machine (committed entries only). Followers can return `NOT_LEADER` with the current leader hint, or you can serve linearizable reads from the leader after commit.
+
+Or run: <code>crafters hint raft --stage read</code>
+</details>
+<!-- /crafters-stage-hint -->

@@ -29,3 +29,16 @@ the oldest in-window cost ages past `window_ms`.
 - Trim entries older than `window_ms` as you go so state stays bounded.
 - This is the same trailing-window idea behind sliding-window log and
   sliding-window counter limiters; you're building the exact (log) form.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Keep the timestamps of admitted units. "How many in the last `window_ms`?" is "how many timestamps are newer than `now - window_ms`?" Trim the rest as you go so the list can't grow without bound.
+
+Or run: <code>crafters hint rate-limiter --stage sliding-window</code>
+</details>
+<!-- /crafters-stage-hint -->

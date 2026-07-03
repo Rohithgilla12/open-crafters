@@ -25,3 +25,16 @@ checks `status` is still held, then releases.
 - Persist on each mutating call (`acquire`, `release`, `renew`). Atomic
   write-to-temp + rename is enough — `SIGKILL` cannot be caught.
 - Store `expires_at_ms` as absolute time so downtime counts toward expiry.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Persist the whole `name → {holder_id, token, expires_at_ms}` map on every mutating RPC. Atomic rename of a small JSON file is enough for SIGKILL.
+
+Or run: <code>crafters hint distributed-lock --stage durability</code>
+</details>
+<!-- /crafters-stage-hint -->

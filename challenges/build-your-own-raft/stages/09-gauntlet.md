@@ -17,3 +17,16 @@ Pass the full progression:
 
 - Combines replication, crash recovery, and catch-up after a slow follower returns.
 - If earlier stages were implemented with shortcuts, this stage catches them.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Writes, leader crashes, follower crashes, restarts, partitions — the same rules throughout: majority commit, term monotonicity, log matching, durable state. Don't special-case the gauntlet.
+
+Or run: <code>crafters hint raft --stage gauntlet</code>
+</details>
+<!-- /crafters-stage-hint -->

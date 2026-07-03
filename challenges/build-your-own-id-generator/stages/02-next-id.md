@@ -28,3 +28,16 @@ Also implement `configure` so tests can set `worker_id` later (default `0`).
 
 - Use the epoch `1577836800000` from the protocol — tests decode your IDs with
   `parse`, not by guessing your encoding.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Pack `(timestamp - epoch) << 22 | worker_id << 12 | sequence` into a decimal string.
+
+Or run: <code>crafters hint id-generator --stage next-id</code>
+</details>
+<!-- /crafters-stage-hint -->

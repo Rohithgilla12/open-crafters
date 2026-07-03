@@ -19,3 +19,16 @@ Implement `ping`:
 ## Tests
 
 Two concurrent connections, interleaved pings.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Newline-delimited JSON server — read line, dispatch, respond, flush. `ping` returns `pong`. Scheduling logic comes in the next stage.
+
+Or run: <code>crafters hint scheduler --stage bind</code>
+</details>
+<!-- /crafters-stage-hint -->

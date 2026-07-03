@@ -30,3 +30,16 @@ After restart, the tester reads all of it back through `get`.
   not a buffer), or applying records in file order.
 - This property — *state is fully reconstructible from the log alone* — is
   what you're actually building. Hold onto it; the next two stages attack it.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Replay is "read records until EOF or first invalid frame, apply ops in order." A torn last record is simply incomplete — stop there, don't apply it, and truncate the file tail before accepting new appends.
+
+Or run: <code>crafters hint wal --stage replay</code>
+</details>
+<!-- /crafters-stage-hint -->

@@ -27,3 +27,16 @@ compute k positions, then set each bit to 1.
 - Items are UTF-8 strings — hash the raw bytes, not a language-specific string
   representation.
 - Adding the same item twice is fine (bits stay set).
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Hash the item's UTF-8 bytes with the PROTOCOL's FNV-1a scheme to get k positions, then set those bits to 1. Unknown filter → `FILTER_NOT_FOUND`.
+
+Or run: <code>crafters hint bloom-filter --stage add</code>
+</details>
+<!-- /crafters-stage-hint -->

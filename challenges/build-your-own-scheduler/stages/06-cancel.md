@@ -15,3 +15,16 @@ get_job → status "cancelled"
 
 Cancelling an unknown job → `JOB_NOT_FOUND`. Cancelling a completed job →
 `{"cancelled": false}`.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `cancel(job_id)` removes a pending job or stops a not-yet-completed scheduled job. Return whether it existed. Completed jobs can't be cancelled.
+
+Or run: <code>crafters hint scheduler --stage cancel</code>
+</details>
+<!-- /crafters-stage-hint -->

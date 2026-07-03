@@ -25,3 +25,16 @@ an RPC error).
 
 - Do not delete the lock name from your map on release — just mark it free.
 - Expired locks should also return `released: false`.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Compare the caller's `token` to the stored token *and* check the lease is still unexpired. Match → clear holder fields and return `released: true`; anything else → `released: false` with no RPC error.
+
+Or run: <code>crafters hint distributed-lock --stage release</code>
+</details>
+<!-- /crafters-stage-hint -->

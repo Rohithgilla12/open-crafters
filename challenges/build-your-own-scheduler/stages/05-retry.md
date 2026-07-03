@@ -23,3 +23,16 @@ schedule {
 
 - Retries reschedule at `now + retry_delay_ms`.
 - `get_job` should show `status: "failed"` and the error string.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `fail` with a lease token schedules a retry: increment `attempt`, set `run_at_ms = now + retry_delay_ms`, clear the lease. Stop after `max_attempts`.
+
+Or run: <code>crafters hint scheduler --stage retry</code>
+</details>
+<!-- /crafters-stage-hint -->

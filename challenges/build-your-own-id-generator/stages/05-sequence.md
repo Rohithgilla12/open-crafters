@@ -16,3 +16,16 @@ up to `4095` without collision.
 
 - This is the heart of the snowflake: same millisecond → bump sequence; new
   millisecond → reset sequence to `0`.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** A mutex around `(last_ts, last_seq)` — the gauntlet will race you without it.
+
+Or run: <code>crafters hint id-generator --stage sequence</code>
+</details>
+<!-- /crafters-stage-hint -->

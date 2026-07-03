@@ -46,3 +46,16 @@ acks with its **stale** receipt.
   the old one can never match again.
 - Don't index in-flight state by message id alone — two different deliveries of
   one message must be distinguishable, and only the latest is live.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** A receipt is a lease on one specific delivery. After ack, nack, or visibility expiry, that receipt must never ack again — even if the worker is slow and tries later.
+
+Or run: <code>crafters hint queue --stage fencing</code>
+</details>
+<!-- /crafters-stage-hint -->

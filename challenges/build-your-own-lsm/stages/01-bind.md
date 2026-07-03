@@ -37,3 +37,16 @@ handle each connection independently (threads, goroutines, or an event loop).
 
 - Be accepting connections within 10 seconds of starting.
 - Write each response with a trailing `\n` and flush — don't buffer.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Newline-delimited JSON over TCP — read a line, dispatch on `method`, write a response line, flush. `ping` returns `pong`. Build the server loop once; each stage adds storage methods.
+
+Or run: <code>crafters hint lsm --stage bind</code>
+</details>
+<!-- /crafters-stage-hint -->

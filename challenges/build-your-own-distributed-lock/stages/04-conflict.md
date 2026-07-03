@@ -27,3 +27,16 @@ The original holder must remain unchanged.
 - Check expiry before rejecting: an expired lease is free for a new acquirer.
 - Same holder trying again without releasing should also get `LOCK_HELD` (only
   one active lease per lock).
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Before granting, ask "is someone else holding this with `expires_at_ms > now`?" If yes, `acquire` errors `LOCK_HELD`; the stored holder and token stay untouched.
+
+Or run: <code>crafters hint distributed-lock --stage conflict</code>
+</details>
+<!-- /crafters-stage-hint -->

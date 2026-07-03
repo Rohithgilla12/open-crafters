@@ -17,3 +17,16 @@ uses `lease_ms: 400` on `schedule`).
 
 - This prevents two workers from processing the same run concurrently.
 - Compare with the queue challenge's visibility timeout — same idea, time axis.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Each poll grants a lease for `lease_ms`. If `complete` doesn't arrive before expiry, the job becomes pollable again — another worker can pick it up. Same payload, new token.
+
+Or run: <code>crafters hint scheduler --stage lease</code>
+</details>
+<!-- /crafters-stage-hint -->

@@ -41,3 +41,16 @@ record was on disk *before* you acknowledged.
 - Keep one append handle open; don't reopen the file per write.
 - Yes, a `del` of a missing key still appends a record — determinism over
   cleverness (and the tester checks).
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Prefix each payload with a 4-byte little-endian length, and put a 4-byte CRC32 *before* that covering `length || payload`. The CRC lets you spot garbage without guessing where a record ends.
+
+Or run: <code>crafters hint wal --stage format</code>
+</details>
+<!-- /crafters-stage-hint -->

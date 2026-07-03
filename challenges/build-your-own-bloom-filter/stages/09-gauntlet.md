@@ -27,3 +27,16 @@ the gauntlet tidy.
   don't corrupt bits.
 - There is no crash/restart in this gauntlet — pure concurrency, in-memory.
 - The gauntlet is the last stage — there is nothing after it but satisfaction.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Protect the filter map and bit arrays with a lock (or equivalent) so concurrent connections can add and probe safely. `delete_filter` is optional but handy for cleanup under churn.
+
+Or run: <code>crafters hint bloom-filter --stage gauntlet</code>
+</details>
+<!-- /crafters-stage-hint -->

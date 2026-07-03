@@ -36,3 +36,16 @@ event.
 - If you built the "needs a workflow task" flag in stage 4, this stage is
   ~15 lines. That's the payoff of the event-driven design: every new feature
   is "append an event, set the flag".
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `signal_workflow` appends `WORKFLOW_EXECUTION_SIGNALED` with the signal name and payload, then enqueues a workflow task so the worker can react. Signals can arrive while a workflow is running or waiting.
+
+Or run: <code>crafters hint temporal --stage signals</code>
+</details>
+<!-- /crafters-stage-hint -->

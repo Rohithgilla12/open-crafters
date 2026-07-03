@@ -33,3 +33,16 @@ Rules the tester enforces:
   worker asks.
 - This flag-based design pays off in every remaining stage: activities,
   timers, and signals all just set the flag.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Every state change is an event with monotonic `event_id`. Never mutate or delete past events — `get_history` returns the full ordered list. Commands from workers become new events.
+
+Or run: <code>crafters hint temporal --stage history</code>
+</details>
+<!-- /crafters-stage-hint -->

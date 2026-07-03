@@ -34,3 +34,16 @@ verifies; then writes again, kills again, verifies again.
   code as if the power can fail after any syscall: flush *and* fsync before
   acknowledging. This challenge grades everything it can observe; this part
   is the honor system, and the habit is the lesson.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Append every mutating operation to a file under `--data-dir` *before* you acknowledge the RPC. On startup, replay that file into the map. `SIGKILL` means no shutdown hook — persist on each write.
+
+Or run: <code>crafters hint wal --stage persist</code>
+</details>
+<!-- /crafters-stage-hint -->

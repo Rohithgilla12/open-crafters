@@ -51,3 +51,16 @@ sorted by `part_number`.
 
 - The object is not visible at the key until `complete_multipart` succeeds.
 - Parts may be uploaded in any order before completion.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Track in-flight uploads by `upload_id` with a map of `part_number → body`. `complete_multipart` concatenates parts in ascending part number, checks each etag, stores at the original key, and removes the upload.
+
+Or run: <code>crafters hint object-store --stage multipart</code>
+</details>
+<!-- /crafters-stage-hint -->

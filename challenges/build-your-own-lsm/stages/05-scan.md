@@ -29,3 +29,16 @@ across both layers. It also checks the half-open end boundary.
 
 - An empty range returns `"entries": []`.
 - `scan` with `start >= end` returns no entries.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Merge memtable keys with all SST keys in `[start, end)`, dedupe keeping the newest version of each key, skip tombstones. Sort the result lexicographically.
+
+Or run: <code>crafters hint lsm --stage scan</code>
+</details>
+<!-- /crafters-stage-hint -->

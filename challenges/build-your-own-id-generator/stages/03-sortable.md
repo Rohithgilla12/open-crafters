@@ -16,3 +16,16 @@ return **strictly increasing** decimal strings when compared as integers.
 - You do not need wall-clock sleep inside the server — the tester pauses between
   calls. Focus on never moving the timestamp backwards and incrementing sequence
   within a millisecond.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Never decrease `last_timestamp_ms`; within a ms, increment `sequence`.
+
+Or run: <code>crafters hint id-generator --stage sortable</code>
+</details>
+<!-- /crafters-stage-hint -->

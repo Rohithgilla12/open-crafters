@@ -16,3 +16,16 @@ least ~15% of the time.
 ## Notes
 
 - Broken vnode positions or wrong clockwise walk fail here.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** With three physical nodes and `replicas=1`, three vnodes sit on the ring. Two thousand keys should land on each node at least ~15% of the time if hashing is correct — gross imbalance means broken vnode positions or lookup walk.
+
+Or run: <code>crafters hint hash-ring --stage spread</code>
+</details>
+<!-- /crafters-stage-hint -->

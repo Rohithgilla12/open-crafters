@@ -19,3 +19,16 @@ greater** than every ID issued before the crash.
 
 - Same durability discipline as the WAL and distributed-lock challenges: write,
   `fsync` if you like, atomic rename — but **correctness** is what we grade.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Persist `last_timestamp_ms` and `last_sequence` after each allocation — atomic rename is enough.
+
+Or run: <code>crafters hint id-generator --stage durability</code>
+</details>
+<!-- /crafters-stage-hint -->

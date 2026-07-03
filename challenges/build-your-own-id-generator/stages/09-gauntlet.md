@@ -20,3 +20,16 @@ Survive:
 
 - Protect `(last_timestamp_ms, last_sequence)` with a mutex — the gauntlet will
   find races if you don't.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** One mutex, one state file, no per-connection counters.
+
+Or run: <code>crafters hint id-generator --stage gauntlet</code>
+</details>
+<!-- /crafters-stage-hint -->

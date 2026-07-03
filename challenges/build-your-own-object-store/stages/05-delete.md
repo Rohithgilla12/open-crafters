@@ -24,3 +24,16 @@ After a successful delete, `get` and `head` on that key must return
 ## Notes
 
 - Deletes are idempotent at the protocol level — missing keys are not errors.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `delete` returns `deleted: true` when a key existed, `false` otherwise. After delete, `get`/`head` must return `NOT_FOUND`.
+
+Or run: <code>crafters hint object-store --stage delete</code>
+</details>
+<!-- /crafters-stage-hint -->

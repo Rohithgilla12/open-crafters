@@ -15,3 +15,16 @@ change owner; every lookup must still match the oracle with four nodes.
 ## Notes
 
 - Moving ~25% is typical for n=4; moving ≥45% suggests reshuffling everything.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Consistent hashing: adding a node should only move keys that would now belong to it — roughly 1/n of keys for n nodes, not half the ring. After adding a fourth node to three, fewer than 45% of keys should change owner.
+
+Or run: <code>crafters hint hash-ring --stage minimal-move</code>
+</details>
+<!-- /crafters-stage-hint -->

@@ -44,3 +44,16 @@ one key doesn't affect others. Everything is in memory — no disk yet.
 
 - Keys and values are always strings.
 - `del` of a missing key is not an error — it returns `deleted: false`.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** An in-memory `map` is your memtable. `put` upserts; `get` returns `found: false` for missing keys; `del` removes. No disk yet — learn the RPC contract first.
+
+Or run: <code>crafters hint lsm --stage put-get</code>
+</details>
+<!-- /crafters-stage-hint -->

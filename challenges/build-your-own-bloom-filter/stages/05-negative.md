@@ -21,3 +21,16 @@ never-added items should return `maybe_present: false`.
   only checks the easy case where the filter is nearly empty.
 - If you get false positives here, double-check your hash positions — a bug
   that sets too many bits looks like a full filter.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** With a large `m`, few inserts, and modest `k`, items you never added should usually return `maybe_present: false`. False positives exist in theory but are unlikely when the filter is sparse.
+
+Or run: <code>crafters hint bloom-filter --stage negative</code>
+</details>
+<!-- /crafters-stage-hint -->

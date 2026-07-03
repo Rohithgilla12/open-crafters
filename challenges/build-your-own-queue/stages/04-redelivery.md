@@ -49,3 +49,16 @@ The tester receives a message with a 500ms timeout, then:
 - Redelivery and ordering interact: a redelivered message keeps its original
   sequence number, so it sorts ahead of newer messages. Hold onto that — the
   Dead-letter stage turns it into a problem.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Each received message has `invisible_until`. When `now` passes that deadline without an ack, the message becomes visible again — same body, new receipt. The old receipt must stop working.
+
+Or run: <code>crafters hint queue --stage redelivery</code>
+</details>
+<!-- /crafters-stage-hint -->

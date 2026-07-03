@@ -30,3 +30,16 @@ state and your durable bytes are not allowed to drift, ever.
   makes "OK" mean something. The same machinery, scaled up, is the bottom
   layer of Postgres, etcd, and Kafka. Next up, a natural sequel: *Build your
   own Temporal* runs this exact durability contract one level up the stack.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** You already have the pieces: framed append + fsync, snapshot + truncate, truncate-on-bad-CRC recovery. The gauntlet is random writes, kills, and restarts — nothing new, just don't skip fsync or reorder checkpoint steps.
+
+Or run: <code>crafters hint wal --stage gauntlet</code>
+</details>
+<!-- /crafters-stage-hint -->

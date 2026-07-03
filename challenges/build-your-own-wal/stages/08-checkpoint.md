@@ -44,3 +44,16 @@ the combined recovery. Then it crafts its *own* `snapshot.json` and
   publish primitive an OS gives you. You'll reuse it everywhere.
 - Don't forget: after truncating, your append handle must point at the new
   empty file, not a deleted inode.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** A checkpoint is a full `snapshot.json` of the map, written atomically (temp file + rename), *then* truncate or reset `wal.log`. Order matters: snapshot first, log second.
+
+Or run: <code>crafters hint wal --stage checkpoint</code>
+</details>
+<!-- /crafters-stage-hint -->

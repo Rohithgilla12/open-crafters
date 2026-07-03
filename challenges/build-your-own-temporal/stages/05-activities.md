@@ -47,3 +47,16 @@ nothing for it to decide yet.
 
 - Track pending activities per workflow (id → type, input, attempt). The
   `attempt` field is always 1 for now; stage 6 makes it interesting.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Workers send `SCHEDULE_ACTIVITY` in `complete_workflow_task`. That appends an event and enqueues an activity task. Activity workers `poll_activity_task`, run work, then `complete_activity_task` with the result.
+
+Or run: <code>crafters hint temporal --stage activities</code>
+</details>
+<!-- /crafters-stage-hint -->

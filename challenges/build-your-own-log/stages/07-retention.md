@@ -31,3 +31,16 @@ group's committed offset is still 1; a new append gets offset 6.
   — offsets stay absolute for free.
 - Don't touch committed offsets on truncate. Lag is the consumer's problem to
   observe, not yours to hide.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `truncate(topic, before)` drops entries with offset `< before` but **does not renumber** surviving offsets. Raise `base` to `before` and trim the slice — offset 100 must still mean offset 100 after truncation.
+
+Or run: <code>crafters hint log --stage retention</code>
+</details>
+<!-- /crafters-stage-hint -->

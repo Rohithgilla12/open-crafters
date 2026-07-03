@@ -22,3 +22,16 @@ time.
 - Tombstones (`value_len=0`) aren't tested here yet — stage 7 covers deletes
   on disk. But in-memory deletes before flush should not appear in the SST
   file at all (the key simply isn't written).
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** On startup, list `sst/*.sst`, sort by filename, and remember the paths. You don't need to load all data into RAM — lazy read per `get` is fine. Bump `next_seq` from the highest file number.
+
+Or run: <code>crafters hint lsm --stage restart</code>
+</details>
+<!-- /crafters-stage-hint -->

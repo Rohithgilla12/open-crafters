@@ -23,3 +23,16 @@ your process and restarts it.
   is mostly about getting multipart and delete semantics right under crash
   pressure.
 - The gauntlet is the last stage — there is nothing after it but satisfaction.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Compose everything: put, get, head, delete, list, multipart, persist after every change. A crash mid-gauntlet must not lose acknowledged writes or resurrect deleted keys.
+
+Or run: <code>crafters hint object-store --stage gauntlet</code>
+</details>
+<!-- /crafters-stage-hint -->

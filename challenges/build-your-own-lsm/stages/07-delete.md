@@ -24,3 +24,16 @@ tombstone entry exists for the deleted key.
 - A tombstone in the memtable (from `del` before flush) should hide the key
   immediately, without waiting for flush.
 - Tombstones in compacted files should still hide keys after compaction.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `del` removes from memtable immediately. On flush, write tombstone entries (`value_len = 0`) so deletes survive restart and hide older values in SSTs during get/scan.
+
+Or run: <code>crafters hint lsm --stage delete</code>
+</details>
+<!-- /crafters-stage-hint -->

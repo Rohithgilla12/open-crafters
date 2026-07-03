@@ -36,3 +36,16 @@ Implement `peek`:
   `now`" computation into one place, then have `take`, `peek`, and
   `retry_after_ms` all call it. Duplicating that math is how the three drift
   out of agreement.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Factor "how much is available at `now`" into one function that both `take` and `peek` call. `peek` runs the accrual but skips the deduction.
+
+Or run: <code>crafters hint rate-limiter --stage peek</code>
+</details>
+<!-- /crafters-stage-hint -->

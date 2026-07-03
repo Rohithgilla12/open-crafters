@@ -21,3 +21,16 @@ Two concurrent connections, each pinged a few times. Accept connections within
 
 - `--data-dir` is yours; ignore it until the Durability stage.
 - The starter templates already pass this stage.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Newline-delimited JSON over TCP — one request line in, one response line out, flush every time. `ping` returns `pong`. Handle each connection independently.
+
+Or run: <code>crafters hint log --stage bind</code>
+</details>
+<!-- /crafters-stage-hint -->

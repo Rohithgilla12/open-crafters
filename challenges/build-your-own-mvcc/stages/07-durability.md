@@ -35,3 +35,16 @@ then commits `d3`, crashes again, and expects `d3` to survive.
   next commit must get a higher number, or conflict detection breaks.
 - In-flight transactions don't survive a crash, and shouldn't: nothing
   acknowledged them.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Append each committed transaction to a durable log under `--data-dir` before acknowledging `commit`. On startup replay commits in sequence order to rebuild version chains.
+
+Or run: <code>crafters hint mvcc --stage durability</code>
+</details>
+<!-- /crafters-stage-hint -->

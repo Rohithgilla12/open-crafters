@@ -23,3 +23,16 @@ This applies to all workflow types you've implemented, not just `greet`.
 - If you need unique IDs in commands, derive them deterministically from
   history (event count, activity id, etc.) — or avoid needing them entirely
   for the workflows in this challenge.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** No `Math.random()`, no `Date.now()`, no reading files — replay is a pure function of history. Call `replay` twice with identical input; byte- identical command output.
+
+Or run: <code>crafters hint workflow-sdk --stage determinism</code>
+</details>
+<!-- /crafters-stage-hint -->

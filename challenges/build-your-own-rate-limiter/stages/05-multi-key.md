@@ -30,3 +30,16 @@ You already key limiters by `key`; now prove the edges:
 
 - A map from `key` to limiter state is all you need. Keep the per-key state
   small — the next stages will hammer it concurrently and persist it.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** One map from `key` to limiter state. `configure` overwrites the entry (fresh state); `take`/`peek` on a missing entry is an error, not an implicit create.
+
+Or run: <code>crafters hint rate-limiter --stage multi-key</code>
+</details>
+<!-- /crafters-stage-hint -->

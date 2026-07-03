@@ -37,3 +37,16 @@ Implement two methods:
 - Error responses look like
   `{"id": "...", "error": {"code": "WORKFLOW_NOT_FOUND", "message": "..."}}` —
   the `message` text is up to you, the `code` is checked exactly.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `start_workflow` creates a workflow execution with a unique `workflow_id`, appends a `WORKFLOW_EXECUTION_STARTED` event to its history, and returns a `run_id`. Histories are append-only from day one.
+
+Or run: <code>crafters hint temporal --stage start-workflow</code>
+</details>
+<!-- /crafters-stage-hint -->

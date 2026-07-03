@@ -26,3 +26,16 @@ free/expired lock → `NOT_HOLDER`. `lease_ms < 1` → `INVALID_PARAMS`.
 - Extending from `max(now, current_expires)` means a renew on an unexpired lock
   stacks time onto the existing lease, not onto `now` alone.
 - `release` still uses `released: false` for wrong tokens; only `renew` errors.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Verify token matches an unexpired holder, then set `expires_at_ms = max(now, current_expires_at_ms) + lease_ms`.
+
+Or run: <code>crafters hint distributed-lock --stage renew</code>
+</details>
+<!-- /crafters-stage-hint -->

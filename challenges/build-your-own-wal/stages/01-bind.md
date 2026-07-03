@@ -37,3 +37,16 @@ handle each connection independently (threads, goroutines, or an event loop).
 
 - Be accepting connections within 10 seconds of starting.
 - Write each response with a trailing `\n` and flush — don't buffer.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** One read loop per connection: read a line, `json` decode, dispatch on `method`, write one response line and flush. `ping` is the only handler for now — get the envelope right and every later stage is a new `case`.
+
+Or run: <code>crafters hint wal --stage bind</code>
+</details>
+<!-- /crafters-stage-hint -->

@@ -39,3 +39,16 @@ Each time, the state visible after restart must be exactly right.
   as "still needs doing".
 - `SIGKILL` means your process gets no chance to flush. Persist *before*
   acknowledging a request, not after.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Snapshot the entire engine state to `--data-dir` after every mutation (temp file + rename). On boot reload workflows, histories, task queues, and pending timers. `SIGKILL` has no shutdown hook.
+
+Or run: <code>crafters hint temporal --stage durability</code>
+</details>
+<!-- /crafters-stage-hint -->

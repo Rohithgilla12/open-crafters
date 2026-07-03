@@ -17,3 +17,16 @@ configured value in every subsequent ID.
 - After `configure` with `42`, `parse` reports `worker_id: 42`.
 - Reconfigure to `1000` — new IDs reflect the new worker.
 - Out-of-range `worker_id` → `INVALID_PARAMS`.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Store `worker_id` from `configure` and OR it into every composed ID.
+
+Or run: <code>crafters hint id-generator --stage worker-id</code>
+</details>
+<!-- /crafters-stage-hint -->

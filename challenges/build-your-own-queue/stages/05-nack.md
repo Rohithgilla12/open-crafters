@@ -37,3 +37,16 @@ nack ends that delivery — so the old receipt is dead afterwards.
 - The nack itself isn't an extra delivery — `receives` counts deliveries
   (`receive`s), not failures. It went up to 1 when you received; the redelivery
   after the nack makes it 2.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `nack` is "put it back now" — make the message visible immediately without waiting for the visibility timeout. Return whether the receipt was still valid.
+
+Or run: <code>crafters hint queue --stage nack</code>
+</details>
+<!-- /crafters-stage-hint -->

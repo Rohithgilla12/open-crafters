@@ -39,3 +39,16 @@ Rules the tester enforces:
   commands for past events; only return what the workflow would decide **now**.
 - This is the same `greet` workflow from the Temporal challenge, but you're
   implementing the worker logic, not the server.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `replay` takes a workflow type and event history. Walk events in order; for `greet`, emit one `COMPLETE_WORKFLOW` command with the greeting. Same history in → same commands out.
+
+Or run: <code>crafters hint workflow-sdk --stage simple-complete</code>
+</details>
+<!-- /crafters-stage-hint -->

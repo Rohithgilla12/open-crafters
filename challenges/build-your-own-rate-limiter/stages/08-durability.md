@@ -35,3 +35,16 @@ because almost no time has passed and the bucket was empty.
 - `SIGKILL` cannot be caught, so persist on each mutating call (an atomic
   temp-file rename is enough — the state is tiny). Don't rely on a shutdown
   hook.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** You already store everything as `(value, as_of_ms)` or timestamped entries. Persist that, and on load recompute from `now`. Persist on each mutation — `SIGKILL` can't run a shutdown hook.
+
+Or run: <code>crafters hint rate-limiter --stage durability</code>
+</details>
+<!-- /crafters-stage-hint -->

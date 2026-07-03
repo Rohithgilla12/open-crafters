@@ -44,3 +44,16 @@ Implement `begin`, `get`, `set`, `commit`, and `rollback`.
   the next stage pins down *which* committed version a transaction may see.
 - `get` returning your own buffered write is "read-your-writes" — non-negotiable
   and easy to forget once snapshots arrive.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `begin` returns a transaction id. `set`/`get`/`del` inside a txn are buffered, not visible to others until `commit`. `rollback` discards the buffer. Outside a txn, reads see only committed data.
+
+Or run: <code>crafters hint mvcc --stage transactions</code>
+</details>
+<!-- /crafters-stage-hint -->

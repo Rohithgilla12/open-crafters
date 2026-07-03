@@ -26,3 +26,16 @@ reads correctly from its recovered offset.
   durable log as your records, and replay them all on boot.
 - Replay order matters: apply appends, truncations, and commits in the order
   they happened so the recovered state matches exactly.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Persist committed offsets alongside topic data. After restart, `committed_offset` returns the same value and consumers can resume exactly where they left off.
+
+Or run: <code>crafters hint log --stage offset-durability</code>
+</details>
+<!-- /crafters-stage-hint -->

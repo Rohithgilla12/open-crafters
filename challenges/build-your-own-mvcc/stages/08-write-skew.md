@@ -34,3 +34,16 @@ each read what the other changed.
 - Preventing write skew requires tracking the read set and doing serializable
   validation (SSI) — a different, heavier algorithm. That's not this challenge;
   resist the urge.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Snapshot isolation prevents write-write conflicts on keys you touch, but two txns can each read disjoint keys and commit conflicting invariants. This challenge tests that your conflict detection covers keys you *wrote*, not keys you only read — know what SI guarantees and what it doesn't.
+
+Or run: <code>crafters hint mvcc --stage write-skew</code>
+</details>
+<!-- /crafters-stage-hint -->

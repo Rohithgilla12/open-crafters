@@ -46,3 +46,16 @@ those three keys in sorted order, conforming to SST1.
 - Only `flush` makes data durable. Unflushed memtable contents are lost on
   crash.
 - Create `<data-dir>/sst/` if it doesn't exist.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Serialize the memtable to `<data-dir>/sst/NNNNNN.sst` using the SST1 format in PROTOCOL.md (magic, entries, footer). Clear the memtable after a successful write. File names sort lexicographically by sequence number.
+
+Or run: <code>crafters hint lsm --stage flush</code>
+</details>
+<!-- /crafters-stage-hint -->

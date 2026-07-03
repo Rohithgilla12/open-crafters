@@ -26,3 +26,16 @@ checks they reconstruct to the served state.
 
 - This stage doesn't introduce new RPC methods — it's a stress test of
   recovery and compaction correctness with realistic file counts.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Flushed SSTs are the durable source of truth. After kill + restart, reload the SST index and verify memtable is empty (unflushed writes may be lost unless you also WAL the memtable — this challenge doesn't require that).
+
+Or run: <code>crafters hint lsm --stage durability</code>
+</details>
+<!-- /crafters-stage-hint -->

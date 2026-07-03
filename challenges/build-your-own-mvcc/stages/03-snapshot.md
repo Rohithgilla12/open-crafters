@@ -33,3 +33,16 @@ number, so it's simply not visible to that reader. No locks, no blocking — jus
 - The snapshot is just an integer captured at `begin`. That integer is the
   entire mechanism — internalize that and the rest of MVCC falls out.
 - Don't garbage-collect old versions yet; correctness first.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** On `begin`, record the current committed sequence number — that's the txn's snapshot. All reads in the txn see data as of that sequence, even if other txns commit while this one is open.
+
+Or run: <code>crafters hint mvcc --stage snapshot</code>
+</details>
+<!-- /crafters-stage-hint -->

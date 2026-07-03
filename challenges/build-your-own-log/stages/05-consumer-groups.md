@@ -32,3 +32,16 @@ beginning). Groups are independent of one another.
 - The committed offset is just a number you store and hand back. The log neither
   validates it against the data nor advances it for the consumer — that's the
   consumer's job, and the source of a log's scalability.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Track `(group, topic) → committed_offset` separately from the log. `commit_offset` advances the cursor; `committed_offset` reads it. Consumers resume from committed + 1.
+
+Or run: <code>crafters hint log --stage consumer-groups</code>
+</details>
+<!-- /crafters-stage-hint -->

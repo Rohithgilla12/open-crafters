@@ -30,3 +30,16 @@ or when `lease_ms < 1`.
 
 - Keep locks in a map keyed by `name`; you'll add contention handling next.
 - `status` should treat expired leases as not held (`held: false`).
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** One map from lock `name` to `{holder_id, token, expires_at_ms}`. On acquire, if the entry is missing or `now >= expires_at_ms`, grant: mint a new token and set `expires_at_ms = now + lease_ms`.
+
+Or run: <code>crafters hint distributed-lock --stage acquire</code>
+</details>
+<!-- /crafters-stage-hint -->

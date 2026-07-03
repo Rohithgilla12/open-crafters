@@ -16,3 +16,16 @@ Protect shared state with a lock (or equivalent).
 
 - Pure concurrency — no crash restart.
 - The gauntlet is the last stage.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Protect ring state with a lock (or equivalent) for concurrent add/remove/lookup from many connections across two rings. Pure concurrency — no crash restart.
+
+Or run: <code>crafters hint hash-ring --stage gauntlet</code>
+</details>
+<!-- /crafters-stage-hint -->

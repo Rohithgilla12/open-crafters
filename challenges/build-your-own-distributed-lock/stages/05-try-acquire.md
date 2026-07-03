@@ -27,3 +27,16 @@ Never return an RPC error solely because of contention.
 
 - Share the grant logic between `acquire` and `try_acquire`; only the
   contention response differs.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Share the grant function with `acquire`; on contention return `{"acquired": false}` instead of an error.
+
+Or run: <code>crafters hint distributed-lock --stage try-acquire</code>
+</details>
+<!-- /crafters-stage-hint -->

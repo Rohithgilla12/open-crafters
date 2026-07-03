@@ -25,3 +25,16 @@ Survive a mixed workload:
   and write state under one lock.
 - Per-lock mutexes (or one mutex over the map) are fine; avoid a global
   convoy or fsync-per-acquire on the hot path.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Grant must be atomic: read state, check expiry, decide, write token — all under one mutex per engine (or per lock). JSON I/O stays outside the lock if you want, but check-and-grant cannot be split.
+
+Or run: <code>crafters hint distributed-lock --stage gauntlet</code>
+</details>
+<!-- /crafters-stage-hint -->

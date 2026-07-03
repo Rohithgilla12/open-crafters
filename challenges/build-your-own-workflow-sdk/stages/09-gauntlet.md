@@ -21,3 +21,16 @@ full progression:
   transition must be correct.
 - If you've been tracking "last event type" per workflow, this stage catches
   shortcuts that worked for simpler flows.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `pipeline` chains activities and timers. Walk the full history event by event, tracking what's done vs pending. Each replay step asks: "given everything so far, what's the next command?" — maybe schedule, maybe wait, maybe complete.
+
+Or run: <code>crafters hint workflow-sdk --stage gauntlet</code>
+</details>
+<!-- /crafters-stage-hint -->

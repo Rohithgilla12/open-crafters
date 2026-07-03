@@ -33,3 +33,16 @@ still read correctly.
   recovery (post-crash conflicts go haywire).
 - Pass this and you've built the concurrency-control core of a real database —
   the part most engineers only ever read about.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Interleave begins, reads, commits, rollbacks, and crashes. The invariants: snapshot reads, atomic commits, conflict detection on overlapping writes, durable commit log.
+
+Or run: <code>crafters hint mvcc --stage gauntlet</code>
+</details>
+<!-- /crafters-stage-hint -->

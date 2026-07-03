@@ -33,3 +33,16 @@ every node agrees on the same `leader_id`.
 
 - Election timeouts ≥ **300ms**; heartbeats ≤ **150ms** (CI stability).
 - At most one leader per term among reachable nodes.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Followers start election timers (≥300ms). When a timer fires, become candidate, increment term, vote for self, send `request_vote` to peers. A candidate with majority votes becomes leader and sends heartbeats.
+
+Or run: <code>crafters hint raft --stage leader</code>
+</details>
+<!-- /crafters-stage-hint -->

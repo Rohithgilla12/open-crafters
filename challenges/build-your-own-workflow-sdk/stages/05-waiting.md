@@ -20,3 +20,16 @@ Handle waiting states correctly:
 - Compare with stage 2: terminal histories (`WORKFLOW_EXECUTION_COMPLETED`)
   also return empty commands, but for a different reason — the workflow is
   finished.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** If the workflow is blocked on an activity or timer that hasn't fired yet, return **no commands** — an empty list. Waiting is not an error; it's "nothing to do until more history arrives."
+
+Or run: <code>crafters hint workflow-sdk --stage waiting</code>
+</details>
+<!-- /crafters-stage-hint -->

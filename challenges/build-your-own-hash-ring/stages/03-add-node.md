@@ -30,3 +30,16 @@ Also implement `lookup`:
 ## Notes
 
 - Implement `lookup` with the PROTOCOL hash walk in this stage or the next.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Add the physical `node_id` to the ring's node set. With one node, every lookup returns it. Duplicate node → `NODE_EXISTS`; unknown ring → `RING_NOT_FOUND`.
+
+Or run: <code>crafters hint hash-ring --stage add-node</code>
+</details>
+<!-- /crafters-stage-hint -->

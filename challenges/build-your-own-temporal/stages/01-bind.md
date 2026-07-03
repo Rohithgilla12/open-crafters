@@ -40,3 +40,16 @@ Handle each connection independently (threads, goroutines, or an event loop).
 - Your server must be accepting connections within 10 seconds of starting.
 - Don't buffer responses: write the response line (with a trailing `\n`) and
   flush after every request.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Newline-delimited JSON over TCP — read line, dispatch, respond, flush. `ping` returns `pong`. You'll add workflow APIs stage by stage.
+
+Or run: <code>crafters hint temporal --stage bind</code>
+</details>
+<!-- /crafters-stage-hint -->

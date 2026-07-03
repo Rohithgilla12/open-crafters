@@ -53,3 +53,16 @@ get the same message.
   names one *delivery* of it (this matters a lot at the Fencing stage).
 - If connections are handled on separate threads, guard your state with a lock
   now — the gauntlet will not forgive a data race.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** A queue is a FIFO of messages with unique ids. `send` appends; `receive` returns the oldest *visible* message and marks it in-flight with a receipt. Empty queue → block or return nothing per the protocol timing.
+
+Or run: <code>crafters hint queue --stage send-receive</code>
+</details>
+<!-- /crafters-stage-hint -->

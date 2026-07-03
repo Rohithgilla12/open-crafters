@@ -42,3 +42,16 @@ When a workflow starts, record a `WORKFLOW_EXECUTION_STARTED` event in its
   is more event types and more command types.
 - Keep history as an ordered list on the workflow record, `event_id` starting
   at 1.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** After start, a workflow task appears on the task queue. Workers `poll_workflow_task`, get a token + history, then `complete_workflow_task` with commands (e.g. `COMPLETE_WORKFLOW`). Tasks are consumed once.
+
+Or run: <code>crafters hint temporal --stage complete-workflow</code>
+</details>
+<!-- /crafters-stage-hint -->

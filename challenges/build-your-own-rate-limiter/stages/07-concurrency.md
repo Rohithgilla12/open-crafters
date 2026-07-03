@@ -27,3 +27,16 @@ for a freshly filled bucket of `capacity C` (no time for meaningful refill) is
   compare-and-set) per key. Decode/encode JSON outside the lock if you like,
   but "is there room?" and "take the room" cannot be separated.
 - Per-key locking is enough; you don't need one global lock across all keys.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** "Is there room?" and "take the room" must be one indivisible step. If another request can slip between them, you'll admit one too many.
+
+Or run: <code>crafters hint rate-limiter --stage concurrency</code>
+</details>
+<!-- /crafters-stage-hint -->

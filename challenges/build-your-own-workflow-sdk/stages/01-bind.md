@@ -34,3 +34,16 @@ handle each connection independently (threads, goroutines, or an event loop).
 
 - Be accepting connections within 10 seconds of starting.
 - Write each response with a trailing `\n` and flush — don't buffer.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Newline-delimited JSON — read line, dispatch, respond, flush. `ping` returns `pong`. The replay engine is pure logic you'll add to `handle_request`; no `--data-dir` needed.
+
+Or run: <code>crafters hint workflow-sdk --stage bind</code>
+</details>
+<!-- /crafters-stage-hint -->

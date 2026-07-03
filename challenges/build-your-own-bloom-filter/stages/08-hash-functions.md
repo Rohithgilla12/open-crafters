@@ -31,3 +31,16 @@ Both `add` and `contains` must use all k positions.
   in `0 .. m-1`.
 - This stage is why the hash spec is pinned exactly — the tester computes
   expected positions with the same algorithm.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Do not stop at `h1 % m`. You need `(h1 + i*h2) % m` for every `i` in `0..k-1`. The tester finds pairs where a single-hash cheat would falsely report present but the full k-hash check correctly says absent.
+
+Or run: <code>crafters hint bloom-filter --stage hash-functions</code>
+</details>
+<!-- /crafters-stage-hint -->

@@ -20,3 +20,16 @@ millisecond (see `CLOCK_BACKWARDS` in the protocol).
 - Implement `batch` as a loop over the same allocator as `next_id` — do not
   call `time.Now()` once per ID if you can help it; reuse the current
   millisecond bucket.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** For `batch`, capture one `now_ms()` bucket and mint many IDs before re-reading the clock.
+
+Or run: <code>crafters hint id-generator --stage clock-skew</code>
+</details>
+<!-- /crafters-stage-hint -->

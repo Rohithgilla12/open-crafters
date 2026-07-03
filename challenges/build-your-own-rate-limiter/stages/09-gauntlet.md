@@ -31,3 +31,16 @@ Survive a mixed workload:
   trap is fsync-per-take or serialising every key behind one lock.
 - Trim sliding-window logs as you go; an ever-growing log turns `take` into an
   O(n) scan and fails the floor.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** If you persist correctly and trim sliding logs, the throughput floor takes care of itself. The traps are fsync-per-take, rescanning an untrimmed log, and serialising every key behind one contended lock.
+
+Or run: <code>crafters hint rate-limiter --stage gauntlet</code>
+</details>
+<!-- /crafters-stage-hint -->

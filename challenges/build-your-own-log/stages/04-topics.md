@@ -27,3 +27,16 @@ zeroes.
 ## Notes
 
 - If your state is a map from topic name to its log, you're basically done.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `map[topicName]*topic` — each topic has its own value array and offset space. Topic names are opaque; no ordering across topics.
+
+Or run: <code>crafters hint log --stage topics</code>
+</details>
+<!-- /crafters-stage-hint -->

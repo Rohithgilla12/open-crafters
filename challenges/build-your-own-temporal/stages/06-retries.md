@@ -51,3 +51,16 @@ With the policy above, the tester fails the activity three times and checks:
 - "Available again after a delay" is best modeled as an `available_at`
   timestamp on the pending activity; `poll_activity_task` skips entries whose
   time hasn't come. No background scheduler needed for this stage.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** On `fail_activity_task`, reschedule with incremented `attempt` and a later `scheduled_time` (backoff). Cap at `maximum_attempts`; then append failure and let the workflow decide. Don't lose the activity — re-enqueue it.
+
+Or run: <code>crafters hint temporal --stage retries</code>
+</details>
+<!-- /crafters-stage-hint -->

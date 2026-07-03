@@ -33,3 +33,16 @@ Expected commands:
   in history.
 - Activity side effects happened in the real world; replay only reads the
   recorded result.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** When history ends with `ACTIVITY_TASK_COMPLETED`, the workflow should consume that result and emit `COMPLETE_WORKFLOW`. Replay simulates "what would the code do after the activity returns?"
+
+Or run: <code>crafters hint workflow-sdk --stage activity-result</code>
+</details>
+<!-- /crafters-stage-hint -->

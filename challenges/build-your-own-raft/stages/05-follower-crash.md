@@ -21,3 +21,16 @@ The tester:
 
 - The dead follower's data dir is left on disk; it may catch up when restarted later.
 - Heartbeats and replication must skip or time out on unreachable peers without blocking the leader forever.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** A cluster needs a majority to commit. With three nodes, one follower down still leaves two — commits continue. The crashed node is just absent from quorum until it returns.
+
+Or run: <code>crafters hint raft --stage follower-crash</code>
+</details>
+<!-- /crafters-stage-hint -->

@@ -36,3 +36,16 @@ files with the same key), calls `compact`, and checks:
 
 - After compaction, old files must be deleted — not left around.
 - The merged file must still conform to SST1 format.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Read every SST, merge into one sorted run (newer values win on duplicate keys), write a single new SST, delete the old files. Same SST1 format — you're just reducing read amplification.
+
+Or run: <code>crafters hint lsm --stage compaction</code>
+</details>
+<!-- /crafters-stage-hint -->

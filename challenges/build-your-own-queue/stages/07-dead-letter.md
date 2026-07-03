@@ -52,3 +52,16 @@ weren't told to.
   as both: it must survive a crash like any other.
 - The DLQ is just another queue. You can receive from it, ack it, even give
   *it* a dead-letter policy. Don't special-case it.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Track `receives` per message. When it exceeds `max_receives`, move the message to the configured DLQ instead of redelivering to the main queue. `configure` sets the policy per queue.
+
+Or run: <code>crafters hint queue --stage dead-letter</code>
+</details>
+<!-- /crafters-stage-hint -->

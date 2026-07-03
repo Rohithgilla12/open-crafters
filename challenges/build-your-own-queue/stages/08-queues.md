@@ -43,3 +43,16 @@ separate config. A `receipt` is meaningful only within its own queue.
 - Make `stats` run the same "expire overdue in-flight messages" sweep that
   `receive` does, so its numbers never lie about a message whose timeout has
   quietly passed.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `map[queueName]*queue` — each queue owns its own messages and DLQ policy. Queue names are opaque strings; no cross-queue ordering guarantees.
+
+Or run: <code>crafters hint queue --stage queues</code>
+</details>
+<!-- /crafters-stage-hint -->

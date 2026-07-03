@@ -39,3 +39,16 @@ kill verifies `k6` was durable.
   That's the deep reason WALs work.
 - Don't trust `length` before checking it against the remaining file size —
   a torn header can claim a 3GB payload.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** A crash can leave the last record half-written. Your length + CRC framing already tells you where validity ends — truncate back to the last good record and keep serving from there.
+
+Or run: <code>crafters hint wal --stage torn-writes</code>
+</details>
+<!-- /crafters-stage-hint -->

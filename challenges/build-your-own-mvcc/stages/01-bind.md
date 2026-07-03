@@ -23,3 +23,16 @@ connections within 10 seconds.
 - `--data-dir` is yours for durable state; ignore it until the Durability
   stage.
 - The starter templates already pass this stage — start from one.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Newline-delimited JSON server loop — read line, dispatch on `method`, respond, flush. `ping` returns `pong`. Build transport once; transactions come next.
+
+Or run: <code>crafters hint mvcc --stage bind</code>
+</details>
+<!-- /crafters-stage-hint -->

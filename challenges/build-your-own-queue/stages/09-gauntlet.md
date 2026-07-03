@@ -35,3 +35,16 @@ Throughout, it holds you to the core invariant of an at-least-once queue:
   one and never resurrect an acked one.
 - If you pass this, you've built a broker that keeps its promises across
   crashes, slow consumers, and contention. That's the whole job.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Compose everything: durable snapshot, visibility redelivery, receipt fencing, DLQ after max receives, multiple queues. Persist after every state change and never resurrect an acked message.
+
+Or run: <code>crafters hint queue --stage gauntlet</code>
+</details>
+<!-- /crafters-stage-hint -->

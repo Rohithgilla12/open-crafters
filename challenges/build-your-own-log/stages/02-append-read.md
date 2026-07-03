@@ -36,3 +36,16 @@ reading at the end returns empty.
 - A list per topic, where index = offset, is all you need for now.
 - "Reads don't consume" is the whole personality of a log — don't pop or delete
   on read.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Each topic is an append-only array with a monotonic end offset. `append` returns the offset assigned; `read` takes `(topic, offset, max)` and returns values starting at that offset plus `next_offset`. Reads never consume data.
+
+Or run: <code>crafters hint log --stage append-read</code>
+</details>
+<!-- /crafters-stage-hint -->

@@ -24,3 +24,16 @@ Missing keys return `NOT_FOUND`, same as `get`.
 
 - You can share almost all of the lookup logic with `get` — just omit the
   body from the result.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Reuse the same lookup as `get`, but omit `body` from the result. Still error with `NOT_FOUND` when the key is absent.
+
+Or run: <code>crafters hint object-store --stage head</code>
+</details>
+<!-- /crafters-stage-hint -->

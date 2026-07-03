@@ -27,3 +27,16 @@ it, all are. `rollback` (and a process that never commits) applies none.
   share an atomic visibility point.
 - "Visible all at once" is automatic if you bump the global sequence counter
   *after* staging all versions, and readers compare against `seq ≤ snapshot`.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** A commit applies every write in the txn together or not at all. Partial commits are forbidden — one `commit` RPC, one new sequence number, all keys updated together.
+
+Or run: <code>crafters hint mvcc --stage atomicity</code>
+</details>
+<!-- /crafters-stage-hint -->

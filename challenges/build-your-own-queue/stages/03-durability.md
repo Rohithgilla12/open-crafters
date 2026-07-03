@@ -42,3 +42,16 @@ survived. It acks both, crashes again, and expects an empty queue.
 - "Persist before you ack" is the entire lesson. If you ack the network request
   before the write is durable, a crash in the gap silently breaks your
   promise — to the producer (lost message) or the consumer (work redone).
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** Persist the full broker state after every mutation — all queues, all messages, sequence counters. On startup reload and continue. Acked messages must stay gone; un-acked inflight messages must come back.
+
+Or run: <code>crafters hint queue --stage durability</code>
+</details>
+<!-- /crafters-stage-hint -->

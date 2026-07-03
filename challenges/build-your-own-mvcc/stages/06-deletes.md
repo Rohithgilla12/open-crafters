@@ -31,3 +31,16 @@ A read resolves to "found" only if the newest visible version is a real value,
   found value.
 - Don't special-case deletes in conflict detection: a tombstone is a write, so
   the "newest version seq > snapshot" rule already covers delete-vs-write.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** `del` in a txn records a tombstone, not absence. Committed deletes hide the key from future reads at that sequence and later. `get` returns `found: false` for tombstoned keys.
+
+Or run: <code>crafters hint mvcc --stage deletes</code>
+</details>
+<!-- /crafters-stage-hint -->

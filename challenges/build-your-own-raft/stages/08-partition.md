@@ -24,3 +24,16 @@ node pairs; your nodes use the `--peers` addresses as usual.
 - Do not acknowledge `set` until a quorum replicates — a partitioned leader should
   time out with `NOT_COMMITTED`.
 - After the test, partitions are healed automatically.
+---
+
+<!-- crafters-stage-hint -->
+## Stuck?
+
+<details>
+<summary><strong>Spoiler-free hint</strong></summary>
+
+> **Hint:** A minority partition must not commit new writes. If the leader is isolated with one follower (2 nodes), it can't reach quorum — return `NOT_COMMITTED` or fail writes. The majority side keeps going.
+
+Or run: <code>crafters hint raft --stage partition</code>
+</details>
+<!-- /crafters-stage-hint -->
