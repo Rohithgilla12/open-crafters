@@ -21,6 +21,12 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Build learn app CSS
+        run: |
+          npm ci
+          npm run build:learn-css
+          git diff --exit-code internal/learn/dist/style.css
+
       - name: Vet, test, and build
         run: |
           go vet ./...

@@ -67,7 +67,7 @@ func (s *Server) handleAPIRoadmaps(w http.ResponseWriter, _ *http.Request) {
 func (s *Server) handleCSS(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "text/css; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte(siteCSS))
+	_, _ = w.Write([]byte(learnCSS))
 }
 
 func (s *Server) handleLearnJS(w http.ResponseWriter, _ *http.Request) {

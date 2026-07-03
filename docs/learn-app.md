@@ -101,9 +101,26 @@ challenge cards and stage lists. Sync with the CLI:
 Use `crafters progress export --all` from a parent directory to merge every
 solution's `.open-crafters/progress.json` into one file.
 
+## Styling (Tailwind)
+
+The learn UI uses [Tailwind CSS v4](https://tailwindcss.com/) compiled from
+`internal/learn/styles/input.css`. Class names live in `templates.go`; the CLI
+scans that file at build time.
+
+```bash
+npm ci
+npm run build:learn-css   # writes internal/learn/dist/style.css (go:embed)
+go run ./cmd/learn
+```
+
+Commit `internal/learn/dist/style.css` when you change templates or styles so
+`go build` works without Node. CI rebuilds CSS and fails if the binary embed
+is stale (run `npm run build:learn-css` locally before pushing).
+
 ## Local development
 
 ```bash
+npm ci && npm run build:learn-css   # first time / after template changes
 go run ./cmd/learn
 # open http://localhost:8081
 ```

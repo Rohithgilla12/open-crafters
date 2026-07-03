@@ -330,7 +330,7 @@ func difficultyMix(stages []Stage) template.HTML {
 	var parts []string
 	for _, d := range []string{"easy", "medium", "hard"} {
 		if n[d] > 0 {
-			parts = append(parts, fmt.Sprintf(`<span class="diff diff-%s">%d %s</span>`, d, n[d], d))
+			parts = append(parts, fmt.Sprintf(`<span class="%s">%d %s</span>`, difficultyPillClass(d), n[d], d))
 		}
 	}
 	return template.HTML(strings.Join(parts, " ")) //nolint:gosec // fixed, internal strings
