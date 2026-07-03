@@ -7,13 +7,14 @@
   function loadProgress() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return { version: FORMAT_VERSION, challenges: {} };
+      if (!raw) return { version: FORMAT_VERSION, challenges: {}, design: {} };
       const p = JSON.parse(raw);
       if (!p.challenges) p.challenges = {};
+      if (!p.design) p.design = {};
       if (!p.version) p.version = FORMAT_VERSION;
       return p;
     } catch {
-      return { version: FORMAT_VERSION, challenges: {} };
+      return { version: FORMAT_VERSION, challenges: {}, design: {} };
     }
   }
 
@@ -31,12 +32,23 @@
   }
 
   function mergeProgress(incoming) {
-    if (!incoming || !incoming.challenges) return loadProgress();
+    if (!incoming) return loadProgress();
     const p = loadProgress();
-    for (const [slug, sc] of Object.entries(incoming.challenges)) {
-      const c = ensureChallenge(p, slug);
-      mergeTimestamps(c.passed, sc.passed || {});
-      mergeTimestamps(c.read, sc.read || {});
+    if (incoming.challenges) {
+      for (const [slug, sc] of Object.entries(incoming.challenges)) {
+        const c = ensureChallenge(p, slug);
+        mergeTimestamps(c.passed, sc.passed || {});
+        mergeTimestamps(c.read, sc.read || {});
+      }
+    }
+    if (incoming.design) {
+      for (const [slug, sd] of Object.entries(incoming.design)) {
+        const d = ensureDesign(p, slug);
+        if (sd.completed_at && (!d.completed_at || sd.completed_at < d.completed_at)) {
+          d.completed_at = sd.completed_at;
+        }
+        mergeTimestamps(d.prompts, sd.prompts || {});
+      }
     }
     saveProgress(p);
     return p;
@@ -54,7 +66,100 @@
     URL.revokeObjectURL(a.href);
   }
 
+  function ensureDesign(p, slug) {
+    if (!p.design[slug]) p.design[slug] = { prompts: {} };
+    const d = p.design[slug];
+    if (!d.prompts) d.prompts = {};
+    return d;
+  }
+
   function ensureChallenge(p, slug) {
+    if (!p.challenges[slug]) p.challenges[slug] = { read: {}, passed: {} };
+    const c = p.challenges[slug];
+    if (!c.read) c.read = {};
+    if (!c.passed) c.passed = {};
+    return c;
+  }
+
+  function markDesignPrompt(slug, idx) {
+    const p = loadProgress();
+    const d = ensureDesign(p, slug);
+    const key = String(idx);
+    if (!d.prompts[key]) {
+      d.prompts[key] = new Date().toISOString();
+      saveProgress(p);
+    }
+  }
+
+  function unmarkDesignPrompt(slug, idx) {
+    const p = loadProgress();
+    const d = p.design[slug];
+    if (!d || !d.prompts) return;
+    delete d.prompts[String(idx)];
+    saveProgress(p);
+  }
+
+  function markDesignComplete(slug) {
+    const p = loadProgress();
+    const d = ensureDesign(p, slug);
+    d.completed_at = new Date().toISOString();
+    saveProgress(p);
+  }
+
+  function applyDesignProgressUI() {
+    const p = loadProgress();
+
+    document.querySelectorAll("[data-design]").forEach((root) => {
+      const slug = root.dataset.design;
+      const d = p.design[slug] || { prompts: {} };
+      root.querySelectorAll("[data-design-progress-label]").forEach((el) => {
+        if (d.completed_at) el.textContent = "complete · ";
+        else if (d.prompts && Object.keys(d.prompts).length > 0) {
+          el.textContent = Object.keys(d.prompts).length + " prompts done · ";
+        } else el.textContent = "";
+      });
+    });
+
+    const slug = document.body.dataset.design;
+    if (!slug) return;
+    const d = p.design[slug] || { prompts: {} };
+    document.querySelectorAll(".design-prompt-check").forEach((cb) => {
+      const idx = cb.dataset.promptIdx;
+      cb.checked = !!(d.prompts && d.prompts[idx]);
+    });
+    const btn = document.getElementById("design-complete-btn");
+    if (btn && d.completed_at) {
+      btn.textContent = "Completed ✓";
+      btn.disabled = true;
+    }
+    document.querySelectorAll("[data-design-progress-label]").forEach((el) => {
+      if (d.completed_at) el.textContent = "complete · ";
+    });
+  }
+
+  function initDesignPage() {
+    const slug = document.body.dataset.design;
+    if (!slug) return;
+
+    document.querySelectorAll(".design-prompt-check").forEach((cb) => {
+      cb.addEventListener("change", () => {
+        const idx = cb.dataset.promptIdx;
+        if (cb.checked) markDesignPrompt(slug, idx);
+        else unmarkDesignPrompt(slug, idx);
+        applyDesignProgressUI();
+      });
+    });
+
+    const btn = document.getElementById("design-complete-btn");
+    if (btn) {
+      btn.addEventListener("click", () => {
+        markDesignComplete(slug);
+        applyDesignProgressUI();
+      });
+    }
+    applyDesignProgressUI();
+  }
+
     if (!p.challenges[slug]) p.challenges[slug] = { read: {}, passed: {} };
     const c = p.challenges[slug];
     if (!c.read) c.read = {};
@@ -325,6 +430,7 @@
           const incoming = JSON.parse(text);
           mergeProgress(incoming);
           applyProgressUI();
+          applyDesignProgressUI();
           applyRoadmapProgress();
           if (statusEl) statusEl.textContent = "Imported " + file.name;
         } catch (err) {
@@ -336,7 +442,9 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     initStagePage();
+    initDesignPage();
     applyProgressUI();
+    applyDesignProgressUI();
     applyRoadmapProgress();
     initSubmitForm();
     initProgressSync();

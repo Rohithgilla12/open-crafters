@@ -16,7 +16,7 @@ import (
 // Dot-prefixed files (e.g. a stray .open-crafters/) are excluded by go:embed
 // automatically, so scaffolds never inherit leftover progress.
 //
-//go:embed challenges
+//go:embed challenges design
 var content embed.FS
 
 //go:embed assets
@@ -41,6 +41,15 @@ func ChallengesFS() fs.FS {
 	sub, err := fs.Sub(content, "challenges")
 	if err != nil {
 		panic(err) // the embed is static; this cannot fail
+	}
+	return sub
+}
+
+// DesignFS returns the embedded design problem tree rooted at design/.
+func DesignFS() fs.FS {
+	sub, err := fs.Sub(content, "design")
+	if err != nil {
+		panic(err)
 	}
 	return sub
 }

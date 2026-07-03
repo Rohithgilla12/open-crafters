@@ -28,4 +28,12 @@ func TestCatalogListsAllChallenges(t *testing.T) {
 	if len(c.Roadmaps) != len(opencrafters.Roadmaps) {
 		t.Fatalf("catalog has %d roadmaps, want %d", len(c.Roadmaps), len(opencrafters.Roadmaps))
 	}
+	if len(c.DesignOrder) != len(opencrafters.DesignProblemOrder) {
+		t.Fatalf("catalog has %d design problems, want %d", len(c.DesignOrder), len(opencrafters.DesignProblemOrder))
+	}
+	for _, slug := range opencrafters.DesignProblemOrder {
+		if _, ok := c.Designs[slug]; !ok {
+			t.Fatalf("missing design problem %q", slug)
+		}
+	}
 }

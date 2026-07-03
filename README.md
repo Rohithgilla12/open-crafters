@@ -146,6 +146,20 @@ paths (`crafters roadmap` or [learn.gilla.fun/roadmaps](https://learn.gilla.fun/
 `crafters list --paths` still lists the four thematic paths. Roadmap pages show
 progress bars synced from browser localStorage (or import `progress.json`).
 
+### System design problems
+
+Whiteboard scenarios on [learn.gilla.fun/design](https://learn.gilla.fun/design) —
+scale numbers, discussion prompts, spoiler-gated hints, and reference architectures.
+Each problem links to related **build-your-own** challenges so you can whiteboard
+first, then implement the primitives.
+
+| Problem | Theme |
+|---|---|
+| **Distributed job scheduler** | Leases, retries, recurring jobs |
+| **Realtime social feed** | Fan-out, celebrity posts, read-heavy QPS |
+| **Workflow orchestration platform** | Histories, replay, timers |
+| **Chat at scale** | Ordering, delivery, sharding |
+
 ### Learning paths
 
 Four curated tracks group the challenges by theme (`crafters list --paths`):

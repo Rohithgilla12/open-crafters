@@ -70,6 +70,9 @@ The compose file publishes `18081:8081` on the host.
 | `GET /api/challenges` | JSON challenge list |
 | `GET /api/paths` | JSON learning paths (`slug`, `name`, `description`, `challenges[]`) |
 | `GET /api/roadmaps` | JSON roadmaps (`slug`, `name`, `tagline`, `milestones[]`, …) |
+| `GET /design` | System design problem catalog (HTML) |
+| `GET /design/{slug}` | Single design problem — prompts, hints, reference architecture |
+| `GET /api/design` | JSON design problem list |
 | `POST /api/submit` | Proxy solution zip to hosted runner (`Authorization: Bearer <token>`) |
 | `GET /api/jobs/{id}` | Poll grading job status |
 | `GET /learn.js` | Progress + submit client script |

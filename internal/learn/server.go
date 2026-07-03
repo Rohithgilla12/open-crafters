@@ -33,6 +33,7 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET /api/challenges", s.handleAPIChallenges)
 	mux.HandleFunc("GET /api/paths", s.handleAPIPaths)
 	mux.HandleFunc("GET /api/roadmaps", s.handleAPIRoadmaps)
+	mux.HandleFunc("GET /api/design", s.handleAPIDesign)
 	mux.HandleFunc("POST /api/submit", s.handleSubmit)
 	mux.HandleFunc("GET /api/jobs/{id}", s.handleSubmitJob)
 	mux.HandleFunc("GET /style.css", s.handleCSS)
@@ -40,6 +41,8 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET /{$}", s.handleIndex)
 	mux.HandleFunc("GET /roadmaps", s.handleRoadmapsIndex)
 	mux.HandleFunc("GET /roadmaps/{slug}", s.handleRoadmap)
+	mux.HandleFunc("GET /design", s.handleDesignIndex)
+	mux.HandleFunc("GET /design/{slug}", s.handleDesignProblem)
 	mux.HandleFunc("GET /paths/{slug}", s.handlePathRedirect)
 	mux.HandleFunc("GET /challenges/{slug}", s.handleChallenge)
 	mux.HandleFunc("GET /challenges/{slug}/stages/{stage}", s.handleStage)
@@ -64,6 +67,10 @@ func (s *Server) handleAPIRoadmaps(w http.ResponseWriter, _ *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]any{"roadmaps": s.catalog.APIRoadmaps()})
 }
 
+func (s *Server) handleAPIDesign(w http.ResponseWriter, _ *http.Request) {
+	writeJSON(w, http.StatusOK, map[string]any{"design": s.catalog.APIDesignList()})
+}
+
 func (s *Server) handleCSS(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "text/css; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
@@ -79,12 +86,18 @@ func (s *Server) handleLearnJS(w http.ResponseWriter, _ *http.Request) {
 
 type indexPageData struct {
 	Roadmaps []RoadmapView
+	Designs  []*DesignProblem
 	Paths    []Path
 }
 
 func (s *Server) handleIndex(w http.ResponseWriter, _ *http.Request) {
+	designs := make([]*DesignProblem, 0, len(s.catalog.DesignOrder))
+	for _, slug := range s.catalog.DesignOrder {
+		designs = append(designs, s.catalog.Designs[slug])
+	}
 	s.render(w, indexTmpl, indexPageData{
 		Roadmaps: s.catalog.Roadmaps,
+		Designs:  designs,
 		Paths:    s.catalog.Paths,
 	})
 }
@@ -101,6 +114,24 @@ func (s *Server) handleRoadmap(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.render(w, roadmapTmpl, rm)
+}
+
+func (s *Server) handleDesignIndex(w http.ResponseWriter, _ *http.Request) {
+	designs := make([]*DesignProblem, 0, len(s.catalog.DesignOrder))
+	for _, slug := range s.catalog.DesignOrder {
+		designs = append(designs, s.catalog.Designs[slug])
+	}
+	s.render(w, designIndexTmpl, designs)
+}
+
+func (s *Server) handleDesignProblem(w http.ResponseWriter, r *http.Request) {
+	slug := r.PathValue("slug")
+	d, ok := s.catalog.GetDesign(slug)
+	if !ok {
+		http.NotFound(w, r)
+		return
+	}
+	s.render(w, designProblemTmpl, d)
 }
 
 func (s *Server) handlePathRedirect(w http.ResponseWriter, r *http.Request) {

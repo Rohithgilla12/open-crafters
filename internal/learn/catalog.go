@@ -37,10 +37,12 @@ type Challenge struct {
 
 // Catalog holds all challenges indexed by slug.
 type Catalog struct {
-	Order      []string
-	Challenges map[string]*Challenge
-	Paths      []Path
-	Roadmaps   []RoadmapView
+	Order       []string
+	Challenges  map[string]*Challenge
+	DesignOrder []string
+	Designs     map[string]*DesignProblem
+	Paths       []Path
+	Roadmaps    []RoadmapView
 }
 
 // RoadmapMilestoneView is one step on a roadmap page.
@@ -180,6 +182,10 @@ func NewCatalog() (*Catalog, error) {
 			rv.Milestones = append(rv.Milestones, mv)
 		}
 		c.Roadmaps = append(c.Roadmaps, rv)
+	}
+
+	if err := loadDesignProblems(c, md); err != nil {
+		return nil, err
 	}
 
 	return c, nil

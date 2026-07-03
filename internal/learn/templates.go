@@ -13,6 +13,9 @@ var tmplFuncs = template.FuncMap{
 	"fontLinks": func() template.HTML { return template.HTML(fontLinksHTML) },
 	"diffBadge": difficultyBadgeClass,
 	"diffPill":  difficultyPillClass,
+	"designShort": func(slug string) string {
+		return strings.TrimPrefix(slug, "design-")
+	},
 }
 
 func difficultyBadgeClass(d string) string {
@@ -53,6 +56,7 @@ const siteNavHTML = `<nav class="sticky top-0 z-50 border-b border-border-soft b
     </a>
     <div class="flex items-center gap-4 text-sm text-muted">
       <a class="hover:text-ink" href="/roadmaps">Roadmaps</a>
+      <a class="hover:text-ink" href="/design">System design</a>
       <a class="hover:text-ink" href="https://runner.gilla.fun">Runner</a>
       <a class="hover:text-ink" href="https://github.com/Rohithgilla12/open-crafters">GitHub</a>
     </div>
@@ -82,10 +86,11 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
 <header class="mb-10 border-b border-border-soft pb-8">
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-[1.35fr_0.85fr] lg:items-start">
   <div>
-  <p class="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">15 challenges · 4 paths · graded black-box</p>
+  <p class="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">15 challenges · 4 design problems · graded black-box</p>
   <h1 class="mb-4 text-[clamp(1.85rem,4vw,2.65rem)] leading-[1.12]">Build the infrastructure<br>senior engineers actually ship.</h1>
-  <p class="max-w-[58ch] text-[1.02rem] text-muted">Open-source <em class="font-medium text-ink not-italic">build-your-own-X</em> challenges for production primitives.
-  Read each stage, implement in any language, and grade over the wire — crashes included.</p>
+  <p class="max-w-[58ch] text-[1.02rem] text-muted">Open-source <em class="font-medium text-ink not-italic">build-your-own-X</em> challenges for production primitives,
+  plus <a class="text-link hover:text-link/80" href="/design">system design scenarios</a> tied to what you build.
+  Implement in any language, grade over the wire — crashes included.</p>
   <div class="mt-5 mb-2">
     <span class="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-muted">Install</span>
     <code class="block overflow-x-auto rounded-[10px] border border-border bg-surface px-4 py-3.5 font-mono text-[0.86rem] text-code shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">curl -fsSL https://raw.githubusercontent.com/Rohithgilla12/open-crafters/main/install.sh | sh</code>
@@ -98,6 +103,11 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
       <span class="mb-1 block text-xs uppercase tracking-widest text-accent-dim">Start here</span>
       <strong class="block font-display text-base">Learning roadmaps</strong>
       <span class="text-sm text-muted">Curated journeys with outcomes →</span>
+    </a>
+    <a class="block rounded-[14px] border border-border bg-surface p-4 text-ink transition hover:-translate-y-0.5 hover:border-accent/45 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/design">
+      <span class="mb-1 block text-xs uppercase tracking-widest text-accent-dim">Whiteboard mode</span>
+      <strong class="block font-display text-base">System design</strong>
+      <span class="text-sm text-muted">Scenarios + reference architectures →</span>
     </a>
     <a class="block rounded-[14px] border border-border bg-surface p-4 text-ink transition hover:-translate-y-0.5 hover:border-accent/45 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="https://runner.gilla.fun">
       <span class="mb-1 block text-xs uppercase tracking-widest text-accent-dim">Remote grading</span>
@@ -135,6 +145,24 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
   {{end}}
   </div>
 </section>
+<section class="mb-12">
+  <div class="mb-4 flex items-baseline justify-between gap-4">
+    <h2 class="font-display text-xs font-semibold uppercase tracking-widest text-accent-dim">System design</h2>
+    <a class="text-sm text-link" href="/design">View all →</a>
+  </div>
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+  {{range .Designs}}
+    <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-violet-400/35 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/design/{{.Slug}}" data-design="{{.Slug}}">
+      <div class="mb-1 flex items-start justify-between gap-3">
+        <h3 class="text-[1.05rem] leading-snug font-semibold">{{.Name}}</h3>
+        <span class="{{diffBadge .Difficulty}}">{{.Difficulty}}</span>
+      </div>
+      <p class="mb-3 text-sm leading-relaxed text-muted">{{.Tagline}}</p>
+      <span class="font-mono text-xs text-violet-300"><span data-design-progress-label></span>~{{.TimeMinutes}} min · whiteboard</span>
+    </a>
+  {{end}}
+  </div>
+</section>
 {{range .Paths}}
 <section class="path-section mb-12 pt-2" id="path-{{.Slug}}" data-path="{{.Slug}}">
   <div class="path-accent mb-4 border-l-[3px] border-border pl-3.5">
@@ -157,6 +185,7 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
 </section>
 {{end}}
 <footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted">
+  <a class="text-link" href="/design">System design</a> ·
   <a class="text-link" href="https://github.com/Rohithgilla12/open-crafters">GitHub</a> ·
   <a class="text-link" href="https://runner.gilla.fun">hosted runner</a> ·
   graded black-box · any language with a TCP socket
@@ -395,4 +424,104 @@ var stageTmpl = template.Must(template.New("stage").Funcs(tmplFuncs).Parse(`<!do
 </div>
 
 <footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted"><a class="text-link" href="/">← all challenges</a> · <a class="text-link" href="https://github.com/Rohithgilla12/open-crafters">GitHub</a> · <a class="text-link" href="https://runner.gilla.fun">hosted runner</a></footer>
+</div><script src="/learn.js"></script></body></html>`))
+
+var designIndexTmpl = template.Must(template.New("design-index").Funcs(tmplFuncs).Parse(`<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>System design — open-crafters learn</title>
+<meta name="description" content="Whiteboard system design scenarios with discussion prompts, hints, and reference architectures tied to build-your-own challenges.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+{{fontLinks}}
+<link rel="stylesheet" href="/style.css">
+</head><body>
+{{siteNav}}
+<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
+<p class="mb-5 text-sm text-muted"><a class="text-link" href="/">← home</a></p>
+<header class="mb-6 border-b border-border-soft pb-6">
+  <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-violet-300">Whiteboard mode</p>
+  <h1 class="mb-2 text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">System design problems</h1>
+  <p class="max-w-[58ch] text-muted">Realistic scenarios with scale numbers, discussion prompts, and spoiler-gated hints. Each problem links to open-crafters build challenges — whiteboard first, then implement the primitives.</p>
+</header>
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+{{range .}}
+  <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-violet-400/35 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/design/{{.Slug}}" data-design="{{.Slug}}">
+    <div class="mb-1 flex items-start justify-between gap-3">
+      <h2 class="text-[1.05rem] font-semibold">{{.Name}}</h2>
+      <span class="{{diffBadge .Difficulty}}">{{.Difficulty}}</span>
+    </div>
+    <p class="mb-2 text-sm text-muted">{{.Tagline}}</p>
+    <span class="mb-1 block font-mono text-xs uppercase tracking-wide text-violet-300/80">{{.Category}} · ~{{.TimeMinutes}} min</span>
+    <span class="font-mono text-xs text-violet-300"><span data-design-progress-label></span>discussion prompts inside</span>
+  </a>
+{{end}}
+</div>
+<footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted"><a class="text-link" href="/">← home</a></footer>
+</div><script src="/learn.js"></script></body></html>`))
+
+var designProblemTmpl = template.Must(template.New("design").Funcs(tmplFuncs).Parse(`<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Name}} — system design — open-crafters</title>
+<meta name="description" content="{{.Tagline}}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+{{fontLinks}}
+<link rel="stylesheet" href="/style.css">
+</head><body data-design="{{.Slug}}">
+{{siteNav}}
+<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
+<p class="mb-5 text-sm text-muted"><a class="text-link" href="/design">← all design problems</a></p>
+<header class="mb-6 border-b border-border-soft pb-6">
+  <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-violet-300">System design · {{.Category}}</p>
+  <div class="mb-1 flex flex-wrap items-center gap-3">
+    <h1 class="text-[clamp(1.5rem,3vw,2.2rem)] leading-tight">{{.Name}}</h1>
+    <span class="{{diffBadge .Difficulty}}">{{.Difficulty}}</span>
+  </div>
+  <p class="max-w-[58ch] text-muted">{{.Tagline}}</p>
+  <p class="mt-2 font-mono text-sm text-violet-300"><span data-design-progress-label></span>~{{.TimeMinutes}} min whiteboard</p>
+</header>
+
+<div class="md mb-8">{{.ProblemHTML}}</div>
+
+{{if .DiscussionPrompts}}
+<h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-accent-dim">Discussion prompts</h2>
+<p class="mb-3 text-sm text-muted">Work through these on paper before opening hints. Check off as you go — saved in your browser.</p>
+<ol class="mb-8 flex flex-col gap-2">
+{{range $i, $p := .DiscussionPrompts}}
+  <li>
+    <label class="flex cursor-pointer items-start gap-3 rounded-[10px] border border-border bg-surface px-4 py-3 transition hover:border-violet-400/30">
+      <input type="checkbox" class="design-prompt-check mt-1" data-prompt-idx="{{$i}}">
+      <span class="text-sm leading-relaxed text-ink">{{$p}}</span>
+    </label>
+  </li>
+{{end}}
+</ol>
+{{end}}
+
+{{if .Related}}
+<h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-accent-dim">Related build challenges</h2>
+<p class="mb-3 text-sm text-muted">Primitives you'd use when implementing pieces of this system.</p>
+<div class="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+{{range .Related}}
+  <a class="block rounded-[10px] border border-border bg-surface px-4 py-3 text-ink transition hover:border-link/40 hover:bg-surface-hover" href="/challenges/{{.Slug}}">
+    <span class="block text-sm font-semibold">{{.Name}}</span>
+    <span class="text-xs text-muted">{{len .Stages}} graded stages</span>
+  </a>
+{{end}}
+</div>
+{{end}}
+
+<details class="mb-4 rounded-[14px] border border-amber-400/25 bg-amber-400/5 px-5 py-4">
+  <summary class="cursor-pointer font-display text-sm font-semibold text-amber-200">Hints (spoiler)</summary>
+  <div class="md mt-4">{{.HintsHTML}}</div>
+</details>
+
+<details class="mb-4 rounded-[14px] border border-violet-400/25 bg-violet-400/5 px-5 py-4">
+  <summary class="cursor-pointer font-display text-sm font-semibold text-violet-200">Reference architecture (spoiler)</summary>
+  <div class="md mt-4">{{.SolutionHTML}}</div>
+</details>
+
+<button type="button" id="design-complete-btn" class="mt-4 inline-flex cursor-pointer items-center justify-center rounded-[10px] border border-violet-400/40 bg-violet-400/10 px-4 py-2.5 text-sm font-semibold text-violet-200 transition hover:bg-violet-400/20">Mark as completed</button>
+
+<footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted"><a class="text-link" href="/design">← all design problems</a> · <a class="text-link" href="/">build challenges</a></footer>
 </div><script src="/learn.js"></script></body></html>`))
