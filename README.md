@@ -163,6 +163,10 @@ first, then implement the primitives.
 | **Payment ledger** | Double-entry, idempotency, audit |
 | **Notification platform** | Multi-channel fan-out, preferences |
 | **Distributed KV store** | Sharding, replication, rebalancing |
+| **Rate-limited API gateway** | Auth, quotas, routing, edge cache |
+| **Video upload & streaming** | Multipart upload, transcoding, CDN |
+| **Search index** | Ingestion, inverted index, sharding |
+| **Multi-tenant SaaS** | Isolation, metering, noisy neighbors |
 
 ### Learning paths
 
