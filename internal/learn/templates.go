@@ -86,7 +86,7 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
 <header class="mb-10 border-b border-border-soft pb-8">
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-[1.35fr_0.85fr] lg:items-start">
   <div>
-  <p class="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">15 challenges · 12 design problems · graded black-box</p>
+  <p class="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">15 challenges · 16 design problems · graded black-box</p>
   <h1 class="mb-4 text-[clamp(1.85rem,4vw,2.65rem)] leading-[1.12]">Build the infrastructure<br>senior engineers actually ship.</h1>
   <p class="max-w-[58ch] text-[1.02rem] text-muted">Open-source <em class="font-medium text-ink not-italic">build-your-own-X</em> challenges for production primitives,
   plus <a class="text-link hover:text-link/80" href="/design">system design scenarios</a> tied to what you build.
@@ -356,12 +356,14 @@ var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Par
 </div>
 
 <h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-accent-dim">Stages</h2>
+<p class="mb-3 text-sm text-muted">Each stage has a spoiler-free hint — expand <strong class="text-ink">Stuck?</strong> on the stage page, or run <code class="rounded bg-white/6 px-1 text-code">crafters hint {{.Challenge.Slug | short}}</code> locally.</p>
 <ol class="flex flex-col gap-2">
 {{range .Challenge.Stages}}
   <li>
     <a class="stage-link flex items-center gap-3 rounded-[10px] border border-border bg-surface px-4 py-3 text-ink transition hover:translate-x-0.5 hover:border-link/45 hover:bg-surface-hover" href="/challenges/{{$.Challenge.Slug}}/stages/{{.Slug}}" data-stage-slug="{{.Slug}}">
       <span class="num flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full border border-border bg-canvas-elevated font-mono text-xs text-accent">{{.Num}}</span>
       <span class="stage-name flex-1 text-[0.95rem] font-semibold">{{.Name}}</span>
+      {{if .Hint}}<span class="shrink-0 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wide text-amber-200">hint</span>{{end}}
       <span class="{{diffPill .Difficulty}}">{{.Difficulty}}</span>
       <span class="slug ml-auto font-mono text-xs text-muted">{{.Slug}}</span>
     </a>

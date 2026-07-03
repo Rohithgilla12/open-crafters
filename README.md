@@ -167,6 +167,10 @@ first, then implement the primitives.
 | **Video upload & streaming** | Multipart upload, transcoding, CDN |
 | **Search index** | Ingestion, inverted index, sharding |
 | **Multi-tenant SaaS** | Isolation, metering, noisy neighbors |
+| **Event streaming** | Topics, partitions, consumer groups |
+| **Blob storage** | Multipart upload, etags, listing |
+| **Distributed cache** | Sharding, eviction, stampedes |
+| **Coordination service** | Raft metadata, watches, leases |
 
 ### Learning paths
 

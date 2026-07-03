@@ -179,6 +179,36 @@ func TestWalkthroughCoverage(t *testing.T) {
 	}
 }
 
+// TestStageInstructionHints: when a walkthrough ships hints, each stage
+// instructions file must embed the synced Stuck? block (see scripts/sync-stage-hints).
+func TestStageInstructionHints(t *testing.T) {
+	const startMarker = "<!-- crafters-stage-hint -->"
+	root := repoRoot(t)
+	for slug, ch := range challenges {
+		if !opencrafters.HasWalkthrough(slug) {
+			continue
+		}
+		for _, st := range ch.Stages {
+			if _, ok := opencrafters.StageHint(slug, st.Slug); !ok {
+				continue
+			}
+			p := st.Instructions
+			if !strings.HasPrefix(p, "challenges/") {
+				p = filepath.Join("challenges", slug, p)
+			}
+			p = filepath.Join(root, filepath.FromSlash(p))
+			b, err := os.ReadFile(p)
+			if err != nil {
+				t.Errorf("%s: read %s: %v", slug, p, err)
+				continue
+			}
+			if !strings.Contains(string(b), startMarker) {
+				t.Errorf("%s/%s: %s missing synced hint block — run go run ./scripts/sync-stage-hints", slug, st.Slug, p)
+			}
+		}
+	}
+}
+
 // yamlStageSlugs extracts the ordered `- slug:` values under the top-level
 // `stages:` key of a challenge.yaml. The repo hand-parses YAML (no dependency),
 // so this mirrors that minimal approach.

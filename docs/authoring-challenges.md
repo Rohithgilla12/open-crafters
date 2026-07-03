@@ -71,6 +71,10 @@ Test-writing conventions:
   inline on a failed stage); `crafters walkthrough` prints the full sections
   after a learner passes. If you ship one it must cover **every** stage with a
   hint — `go test ./cmd/crafters` enforces this.
+- After editing `WALKTHROUGH.md`, sync hints into stage instructions:
+  `go run ./scripts/sync-stage-hints` — embeds a collapsible **Stuck?** block
+  at the bottom of each `stages/*.md` (shown on learn.gilla.fun and in
+  scaffolded solutions). CI checks these markers stay in sync.
 
 ## Checklist before merging
 
