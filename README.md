@@ -159,6 +159,10 @@ first, then implement the primitives.
 | **Realtime social feed** | Fan-out, celebrity posts, read-heavy QPS |
 | **Workflow orchestration platform** | Histories, replay, timers |
 | **Chat at scale** | Ordering, delivery, sharding |
+| **URL shortener** | Code generation, redirects, analytics |
+| **Payment ledger** | Double-entry, idempotency, audit |
+| **Notification platform** | Multi-channel fan-out, preferences |
+| **Distributed KV store** | Sharding, replication, rebalancing |
 
 ### Learning paths
 
