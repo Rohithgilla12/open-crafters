@@ -87,3 +87,9 @@ func TestLearnJS(t *testing.T) {
 		t.Fatal("learn.js not embedded")
 	}
 }
+
+func TestLearnCSS(t *testing.T) {
+	if len(learnCSS) < 1000 {
+		t.Fatal("learn CSS not embedded")
+	}
+}

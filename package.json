@@ -1,0 +1,11 @@
+{
+  "name": "open-crafters",
+  "private": true,
+  "scripts": {
+    "build:learn-css": "tailwindcss -i ./internal/learn/styles/input.css -o ./internal/learn/dist/style.css --minify"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.11",
+    "tailwindcss": "^4.1.11"
+  }
+}
