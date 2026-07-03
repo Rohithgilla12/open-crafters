@@ -128,6 +128,7 @@ go build -o crafters ./cmd/crafters
 | [Build your own bloom filter](challenges/build-your-own-bloom-filter/) — a probabilistic set membership service: FNV-1a double hashing, k hash functions, no false negatives, independent filters, and concurrent lookup churn | 9 | ✅ ready |
 | [Build your own hash ring](challenges/build-your-own-hash-ring/) — a consistent hash ring: FNV-1a vnode placement, clockwise lookup, minimal key movement on add/remove, virtual nodes, and concurrent multi-ring churn | 9 | ✅ ready |
 | [Build your own distributed lock](challenges/build-your-own-distributed-lock/) — a distributed lock service: exclusive acquire with leases, try-acquire without blocking, token-gated release and renew, crash-durable state, and concurrent multi-lock churn | 9 | ✅ ready |
+| [Build your own ID generator](challenges/build-your-own-id-generator/) — a snowflake-style ID service: time-ordered 64-bit IDs, worker partitioning, per-ms sequences, batch allocation, and crash-safe monotonic issuance | 9 | ✅ ready |
 
 ### Learning roadmaps
 
@@ -139,7 +140,7 @@ paths (`crafters roadmap` or [learn.gilla.fun/roadmaps](https://learn.gilla.fun/
 | **Durability & storage** | WAL → Queue → Log → LSM → MVCC → Object store |
 | **Workflow engines** | Temporal → Workflow SDK |
 | **Distributed systems** | Raft → Hash ring → Bloom filter |
-| **Coordination & control** | Scheduler → Rate limiter → Distributed lock |
+| **Coordination & control** | Scheduler → Rate limiter → Distributed lock → ID generator |
 | **Full platform** | All four tracks in suggested order |
 
 `crafters list --paths` still lists the four thematic paths. Roadmap pages show
@@ -154,7 +155,7 @@ Four curated tracks group the challenges by theme (`crafters list --paths`):
 | **Durability & storage** | WAL → Queue → Log → LSM → MVCC → Object store |
 | **Workflow engines** | Temporal → Workflow SDK |
 | **Distributed systems** | Raft → Hash ring → Bloom filter |
-| **Coordination & control** | Scheduler → Rate limiter → Distributed lock |
+| **Coordination & control** | Scheduler → Rate limiter → Distributed lock → ID generator |
 
 ### Which challenge should I start with?
 

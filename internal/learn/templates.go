@@ -82,7 +82,7 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
 <header class="mb-10 border-b border-border-soft pb-8">
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-[1.35fr_0.85fr] lg:items-start">
   <div>
-  <p class="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">14 challenges · 4 paths · graded black-box</p>
+  <p class="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">15 challenges · 4 paths · graded black-box</p>
   <h1 class="mb-4 text-[clamp(1.85rem,4vw,2.65rem)] leading-[1.12]">Build the infrastructure<br>senior engineers actually ship.</h1>
   <p class="max-w-[58ch] text-[1.02rem] text-muted">Open-source <em class="font-medium text-ink not-italic">build-your-own-X</em> challenges for production primitives.
   Read each stage, implement in any language, and grade over the wire — crashes included.</p>

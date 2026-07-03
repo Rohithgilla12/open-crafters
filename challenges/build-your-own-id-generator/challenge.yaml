@@ -1,0 +1,49 @@
+slug: build-your-own-id-generator
+name: Build your own ID generator
+short_description: >
+  Build a snowflake-style ID generator: time-ordered 64-bit IDs, worker
+  partitioning, per-millisecond sequences, batch allocation, crash-durable
+  counters, and concurrent uniqueness — graded over the wire.
+difficulty: medium
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port> --data-dir <path>
+tester:
+  challenge_flag: build-your-own-id-generator
+stages:
+  - slug: bind
+    name: Boot the server
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: next-id
+    name: Generate an ID
+    difficulty: easy
+    instructions: stages/02-next-id.md
+  - slug: sortable
+    name: Time-ordered IDs
+    difficulty: easy
+    instructions: stages/03-sortable.md
+  - slug: worker-id
+    name: Worker partitioning
+    difficulty: easy
+    instructions: stages/04-worker-id.md
+  - slug: sequence
+    name: Per-millisecond sequence
+    difficulty: medium
+    instructions: stages/05-sequence.md
+  - slug: clock-skew
+    name: Dense millisecond allocation
+    difficulty: medium
+    instructions: stages/06-clock-skew.md
+  - slug: batch
+    name: Batch allocate
+    difficulty: medium
+    instructions: stages/07-batch.md
+  - slug: durability
+    name: Survive a crash
+    difficulty: hard
+    instructions: stages/08-durability.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

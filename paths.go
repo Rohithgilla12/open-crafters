@@ -51,6 +51,7 @@ var ChallengePaths = []ChallengePath{
 			"build-your-own-scheduler",
 			"build-your-own-rate-limiter",
 			"build-your-own-distributed-lock",
+			"build-your-own-id-generator",
 		},
 	},
 }

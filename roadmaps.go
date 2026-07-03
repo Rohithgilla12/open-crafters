@@ -86,12 +86,14 @@ var Roadmaps = []Roadmap{
 			"Schedule delayed and recurring jobs with leases",
 			"Rate-limit with token buckets and sliding windows",
 			"Implement distributed locks with lease renewal",
+			"Generate snowflake-style unique, sortable IDs",
 		},
 		PathSlug: "coordination",
 		Milestones: []RoadmapMilestone{
 			{Challenge: "build-your-own-scheduler", Blurb: "Durable delayed work — poll, lease, retry, recurring jobs."},
 			{Challenge: "build-your-own-rate-limiter", Blurb: "Admission control — windows, buckets, per-key limits."},
 			{Challenge: "build-your-own-distributed-lock", Blurb: "Exclusive locks — acquire, renew, survive crashes."},
+			{Challenge: "build-your-own-id-generator", Blurb: "Snowflake IDs — time-ordered, batched, crash-safe."},
 		},
 	},
 	{
@@ -100,7 +102,7 @@ var Roadmaps = []Roadmap{
 		Tagline:     "All four tracks — the complete open-crafters journey.",
 		Description: "A suggested order across every path: start with durability fundamentals, add workflow orchestration, then distributed primitives, and finish with coordination services.",
 		Outcomes: []string{
-			"Complete all 14 challenges across 4 thematic paths",
+			"Complete all 15 challenges across 4 thematic paths",
 			"Understand how production infrastructure primitives compose",
 		},
 		PathSlug: "", // meta-roadmap — milestones are paths
@@ -108,7 +110,7 @@ var Roadmaps = []Roadmap{
 			{Challenge: "__path:durability__", Blurb: "6 challenges — WAL through object store (recommended first)."},
 			{Challenge: "__path:workflow__", Blurb: "2 challenges — Temporal server + replay SDK."},
 			{Challenge: "__path:distributed__", Blurb: "3 challenges — Raft, hash ring, Bloom filter."},
-			{Challenge: "__path:coordination__", Blurb: "3 challenges — scheduler, rate limiter, distributed lock."},
+			{Challenge: "__path:coordination__", Blurb: "4 challenges — scheduler, rate limiter, lock, ID generator."},
 		},
 	},
 }
