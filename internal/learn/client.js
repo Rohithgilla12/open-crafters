@@ -135,6 +135,48 @@
     document.querySelectorAll("[data-design-progress-label]").forEach((el) => {
       if (d.completed_at) el.textContent = "complete · ";
     });
+    applyDesignRoadmapProgress();
+  }
+
+  function designRoadmapCompleted(p, designsCSV) {
+    let total = 0;
+    let done = 0;
+    for (const slug of designsCSV.split(",").filter(Boolean)) {
+      total++;
+      const d = p.design[slug];
+      if (d && d.completed_at) done++;
+    }
+    return { total, done };
+  }
+
+  function applyDesignRoadmapProgress() {
+    const p = loadProgress();
+    document.querySelectorAll("[data-design-roadmap-card]").forEach((card) => {
+      const csv = card.dataset.designs || "";
+      const total = parseInt(card.dataset.totalProblems || "0", 10);
+      const { done } = designRoadmapCompleted(p, csv);
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+      const fill = card.querySelector(".roadmap-bar-fill");
+      if (fill) fill.style.width = pct + "%";
+      card.querySelectorAll("[data-design-roadmap-progress-label]").forEach((el) => {
+        if (done === total && total > 0) el.textContent = "complete · ";
+        else if (done > 0) el.textContent = done + "/" + total + " complete · ";
+        else el.textContent = "";
+      });
+    });
+    const bar = document.querySelector("[data-design-roadmap-bar]");
+    if (bar) {
+      const csv = document.body.dataset.designs || "";
+      const total = parseInt(bar.dataset.totalProblems || "0", 10);
+      const { done } = designRoadmapCompleted(p, csv);
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+      const fill = bar.querySelector(".roadmap-bar-fill");
+      if (fill) fill.style.width = pct + "%";
+      document.querySelectorAll("[data-design-roadmap-progress-label]").forEach((el) => {
+        if (done === total && total > 0) el.textContent = "complete — " + total + " problems";
+        else el.textContent = done + "/" + total + " complete";
+      });
+    }
   }
 
   function initDesignPage() {
@@ -155,6 +197,7 @@
       btn.addEventListener("click", () => {
         markDesignComplete(slug);
         applyDesignProgressUI();
+        applyDesignRoadmapProgress();
       });
     }
     applyDesignProgressUI();
@@ -431,6 +474,7 @@
           mergeProgress(incoming);
           applyProgressUI();
           applyDesignProgressUI();
+          applyDesignRoadmapProgress();
           applyRoadmapProgress();
           if (statusEl) statusEl.textContent = "Imported " + file.name;
         } catch (err) {
@@ -445,6 +489,7 @@
     initDesignPage();
     applyProgressUI();
     applyDesignProgressUI();
+    applyDesignRoadmapProgress();
     applyRoadmapProgress();
     initSubmitForm();
     initProgressSync();

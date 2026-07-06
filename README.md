@@ -150,8 +150,19 @@ progress bars synced from browser localStorage (or import `progress.json`).
 
 Whiteboard scenarios on [learn.gilla.fun/design](https://learn.gilla.fun/design) —
 scale numbers, discussion prompts, spoiler-gated hints, and reference architectures.
+**[Design roadmaps](https://learn.gilla.fun/design/roadmaps)** group problems into
+interview prep and thematic tracks.
 Each problem links to related **build-your-own** challenges so you can whiteboard
 first, then implement the primitives.
+
+| Roadmap | Focus |
+|---|---|
+| **Interview classics** | URL shortener, feed, chat, ledger, API gateway |
+| **Storage & data planes** | Blob storage, event streaming, search, KV, ledger |
+| **Scale & traffic** | Feed, cache, video, notifications, gateway |
+| **Distributed core** | Coordination service, KV, scheduler, workflow, streaming |
+| **Platform engineering** | Multi-tenant SaaS, gateway, notifications, workflow |
+| **Full curriculum** | All 16 problems in suggested order |
 
 | Problem | Theme |
 |---|---|

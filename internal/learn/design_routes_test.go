@@ -15,7 +15,7 @@ func TestDesignRoutes(t *testing.T) {
 	srv := NewServer(catalog, Config{})
 	mux := srv.Handler()
 
-	for _, path := range []string{"/design", "/design/design-chat-at-scale"} {
+	for _, path := range []string{"/design", "/design/design-chat-at-scale", "/design/roadmaps", "/design/roadmaps/interview-classics"} {
 		req := httptest.NewRequest(http.MethodGet, path, nil)
 		rec := httptest.NewRecorder()
 		mux.ServeHTTP(rec, req)

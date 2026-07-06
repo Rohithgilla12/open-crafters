@@ -39,9 +39,10 @@ type Challenge struct {
 type Catalog struct {
 	Order       []string
 	Challenges  map[string]*Challenge
-	DesignOrder []string
-	Designs     map[string]*DesignProblem
-	Paths       []Path
+	DesignOrder      []string
+	Designs          map[string]*DesignProblem
+	DesignRoadmaps   []DesignRoadmapView
+	Paths            []Path
 	Roadmaps    []RoadmapView
 }
 
@@ -187,6 +188,7 @@ func NewCatalog() (*Catalog, error) {
 	if err := loadDesignProblems(c, md); err != nil {
 		return nil, err
 	}
+	loadDesignRoadmaps(c)
 
 	return c, nil
 }

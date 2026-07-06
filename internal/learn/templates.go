@@ -445,8 +445,25 @@ var designIndexTmpl = template.Must(template.New("design-index").Funcs(tmplFuncs
   <h1 class="mb-2 text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">System design problems</h1>
   <p class="max-w-[58ch] text-muted">Realistic scenarios with scale numbers, discussion prompts, and spoiler-gated hints. Each problem links to open-crafters build challenges — whiteboard first, then implement the primitives.</p>
 </header>
+<section class="mb-10">
+  <div class="mb-4 flex items-baseline justify-between gap-4">
+    <h2 class="font-display text-xs font-semibold uppercase tracking-widest text-violet-300">Design roadmaps</h2>
+    <a class="text-sm text-link" href="/design/roadmaps">View all →</a>
+  </div>
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+  {{range .Roadmaps}}
+    <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-violet-400/35 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/design/roadmaps/{{.Slug}}" data-design-roadmap-card data-designs="{{.ProblemCSV}}" data-total-problems="{{.TotalProblems}}">
+      <h3 class="mb-1.5 text-[1.05rem] font-semibold">{{.Name}}</h3>
+      <p class="mb-2.5 text-sm leading-snug text-muted">{{.Tagline}}</p>
+      <span class="mb-1.5 block font-mono text-xs text-violet-300"><span data-design-roadmap-progress-label></span>{{.TotalProblems}} problems</span>
+      <span class="roadmap-bar block h-1.5 overflow-hidden rounded-full bg-white/6"><span class="roadmap-bar-fill"></span></span>
+    </a>
+  {{end}}
+  </div>
+</section>
+<h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-accent-dim">All problems</h2>
 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-{{range .}}
+{{range .Designs}}
   <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-violet-400/35 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/design/{{.Slug}}" data-design="{{.Slug}}">
     <div class="mb-1 flex items-start justify-between gap-3">
       <h2 class="text-[1.05rem] font-semibold">{{.Name}}</h2>
@@ -458,7 +475,80 @@ var designIndexTmpl = template.Must(template.New("design-index").Funcs(tmplFuncs
   </a>
 {{end}}
 </div>
-<footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted"><a class="text-link" href="/">← home</a></footer>
+<footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted"><a class="text-link" href="/design/roadmaps">Design roadmaps</a> · <a class="text-link" href="/">← home</a></footer>
+</div><script src="/learn.js"></script></body></html>`))
+
+var designRoadmapsIndexTmpl = template.Must(template.New("design-roadmaps-index").Funcs(tmplFuncs).Parse(`<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design roadmaps — open-crafters learn</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+{{fontLinks}}
+<link rel="stylesheet" href="/style.css">
+</head><body>
+{{siteNav}}
+<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
+<p class="mb-5 text-sm text-muted"><a class="text-link" href="/design">← system design</a></p>
+<header class="mb-6 border-b border-border-soft pb-6">
+  <h1 class="mb-2 text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">Design roadmaps</h1>
+  <p class="max-w-[58ch] text-muted">Curated whiteboard journeys — interview classics, storage, scale, distributed core, and the full 16-problem curriculum.</p>
+</header>
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+{{range .}}
+  <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-violet-400/35" href="/design/roadmaps/{{.Slug}}" data-design-roadmap-card data-designs="{{.ProblemCSV}}" data-total-problems="{{.TotalProblems}}">
+    <h2 class="mb-1.5 text-[1.05rem] font-semibold">{{.Name}}</h2>
+    <p class="mb-2 text-sm text-muted">{{.Tagline}}</p>
+    <span class="mb-1.5 block font-mono text-xs text-violet-300"><span data-design-roadmap-progress-label></span>{{.TotalProblems}} problems</span>
+    <span class="roadmap-bar block h-1.5 overflow-hidden rounded-full bg-white/6"><span class="roadmap-bar-fill"></span></span>
+  </a>
+{{end}}
+</div>
+<footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted"><a class="text-link" href="/design">← system design</a></footer>
+</div><script src="/learn.js"></script></body></html>`))
+
+var designRoadmapTmpl = template.Must(template.New("design-roadmap").Funcs(tmplFuncs).Parse(`<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Name}} — design roadmap</title>
+<meta name="description" content="{{.Tagline}}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+{{fontLinks}}
+<link rel="stylesheet" href="/style.css">
+</head><body data-design-roadmap-page data-designs="{{.ProblemCSV}}">
+{{siteNav}}
+<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
+<p class="mb-5 text-sm text-muted"><a class="text-link" href="/design/roadmaps">← all design roadmaps</a></p>
+<header class="mb-6 border-b border-border-soft pb-6">
+  <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-violet-300">Design roadmap</p>
+  <h1 class="mb-2 text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">{{.Name}}</h1>
+  <p class="max-w-[58ch] text-muted">{{.Description}}</p>
+  <div class="mt-4 max-w-md" data-design-roadmap-bar data-total-problems="{{.TotalProblems}}">
+    <span data-design-roadmap-progress-label class="mb-1 block font-mono text-sm text-violet-300">0/{{.TotalProblems}} complete</span>
+    <span class="roadmap-bar block h-1.5 overflow-hidden rounded-full bg-white/6"><span class="roadmap-bar-fill"></span></span>
+  </div>
+</header>
+{{if .Outcomes}}
+<h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-accent-dim">What you'll practice</h2>
+<ul class="mb-6 rounded-[14px] border border-border bg-surface py-3 pl-10 pr-4 text-muted">
+{{range .Outcomes}}<li class="my-1.5 leading-relaxed">{{.}}</li>{{end}}
+</ul>
+{{end}}
+<h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-accent-dim">Problems</h2>
+<ol class="flex flex-col gap-3">
+{{range .Milestones}}
+  <li>
+    <a class="flex items-start gap-4 rounded-[14px] border border-border bg-surface p-5 text-ink transition hover:-translate-y-0.5 hover:border-violet-400/35 hover:bg-surface-hover" href="/design/{{.Problem.Slug}}" data-design="{{.Problem.Slug}}">
+      <span class="flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full border border-border bg-canvas-elevated font-mono text-sm text-violet-300">{{.Num}}</span>
+      <div class="flex-1">
+        <h2 class="mb-1 flex flex-wrap items-center gap-2 text-[1.08rem] font-semibold">{{.Problem.Name}} <span class="{{diffBadge .Problem.Difficulty}}">{{.Problem.Difficulty}}</span></h2>
+        <p class="mb-2 text-sm text-muted">{{.Blurb}}</p>
+        <span class="font-mono text-xs text-violet-300"><span data-design-progress-label></span>~{{.Problem.TimeMinutes}} min whiteboard →</span>
+      </div>
+    </a>
+  </li>
+{{end}}
+</ol>
+<footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted"><a class="text-link" href="/design/roadmaps">← all design roadmaps</a></footer>
 </div><script src="/learn.js"></script></body></html>`))
 
 var designProblemTmpl = template.Must(template.New("design").Funcs(tmplFuncs).Parse(`<!doctype html>

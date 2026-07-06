@@ -71,7 +71,10 @@ The compose file publishes `18081:8081` on the host.
 | `GET /api/paths` | JSON learning paths (`slug`, `name`, `description`, `challenges[]`) |
 | `GET /api/roadmaps` | JSON roadmaps (`slug`, `name`, `tagline`, `milestones[]`, …) |
 | `GET /design` | System design problem catalog (HTML) |
+| `GET /design/roadmaps` | Design roadmap catalog (HTML) |
+| `GET /design/roadmaps/{slug}` | Single design roadmap — outcomes, problem timeline |
 | `GET /design/{slug}` | Single design problem — prompts, hints, reference architecture |
+| `GET /api/design/roadmaps` | JSON design roadmaps |
 | `GET /api/design` | JSON design problem list |
 | `POST /api/submit` | Proxy solution zip to hosted runner (`Authorization: Bearer <token>`) |
 | `GET /api/jobs/{id}` | Poll grading job status |

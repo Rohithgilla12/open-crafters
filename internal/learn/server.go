@@ -34,6 +34,7 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET /api/paths", s.handleAPIPaths)
 	mux.HandleFunc("GET /api/roadmaps", s.handleAPIRoadmaps)
 	mux.HandleFunc("GET /api/design", s.handleAPIDesign)
+	mux.HandleFunc("GET /api/design/roadmaps", s.handleAPIDesignRoadmaps)
 	mux.HandleFunc("POST /api/submit", s.handleSubmit)
 	mux.HandleFunc("GET /api/jobs/{id}", s.handleSubmitJob)
 	mux.HandleFunc("GET /style.css", s.handleCSS)
@@ -42,6 +43,8 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET /roadmaps", s.handleRoadmapsIndex)
 	mux.HandleFunc("GET /roadmaps/{slug}", s.handleRoadmap)
 	mux.HandleFunc("GET /design", s.handleDesignIndex)
+	mux.HandleFunc("GET /design/roadmaps", s.handleDesignRoadmapsIndex)
+	mux.HandleFunc("GET /design/roadmaps/{slug}", s.handleDesignRoadmap)
 	mux.HandleFunc("GET /design/{slug}", s.handleDesignProblem)
 	mux.HandleFunc("GET /paths/{slug}", s.handlePathRedirect)
 	mux.HandleFunc("GET /challenges/{slug}", s.handleChallenge)
@@ -69,6 +72,10 @@ func (s *Server) handleAPIRoadmaps(w http.ResponseWriter, _ *http.Request) {
 
 func (s *Server) handleAPIDesign(w http.ResponseWriter, _ *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]any{"design": s.catalog.APIDesignList()})
+}
+
+func (s *Server) handleAPIDesignRoadmaps(w http.ResponseWriter, _ *http.Request) {
+	writeJSON(w, http.StatusOK, map[string]any{"roadmaps": s.catalog.APIDesignRoadmaps()})
 }
 
 func (s *Server) handleCSS(w http.ResponseWriter, _ *http.Request) {
@@ -121,7 +128,29 @@ func (s *Server) handleDesignIndex(w http.ResponseWriter, _ *http.Request) {
 	for _, slug := range s.catalog.DesignOrder {
 		designs = append(designs, s.catalog.Designs[slug])
 	}
-	s.render(w, designIndexTmpl, designs)
+	s.render(w, designIndexTmpl, designIndexData{
+		Roadmaps: s.catalog.DesignRoadmaps,
+		Designs:  designs,
+	})
+}
+
+func (s *Server) handleDesignRoadmapsIndex(w http.ResponseWriter, _ *http.Request) {
+	s.render(w, designRoadmapsIndexTmpl, s.catalog.DesignRoadmaps)
+}
+
+func (s *Server) handleDesignRoadmap(w http.ResponseWriter, r *http.Request) {
+	slug := r.PathValue("slug")
+	rm, ok := s.catalog.GetDesignRoadmap(slug)
+	if !ok {
+		http.NotFound(w, r)
+		return
+	}
+	s.render(w, designRoadmapTmpl, rm)
+}
+
+type designIndexData struct {
+	Roadmaps []DesignRoadmapView
+	Designs  []*DesignProblem
 }
 
 func (s *Server) handleDesignProblem(w http.ResponseWriter, r *http.Request) {
