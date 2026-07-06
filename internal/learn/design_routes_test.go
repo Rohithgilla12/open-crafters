@@ -15,7 +15,15 @@ func TestDesignRoutes(t *testing.T) {
 	srv := NewServer(catalog, Config{})
 	mux := srv.Handler()
 
-	for _, path := range []string{"/design", "/design/design-chat-at-scale", "/design/roadmaps", "/design/roadmaps/interview-classics"} {
+	for _, path := range []string{
+		"/design",
+		"/design/design-chat-at-scale",
+		"/design/roadmaps",
+		"/design/roadmaps/interview-classics",
+		"/design/stacks",
+		"/design/stacks/url-shortener",
+		"/challenges/build-your-own-id-generator",
+	} {
 		req := httptest.NewRequest(http.MethodGet, path, nil)
 		rec := httptest.NewRecorder()
 		mux.ServeHTTP(rec, req)
@@ -23,8 +31,19 @@ func TestDesignRoutes(t *testing.T) {
 			t.Fatalf("GET %s = %d", path, rec.Code)
 		}
 		body := rec.Body.String()
-		if !strings.Contains(body, "System design") && !strings.Contains(body, "chat at scale") {
-			t.Fatalf("GET %s body missing expected content", path)
+		switch path {
+		case "/design/stacks/url-shortener":
+			if !strings.Contains(body, "URL shortener stack") {
+				t.Fatalf("GET %s body missing stack title", path)
+			}
+		case "/challenges/build-your-own-id-generator":
+			if !strings.Contains(body, "Whiteboard first") {
+				t.Fatalf("GET %s body missing design bridge", path)
+			}
+		default:
+			if !strings.Contains(body, "System design") && !strings.Contains(body, "chat at scale") && !strings.Contains(body, "Design stacks") {
+				t.Fatalf("GET %s body missing expected content", path)
+			}
 		}
 	}
 

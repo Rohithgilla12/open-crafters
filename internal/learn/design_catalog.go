@@ -19,6 +19,8 @@ type DesignProblem struct {
 	TimeMinutes       int    `json:"time_minutes"`
 	RelatedChallenges []string
 	Related           []*Challenge // resolved from catalog
+	BuildSteps        []DesignBuildStepView
+	Stacks            []DesignStackLink
 	DiscussionPrompts []string     `json:"discussion_prompts"`
 	ProblemHTML       template.HTML
 	HintsHTML         template.HTML

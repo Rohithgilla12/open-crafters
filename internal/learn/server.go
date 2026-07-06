@@ -45,6 +45,8 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET /design", s.handleDesignIndex)
 	mux.HandleFunc("GET /design/roadmaps", s.handleDesignRoadmapsIndex)
 	mux.HandleFunc("GET /design/roadmaps/{slug}", s.handleDesignRoadmap)
+	mux.HandleFunc("GET /design/stacks", s.handleDesignStacksIndex)
+	mux.HandleFunc("GET /design/stacks/{slug}", s.handleDesignStack)
 	mux.HandleFunc("GET /design/{slug}", s.handleDesignProblem)
 	mux.HandleFunc("GET /paths/{slug}", s.handlePathRedirect)
 	mux.HandleFunc("GET /challenges/{slug}", s.handleChallenge)
@@ -130,6 +132,7 @@ func (s *Server) handleDesignIndex(w http.ResponseWriter, _ *http.Request) {
 	}
 	s.render(w, designIndexTmpl, designIndexData{
 		Roadmaps: s.catalog.DesignRoadmaps,
+		Stacks:   s.catalog.DesignStacks,
 		Designs:  designs,
 	})
 }
@@ -148,8 +151,23 @@ func (s *Server) handleDesignRoadmap(w http.ResponseWriter, r *http.Request) {
 	s.render(w, designRoadmapTmpl, rm)
 }
 
+func (s *Server) handleDesignStacksIndex(w http.ResponseWriter, _ *http.Request) {
+	s.render(w, designStacksIndexTmpl, s.catalog.DesignStacks)
+}
+
+func (s *Server) handleDesignStack(w http.ResponseWriter, r *http.Request) {
+	slug := r.PathValue("slug")
+	st, ok := s.catalog.GetDesignStack(slug)
+	if !ok {
+		http.NotFound(w, r)
+		return
+	}
+	s.render(w, designStackTmpl, st)
+}
+
 type designIndexData struct {
 	Roadmaps []DesignRoadmapView
+	Stacks   []DesignStackView
 	Designs  []*DesignProblem
 }
 
@@ -176,10 +194,12 @@ func (s *Server) handleChallenge(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.render(w, challengeTmpl, challengePageData{
-		Challenge:  ch,
-		StageSlugs: stageSlugs(ch),
-		RoadmapSlug: s.catalog.RoadmapForChallenge(slug),
-		RoadmapName: roadmapName(s.catalog, slug),
+		Challenge:       ch,
+		StageSlugs:      stageSlugs(ch),
+		RoadmapSlug:     s.catalog.RoadmapForChallenge(slug),
+		RoadmapName:     roadmapName(s.catalog, slug),
+		RelatedDesigns:  s.catalog.DesignsForChallenge(slug),
+		DesignStacks:    s.catalog.StacksForChallenge(slug),
 	})
 }
 
@@ -215,10 +235,12 @@ type stagePageData struct {
 }
 
 type challengePageData struct {
-	Challenge   *Challenge
-	StageSlugs  string
-	RoadmapSlug string
-	RoadmapName string
+	Challenge      *Challenge
+	StageSlugs     string
+	RoadmapSlug    string
+	RoadmapName    string
+	RelatedDesigns []*DesignProblem
+	DesignStacks   []DesignStackLink
 }
 
 func stageSlugs(ch *Challenge) string {

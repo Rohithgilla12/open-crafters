@@ -42,6 +42,7 @@ type Catalog struct {
 	DesignOrder      []string
 	Designs          map[string]*DesignProblem
 	DesignRoadmaps   []DesignRoadmapView
+	DesignStacks     []DesignStackView
 	Paths            []Path
 	Roadmaps    []RoadmapView
 }
@@ -189,6 +190,8 @@ func NewCatalog() (*Catalog, error) {
 		return nil, err
 	}
 	loadDesignRoadmaps(c)
+	loadDesignStacks(c)
+	enrichDesignBridges(c)
 
 	return c, nil
 }

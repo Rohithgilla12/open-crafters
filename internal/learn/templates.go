@@ -371,6 +371,29 @@ var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Par
 {{end}}
 </ol>
 
+{{if .RelatedDesigns}}
+<h2 class="mb-4 mt-10 font-display text-xs font-semibold uppercase tracking-widest text-violet-300">Whiteboard first</h2>
+<p class="mb-3 text-sm text-muted">System design problems that use this challenge as a building block — sketch the full system before you implement.</p>
+<div class="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+{{range .RelatedDesigns}}
+  <a class="block rounded-[10px] border border-violet-400/25 bg-violet-400/5 px-4 py-3 text-ink transition hover:border-violet-400/45 hover:bg-violet-400/10" href="/design/{{.Slug}}">
+    <span class="block text-sm font-semibold">{{.Name}}</span>
+    <span class="text-xs text-muted">{{.Tagline}}</span>
+  </a>
+{{end}}
+</div>
+{{end}}
+
+{{if .DesignStacks}}
+<h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-violet-300">Part of a design stack</h2>
+<p class="mb-3 text-sm text-muted">Curated whiteboard→build journeys that include this challenge.</p>
+<div class="mb-8 flex flex-wrap gap-2">
+{{range .DesignStacks}}
+  <a class="rounded-full border border-violet-400/30 bg-violet-400/10 px-3 py-1.5 text-sm font-medium text-violet-200 transition hover:border-violet-400/50 hover:bg-violet-400/15" href="/design/stacks/{{.Slug}}">{{.Name}}</a>
+{{end}}
+</div>
+{{end}}
+
 <h2 class="mb-4 mt-10 font-display text-xs font-semibold uppercase tracking-widest text-accent-dim" id="protocol">Protocol</h2>
 <div class="md protocol rounded-[14px] border border-border bg-surface px-5 py-4">{{.Challenge.ProtocolHTML}}</div>
 
@@ -447,6 +470,22 @@ var designIndexTmpl = template.Must(template.New("design-index").Funcs(tmplFuncs
 </header>
 <section class="mb-10">
   <div class="mb-4 flex items-baseline justify-between gap-4">
+    <h2 class="font-display text-xs font-semibold uppercase tracking-widest text-violet-300">Design stacks</h2>
+    <a class="text-sm text-link" href="/design/stacks">View all →</a>
+  </div>
+  <p class="mb-4 max-w-[58ch] text-sm text-muted">End-to-end journeys — whiteboard one problem, then build the primitives underneath in order.</p>
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+  {{range .Stacks}}
+    <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-violet-400/35 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/design/stacks/{{.Slug}}">
+      <h3 class="mb-1.5 text-[1.05rem] font-semibold">{{.Name}}</h3>
+      <p class="mb-2.5 text-sm leading-snug text-muted">{{.Tagline}}</p>
+      <span class="font-mono text-xs text-violet-300">{{.TotalSteps}} steps · design → build</span>
+    </a>
+  {{end}}
+  </div>
+</section>
+<section class="mb-10">
+  <div class="mb-4 flex items-baseline justify-between gap-4">
     <h2 class="font-display text-xs font-semibold uppercase tracking-widest text-violet-300">Design roadmaps</h2>
     <a class="text-sm text-link" href="/design/roadmaps">View all →</a>
   </div>
@@ -475,7 +514,7 @@ var designIndexTmpl = template.Must(template.New("design-index").Funcs(tmplFuncs
   </a>
 {{end}}
 </div>
-<footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted"><a class="text-link" href="/design/roadmaps">Design roadmaps</a> · <a class="text-link" href="/">← home</a></footer>
+<footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted"><a class="text-link" href="/design/stacks">Design stacks</a> · <a class="text-link" href="/design/roadmaps">Design roadmaps</a> · <a class="text-link" href="/">← home</a></footer>
 </div><script src="/learn.js"></script></body></html>`))
 
 var designRoadmapsIndexTmpl = template.Must(template.New("design-roadmaps-index").Funcs(tmplFuncs).Parse(`<!doctype html>
@@ -551,6 +590,75 @@ var designRoadmapTmpl = template.Must(template.New("design-roadmap").Funcs(tmplF
 <footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted"><a class="text-link" href="/design/roadmaps">← all design roadmaps</a></footer>
 </div><script src="/learn.js"></script></body></html>`))
 
+var designStacksIndexTmpl = template.Must(template.New("design-stacks-index").Funcs(tmplFuncs).Parse(`<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design stacks — open-crafters learn</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+{{fontLinks}}
+<link rel="stylesheet" href="/style.css">
+</head><body>
+{{siteNav}}
+<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
+<p class="mb-5 text-sm text-muted"><a class="text-link" href="/design">← system design</a></p>
+<header class="mb-6 border-b border-border-soft pb-6">
+  <h1 class="mb-2 text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">Design stacks</h1>
+  <p class="max-w-[58ch] text-muted">Whiteboard a system, then implement the graded primitives underneath — in dependency order.</p>
+</header>
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+{{range .}}
+  <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-violet-400/35" href="/design/stacks/{{.Slug}}">
+    <h2 class="mb-1.5 text-[1.05rem] font-semibold">{{.Name}}</h2>
+    <p class="mb-2 text-sm text-muted">{{.Tagline}}</p>
+    <span class="font-mono text-xs text-violet-300">{{.TotalSteps}} milestones</span>
+  </a>
+{{end}}
+</div>
+<footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted"><a class="text-link" href="/design">← system design</a></footer>
+</div><script src="/learn.js"></script></body></html>`))
+
+var designStackTmpl = template.Must(template.New("design-stack").Funcs(tmplFuncs).Parse(`<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Name}} — design stack</title>
+<meta name="description" content="{{.Tagline}}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+{{fontLinks}}
+<link rel="stylesheet" href="/style.css">
+</head><body data-design-stack-page data-steps="{{.StepCSV}}">
+{{siteNav}}
+<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
+<p class="mb-5 text-sm text-muted"><a class="text-link" href="/design/stacks">← all design stacks</a></p>
+<header class="mb-6 border-b border-border-soft pb-6">
+  <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-violet-300">Design stack</p>
+  <h1 class="mb-2 text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">{{.Name}}</h1>
+  <p class="max-w-[58ch] text-muted">{{.Description}}</p>
+</header>
+{{if .Outcomes}}
+<h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-accent-dim">What you'll practice</h2>
+<ul class="mb-6 rounded-[14px] border border-border bg-surface py-3 pl-10 pr-4 text-muted">
+{{range .Outcomes}}<li class="my-1.5 leading-relaxed">{{.}}</li>{{end}}
+</ul>
+{{end}}
+<h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-accent-dim">Journey</h2>
+<ol class="flex flex-col gap-3">
+{{range .Milestones}}
+  <li>
+    <a class="flex items-start gap-4 rounded-[14px] border border-border bg-surface p-5 text-ink transition hover:-translate-y-0.5 hover:bg-surface-hover{{if eq .Kind "design"}} hover:border-violet-400/35{{else}} hover:border-accent/35{{end}}" href="{{.Href}}">
+      <span class="flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full border border-border bg-canvas-elevated font-mono text-sm {{if eq .Kind "design"}}text-violet-300{{else}}text-accent{{end}}">{{.Num}}</span>
+      <div class="flex-1">
+        <p class="mb-1 font-mono text-[0.65rem] font-bold uppercase tracking-widest {{if eq .Kind "design"}}text-violet-300{{else}}text-accent-dim{{end}}">{{if eq .Kind "design"}}Whiteboard{{else}}Build{{end}}</p>
+        <h2 class="mb-1 text-[1.08rem] font-semibold">{{.Label}}</h2>
+        <p class="mb-2 text-sm text-muted">{{.Blurb}}</p>
+        {{if .StartCommand}}<code class="block overflow-x-auto rounded-[8px] border border-border bg-canvas-elevated px-3 py-2 font-mono text-xs text-code">{{.StartCommand}}</code>{{end}}
+      </div>
+    </a>
+  </li>
+{{end}}
+</ol>
+<footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted"><a class="text-link" href="/design/stacks">← all design stacks</a></footer>
+</div><script src="/learn.js"></script></body></html>`))
+
 var designProblemTmpl = template.Must(template.New("design").Funcs(tmplFuncs).Parse(`<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -588,6 +696,37 @@ var designProblemTmpl = template.Must(template.New("design").Funcs(tmplFuncs).Pa
   </li>
 {{end}}
 </ol>
+{{end}}
+
+{{if .BuildSteps}}
+<h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-accent-dim">Implement these primitives</h2>
+<p class="mb-3 text-sm text-muted">Ordered build path — each challenge maps to a box from your whiteboard.</p>
+<ol class="mb-8 flex flex-col gap-3">
+{{range .BuildSteps}}
+  <li class="rounded-[14px] border border-border bg-surface p-5">
+    <div class="mb-2 flex items-start gap-3">
+      <span class="flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full border border-border bg-canvas-elevated font-mono text-xs text-accent">{{.Num}}</span>
+      <div class="flex-1">
+        {{if .Challenge}}
+        <a class="text-[1.02rem] font-semibold text-ink hover:text-link" href="/challenges/{{.Challenge.Slug}}">{{.Challenge.Name}}</a>
+        <span class="ml-2 {{diffBadge .Challenge.Difficulty}}">{{.Challenge.Difficulty}}</span>
+        {{end}}
+        <p class="mt-1 text-sm text-muted">{{.Blurb}}</p>
+      </div>
+    </div>
+    <code class="block overflow-x-auto rounded-[8px] border border-border bg-canvas-elevated px-3 py-2 font-mono text-xs text-code">{{.StartCommand}}</code>
+  </li>
+{{end}}
+</ol>
+{{end}}
+
+{{if .Stacks}}
+<h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-violet-300">Part of a design stack</h2>
+<div class="mb-8 flex flex-wrap gap-2">
+{{range .Stacks}}
+  <a class="rounded-full border border-violet-400/30 bg-violet-400/10 px-3 py-1.5 text-sm font-medium text-violet-200 transition hover:border-violet-400/50 hover:bg-violet-400/15" href="/design/stacks/{{.Slug}}">{{.Name}}</a>
+{{end}}
+</div>
 {{end}}
 
 {{if .Related}}
