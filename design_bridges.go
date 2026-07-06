@@ -18,6 +18,7 @@ var DesignBuildSteps = map[string][]DesignBuildStep{
 		{Challenge: "build-your-own-scheduler", Blurb: "Core fire-time queue, leases, and recurring jobs."},
 		{Challenge: "build-your-own-queue", Blurb: "At-least-once buffer between scheduler and workers."},
 		{Challenge: "build-your-own-distributed-lock", Blurb: "Singleton cron leader or critical-section guards."},
+		{Challenge: "build-your-own-job-platform", Blurb: "Meta-compose — wire the three services in one gateway."},
 	},
 	"design-realtime-feed": {
 		{Challenge: "build-your-own-log", Blurb: "Post ingestion stream for fan-out workers."},

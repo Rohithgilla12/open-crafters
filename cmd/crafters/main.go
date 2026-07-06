@@ -31,6 +31,7 @@ import (
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/grader"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/distlock"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/idgen"
+	"github.com/Rohithgilla12/open-crafters/internal/challenges/jobplatform"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/hashring"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/logstore"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/lsm"
@@ -66,6 +67,7 @@ var challenges = map[string]harness.Challenge{
 	"build-your-own-id-generator":          idgen.Challenge(),
 	"build-your-own-distributed-cache":     distcache.Challenge(),
 	"build-your-own-url-shortener":         urlshortener.Challenge(),
+	"build-your-own-job-platform":          jobplatform.Challenge(),
 	"build-your-own-harness":               grader.Challenge(),
 }
 

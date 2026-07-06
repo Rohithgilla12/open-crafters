@@ -102,7 +102,7 @@ var Roadmaps = []Roadmap{
 		Slug:        "integration",
 		Name:        "Compose & meta",
 		Tagline:     "Wire primitives together — and build the tester itself.",
-		Description: "Capstone challenges: orchestrate reference id-generator, bloom-filter, and object-store into a URL shortener gateway, then implement spawn/proxy/assert like the real harness.",
+		Description: "Capstone challenges: orchestrate reference primitives into URL shortener and job platform gateways, then implement spawn/proxy/assert like the real harness.",
 		Outcomes: []string{
 			"Compose multiple graded primitives into one gateway",
 			"Implement process spawn, NDJSON proxying, and test assertions",
@@ -110,6 +110,7 @@ var Roadmaps = []Roadmap{
 		PathSlug: "integration",
 		Milestones: []RoadmapMilestone{
 			{Challenge: "build-your-own-url-shortener", Blurb: "Meta-compose — gateway + three reference services."},
+			{Challenge: "build-your-own-job-platform", Blurb: "Meta-compose — scheduler + queue + lock orchestration."},
 			{Challenge: "build-your-own-harness", Blurb: "Meta grader — spawn, proxy calls, run_case."},
 		},
 	},
@@ -119,7 +120,7 @@ var Roadmaps = []Roadmap{
 		Tagline:     "All five tracks — the complete open-crafters journey.",
 		Description: "A suggested order across every path: durability, workflow, distributed primitives, coordination glue, then compose/meta capstones.",
 		Outcomes: []string{
-			"Complete all 18 challenges across 5 thematic paths",
+			"Complete all 19 challenges across 5 thematic paths",
 			"Understand how production infrastructure primitives compose",
 		},
 		PathSlug: "", // meta-roadmap — milestones are paths
@@ -128,7 +129,7 @@ var Roadmaps = []Roadmap{
 			{Challenge: "__path:workflow__", Blurb: "2 challenges — Temporal server + replay SDK."},
 			{Challenge: "__path:distributed__", Blurb: "4 challenges — Raft, hash ring, Bloom filter, cache node."},
 			{Challenge: "__path:coordination__", Blurb: "4 challenges — scheduler, rate limiter, lock, ID generator."},
-			{Challenge: "__path:integration__", Blurb: "2 capstones — URL shortener compose + build the harness."},
+			{Challenge: "__path:integration__", Blurb: "3 capstones — URL shortener, job platform, build the harness."},
 		},
 	},
 }

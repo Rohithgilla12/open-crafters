@@ -52,6 +52,7 @@ var DesignStacks = []DesignStack{
 			{Kind: "build", Slug: "build-your-own-scheduler", Blurb: "Fire times, recurring jobs, durability"},
 			{Kind: "build", Slug: "build-your-own-queue", Blurb: "Worker delivery with visibility timeout"},
 			{Kind: "build", Slug: "build-your-own-distributed-lock", Blurb: "Leader election or exclusive sections"},
+			{Kind: "build", Slug: "build-your-own-job-platform", Blurb: "Meta-compose — wire scheduler, queue, and lock in a gateway"},
 		},
 	},
 	{

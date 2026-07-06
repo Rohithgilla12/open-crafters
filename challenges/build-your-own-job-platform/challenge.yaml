@@ -1,0 +1,49 @@
+slug: build-your-own-job-platform
+name: Build your own job platform
+short_description: >
+  Meta-compose challenge: implement a job platform gateway that orchestrates
+  reference scheduler, queue, and distributed-lock services spawned by the
+  harness — graded over the wire.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port>
+tester:
+  challenge_flag: build-your-own-job-platform
+stages:
+  - slug: bind
+    name: Boot the stack
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: submit
+    name: Schedule a job
+    difficulty: easy
+    instructions: stages/02-submit.md
+  - slug: delayed
+    name: Delayed delivery
+    difficulty: easy
+    instructions: stages/03-delayed.md
+  - slug: complete
+    name: Complete work
+    difficulty: medium
+    instructions: stages/04-complete.md
+  - slug: empty
+    name: Nothing to do
+    difficulty: easy
+    instructions: stages/05-empty.md
+  - slug: cancel
+    name: Cancel pending
+    difficulty: medium
+    instructions: stages/06-cancel.md
+  - slug: multi
+    name: Several jobs
+    difficulty: medium
+    instructions: stages/07-multi.md
+  - slug: concurrent
+    name: Parallel submits
+    difficulty: hard
+    instructions: stages/08-concurrent.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

@@ -45,6 +45,7 @@ var DesignProblems = []DesignProblem{
 			"build-your-own-scheduler",
 			"build-your-own-queue",
 			"build-your-own-distributed-lock",
+			"build-your-own-job-platform",
 		},
 		DiscussionPrompts: []string{
 			"What are the core entities (jobs, workers, schedules) and who owns each?",

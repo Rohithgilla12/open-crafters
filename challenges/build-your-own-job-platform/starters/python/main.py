@@ -1,15 +1,25 @@
-"""Reference stub for build-your-own-harness (bind only). See go/ for full solution."""
+"""Starter for job platform gateway (Python). Passes bind only."""
 
 import argparse
 import json
+import os
 import socketserver
 
 
-class HarnessError(Exception):
+class GWError(Exception):
     def __init__(self, code, message):
         super().__init__(message)
         self.code = code
         self.message = message
+
+
+def handle(method, params):
+    if method == "ping":
+        return {"message": "pong"}
+    _ = os.environ.get("SCHEDULER_ADDR")
+    _ = os.environ.get("QUEUE_ADDR")
+    _ = os.environ.get("LOCK_ADDR")
+    raise GWError("UNKNOWN_METHOD", f"unknown method {method!r}")
 
 
 class Handler(socketserver.StreamRequestHandler):
@@ -18,14 +28,10 @@ class Handler(socketserver.StreamRequestHandler):
             if not line.strip():
                 continue
             req = json.loads(line)
-            method = req.get("method")
             try:
-                if method == "ping":
-                    result = {"message": "pong"}
-                else:
-                    raise HarnessError("UNKNOWN_METHOD", f"unknown method {method!r}")
+                result = handle(req.get("method"), req.get("params") or {})
                 resp = {"id": req.get("id"), "result": result}
-            except HarnessError as e:
+            except GWError as e:
                 resp = {"id": req.get("id"), "error": {"code": e.code, "message": e.message}}
             self.wfile.write(json.dumps(resp).encode() + b"\n")
             self.wfile.flush()
@@ -39,9 +45,11 @@ class Server(socketserver.ThreadingTCPServer):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--port", type=int, required=True)
-    p.add_argument("--data-dir", required=False)
+    p.add_argument("--data-dir", default="")
     args = p.parse_args()
-    Server(("127.0.0.1", args.port), Handler).serve_forever()
+    with Server(("127.0.0.1", args.port), Handler) as srv:
+        print(f"listening on 127.0.0.1:{args.port}", flush=True)
+        srv.serve_forever()
 
 
 if __name__ == "__main__":

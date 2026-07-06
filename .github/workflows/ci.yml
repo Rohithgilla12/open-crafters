@@ -187,9 +187,49 @@ jobs:
         run: ./crafters grade --challenge build-your-own-id-generator --all
           --program examples/solutions/build-your-own-id-generator/typescript/your_program.sh
 
+      - name: "Reference: Build your own distributed cache — Python"
+        run: ./crafters grade --challenge build-your-own-distributed-cache --all
+          --program examples/solutions/build-your-own-distributed-cache/python/your_program.sh
+      - name: "Reference: Build your own distributed cache — Go"
+        run: ./crafters grade --challenge build-your-own-distributed-cache --all
+          --program examples/solutions/build-your-own-distributed-cache/go/your_program.sh
+      - name: "Reference: Build your own distributed cache — TypeScript/Bun"
+        run: ./crafters grade --challenge build-your-own-distributed-cache --all
+          --program examples/solutions/build-your-own-distributed-cache/typescript/your_program.sh
+
+      - name: "Reference: Build your own URL shortener — Python"
+        run: ./crafters grade --challenge build-your-own-url-shortener --all
+          --program examples/solutions/build-your-own-url-shortener/python/your_program.sh
+      - name: "Reference: Build your own URL shortener — Go"
+        run: ./crafters grade --challenge build-your-own-url-shortener --all
+          --program examples/solutions/build-your-own-url-shortener/go/your_program.sh
+      - name: "Reference: Build your own URL shortener — TypeScript/Bun"
+        run: ./crafters grade --challenge build-your-own-url-shortener --all
+          --program examples/solutions/build-your-own-url-shortener/typescript/your_program.sh
+
+      - name: "Reference: Build your own harness — Python"
+        run: ./crafters grade --challenge build-your-own-harness --all
+          --program examples/solutions/build-your-own-harness/python/your_program.sh
+      - name: "Reference: Build your own harness — Go"
+        run: ./crafters grade --challenge build-your-own-harness --all
+          --program examples/solutions/build-your-own-harness/go/your_program.sh
+      - name: "Reference: Build your own harness — TypeScript/Bun"
+        run: ./crafters grade --challenge build-your-own-harness --all
+          --program examples/solutions/build-your-own-harness/typescript/your_program.sh
+
+      - name: "Reference: Build your own job platform — Python"
+        run: ./crafters grade --challenge build-your-own-job-platform --all
+          --program examples/solutions/build-your-own-job-platform/python/your_program.sh
+      - name: "Reference: Build your own job platform — Go"
+        run: ./crafters grade --challenge build-your-own-job-platform --all
+          --program examples/solutions/build-your-own-job-platform/go/your_program.sh
+      - name: "Reference: Build your own job platform — TypeScript/Bun"
+        run: ./crafters grade --challenge build-your-own-job-platform --all
+          --program examples/solutions/build-your-own-job-platform/typescript/your_program.sh
+
       - name: "Starters pass stage 1 (Python, Go, TypeScript — all challenges)"
         run: |
-          for ch in build-your-own-temporal build-your-own-wal build-your-own-queue build-your-own-mvcc build-your-own-log build-your-own-lsm build-your-own-workflow-sdk build-your-own-raft build-your-own-scheduler build-your-own-rate-limiter build-your-own-object-store build-your-own-bloom-filter build-your-own-hash-ring build-your-own-distributed-lock build-your-own-id-generator; do
+          for ch in build-your-own-temporal build-your-own-wal build-your-own-queue build-your-own-mvcc build-your-own-log build-your-own-lsm build-your-own-workflow-sdk build-your-own-raft build-your-own-scheduler build-your-own-rate-limiter build-your-own-object-store build-your-own-bloom-filter build-your-own-hash-ring build-your-own-distributed-lock build-your-own-id-generator build-your-own-distributed-cache build-your-own-url-shortener build-your-own-job-platform build-your-own-harness; do
             for lang in python go typescript; do
               ./crafters grade --challenge "$ch" --stage bind \
                 --program "challenges/$ch/starters/$lang/your_program.sh"
