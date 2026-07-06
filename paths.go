@@ -41,6 +41,7 @@ var ChallengePaths = []ChallengePath{
 			"build-your-own-raft",
 			"build-your-own-hash-ring",
 			"build-your-own-bloom-filter",
+			"build-your-own-distributed-cache",
 		},
 	},
 	{

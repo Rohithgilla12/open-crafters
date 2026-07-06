@@ -27,6 +27,7 @@ import (
 
 	opencrafters "github.com/Rohithgilla12/open-crafters"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/bloomfilter"
+	"github.com/Rohithgilla12/open-crafters/internal/challenges/distcache"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/distlock"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/idgen"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/hashring"
@@ -60,7 +61,8 @@ var challenges = map[string]harness.Challenge{
 	"build-your-own-bloom-filter": bloomfilter.Challenge(),
 	"build-your-own-hash-ring":         hashring.Challenge(),
 	"build-your-own-distributed-lock": distlock.Challenge(),
-	"build-your-own-id-generator":     idgen.Challenge(),
+	"build-your-own-id-generator":          idgen.Challenge(),
+	"build-your-own-distributed-cache":     distcache.Challenge(),
 }
 
 // challengeOrder re-exports the canonical order from the root module.

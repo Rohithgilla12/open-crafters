@@ -325,6 +325,7 @@ var DesignProblems = []DesignProblem{
 			"build-your-own-hash-ring",
 			"build-your-own-bloom-filter",
 			"build-your-own-rate-limiter",
+			"build-your-own-distributed-cache",
 		},
 		DiscussionPrompts: []string{
 			"How do keys map to cache nodes, and what happens when you add or remove a node?",

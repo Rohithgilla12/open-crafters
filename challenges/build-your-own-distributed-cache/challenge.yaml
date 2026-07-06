@@ -1,0 +1,49 @@
+slug: build-your-own-distributed-cache
+name: Build your own distributed cache
+short_description: >
+  Build an in-memory cache node: GET/SET with TTL, delete, set-if-not-exists,
+  compare-and-swap, multi-get, LRU eviction under a key cap, and concurrent
+  churn — graded over the wire.
+difficulty: medium
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port>
+tester:
+  challenge_flag: build-your-own-distributed-cache
+stages:
+  - slug: bind
+    name: Boot the server
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: set-get
+    name: Set and get
+    difficulty: easy
+    instructions: stages/02-set-get.md
+  - slug: delete
+    name: Delete a key
+    difficulty: easy
+    instructions: stages/03-delete.md
+  - slug: ttl
+    name: TTL expiration
+    difficulty: medium
+    instructions: stages/04-ttl.md
+  - slug: setnx
+    name: Set if not exists
+    difficulty: medium
+    instructions: stages/05-setnx.md
+  - slug: cas
+    name: Compare and swap
+    difficulty: medium
+    instructions: stages/06-cas.md
+  - slug: mget
+    name: Multi-get
+    difficulty: easy
+    instructions: stages/07-mget.md
+  - slug: lru
+    name: LRU eviction
+    difficulty: hard
+    instructions: stages/08-lru.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

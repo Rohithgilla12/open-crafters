@@ -83,6 +83,7 @@ var DesignBuildSteps = map[string][]DesignBuildStep{
 		{Challenge: "build-your-own-hash-ring", Blurb: "Route keys to cache nodes."},
 		{Challenge: "build-your-own-bloom-filter", Blurb: "Negative cache — key definitely absent."},
 		{Challenge: "build-your-own-rate-limiter", Blurb: "Stampede protection via single-flight limits."},
+		{Challenge: "build-your-own-distributed-cache", Blurb: "The cache node — GET/SET, TTL, LRU, CAS."},
 	},
 	"design-coordination-service": {
 		{Challenge: "build-your-own-raft", Blurb: "Linearizable replicated metadata log."},

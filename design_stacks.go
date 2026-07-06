@@ -105,6 +105,24 @@ var DesignStacks = []DesignStack{
 			{Kind: "build", Slug: "build-your-own-raft", Blurb: "Optional — leader per conversation shard"},
 		},
 	},
+	{
+		Slug:        "distributed-cache",
+		Name:        "Distributed cache stack",
+		Tagline:     "Whiteboard the cluster, then build routing, negative cache, stampede control, and the node.",
+		Description: "Memcached-class systems combine shard routing, optional bloom negative caches, stampede limits, and fast in-memory nodes. Design the cluster, then implement each layer.",
+		Outcomes: []string{
+			"Complete the distributed cache design problem",
+			"Route keys with a hash ring and skip definite misses with a bloom filter",
+			"Build the cache node with TTL, CAS, and LRU eviction",
+		},
+		Milestones: []DesignStackMilestone{
+			{Kind: "design", Slug: "design-distributed-cache", Blurb: "Whiteboard — shards, eviction, stampedes (~45 min)"},
+			{Kind: "build", Slug: "build-your-own-hash-ring", Blurb: "Key → cache node placement"},
+			{Kind: "build", Slug: "build-your-own-bloom-filter", Blurb: "Client-side negative cache"},
+			{Kind: "build", Slug: "build-your-own-rate-limiter", Blurb: "Throttle hot-key stampedes"},
+			{Kind: "build", Slug: "build-your-own-distributed-cache", Blurb: "In-memory node — GET/SET/TTL/LRU"},
+		},
+	},
 }
 
 // DesignStackBySlug returns a design stack or false.

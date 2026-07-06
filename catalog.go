@@ -18,4 +18,5 @@ var ChallengeOrder = []string{
 	"build-your-own-hash-ring",
 	"build-your-own-distributed-lock",
 	"build-your-own-id-generator",
+	"build-your-own-distributed-cache",
 }

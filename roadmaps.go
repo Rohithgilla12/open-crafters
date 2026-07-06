@@ -69,12 +69,14 @@ var Roadmaps = []Roadmap{
 			"Implement Raft leader election and replicated logs",
 			"Route keys with consistent hashing and virtual nodes",
 			"Build a Bloom filter with zero false negatives",
+			"Ship an in-memory cache node with TTL and LRU eviction",
 		},
 		PathSlug: "distributed",
 		Milestones: []RoadmapMilestone{
 			{Challenge: "build-your-own-raft", Blurb: "3-node Raft — election, replication, partitions."},
 			{Challenge: "build-your-own-hash-ring", Blurb: "Vnode placement — add/remove nodes without reshuffling everything."},
 			{Challenge: "build-your-own-bloom-filter", Blurb: "Probabilistic membership — compact, fast, no false negatives."},
+			{Challenge: "build-your-own-distributed-cache", Blurb: "In-memory cache node — TTL, CAS, LRU eviction."},
 		},
 	},
 	{
@@ -102,14 +104,14 @@ var Roadmaps = []Roadmap{
 		Tagline:     "All four tracks — the complete open-crafters journey.",
 		Description: "A suggested order across every path: start with durability fundamentals, add workflow orchestration, then distributed primitives, and finish with coordination services.",
 		Outcomes: []string{
-			"Complete all 15 challenges across 4 thematic paths",
+			"Complete all 16 challenges across 4 thematic paths",
 			"Understand how production infrastructure primitives compose",
 		},
 		PathSlug: "", // meta-roadmap — milestones are paths
 		Milestones: []RoadmapMilestone{
 			{Challenge: "__path:durability__", Blurb: "6 challenges — WAL through object store (recommended first)."},
 			{Challenge: "__path:workflow__", Blurb: "2 challenges — Temporal server + replay SDK."},
-			{Challenge: "__path:distributed__", Blurb: "3 challenges — Raft, hash ring, Bloom filter."},
+			{Challenge: "__path:distributed__", Blurb: "4 challenges — Raft, hash ring, Bloom filter, cache node."},
 			{Challenge: "__path:coordination__", Blurb: "4 challenges — scheduler, rate limiter, lock, ID generator."},
 		},
 	},
