@@ -49,12 +49,13 @@ func (p *Program) Start() error {
 	if p.cmd != nil {
 		return fmt.Errorf("program already running")
 	}
-	return p.StartWithArgs(nil)
+	return p.StartWithArgs(nil, nil)
 }
 
 // StartWithArgs launches the process with extra CLI flags before --port and
-// --data-dir (used by multi-node challenges).
-func (p *Program) StartWithArgs(extra []string) error {
+// --data-dir (used by multi-node challenges). extraEnv is merged into the
+// child environment.
+func (p *Program) StartWithArgs(extra []string, extraEnv map[string]string) error {
 	if p.cmd != nil {
 		return fmt.Errorf("program already running")
 	}
@@ -63,6 +64,10 @@ func (p *Program) StartWithArgs(extra []string) error {
 	cmd := exec.Command(p.path, args...)
 	cmd.Dir = filepath.Dir(p.path)
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	cmd.Env = os.Environ()
+	for k, v := range extraEnv {
+		cmd.Env = append(cmd.Env, k+"="+v)
+	}
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {

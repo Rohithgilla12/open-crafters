@@ -168,7 +168,7 @@ func (c *Cluster) startNode(n *nodeProc) error {
 		"--node-id", strconv.Itoa(n.id),
 		"--peers", peers,
 	}
-	if err := p.StartWithArgs(args); err != nil {
+	if err := p.StartWithArgs(args, nil); err != nil {
 		return err
 	}
 	n.program = p

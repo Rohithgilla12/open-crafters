@@ -78,8 +78,12 @@ func TestStagesAreRunnable(t *testing.T) {
 			} else if _, err := fs.Stat(cfs, strings.TrimPrefix(st.Instructions, "challenges/")); err != nil {
 				t.Errorf("%s/%s: instructions file %q not found in embedded content: %v", slug, st.Slug, st.Instructions, err)
 			}
-			// Cluster challenges grade via TestCluster; single-process via Test.
-			if ch.ClusterSize > 0 {
+			// Compose challenges grade via TestCompose; cluster via TestCluster; else Test.
+			if len(ch.Services) > 0 {
+				if st.TestCompose == nil {
+					t.Errorf("%s/%s: compose challenge but TestCompose is nil", slug, st.Slug)
+				}
+			} else if ch.ClusterSize > 0 {
 				if st.TestCluster == nil {
 					t.Errorf("%s/%s: cluster challenge but TestCluster is nil", slug, st.Slug)
 				}

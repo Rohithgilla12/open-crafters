@@ -1,0 +1,48 @@
+slug: build-your-own-harness
+name: Build your own harness
+short_description: >
+  Meta challenge: implement a mini grader that spawns programs, proxies RPC
+  calls, and asserts results — the real harness tests your harness black-box.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port>
+tester:
+  challenge_flag: build-your-own-harness
+stages:
+  - slug: bind
+    name: Boot the harness
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: spawn
+    name: Spawn a program
+    difficulty: easy
+    instructions: stages/02-spawn.md
+  - slug: call
+    name: Proxy a call
+    difficulty: easy
+    instructions: stages/03-call.md
+  - slug: set-get
+    name: Set and get via proxy
+    difficulty: easy
+    instructions: stages/04-set-get.md
+  - slug: run-case
+    name: Run one case
+    difficulty: medium
+    instructions: stages/05-run-case.md
+  - slug: run-suite
+    name: Run a suite
+    difficulty: medium
+    instructions: stages/06-run-suite.md
+  - slug: respawn
+    name: Spawn again
+    difficulty: medium
+    instructions: stages/07-respawn.md
+  - slug: concurrent
+    name: Parallel calls
+    difficulty: hard
+    instructions: stages/08-concurrent.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

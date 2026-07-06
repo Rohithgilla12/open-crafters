@@ -1,0 +1,49 @@
+slug: build-your-own-url-shortener
+name: Build your own URL shortener
+short_description: >
+  Meta-compose challenge: implement a URL shortener gateway that orchestrates
+  reference id-generator, bloom-filter, and object-store services spawned by
+  the harness — graded over the wire.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port>
+tester:
+  challenge_flag: build-your-own-url-shortener
+stages:
+  - slug: bind
+    name: Boot the stack
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: shorten
+    name: Mint a short code
+    difficulty: easy
+    instructions: stages/02-shorten.md
+  - slug: resolve
+    name: Resolve a code
+    difficulty: easy
+    instructions: stages/03-resolve.md
+  - slug: not-found
+    name: Unknown codes
+    difficulty: easy
+    instructions: stages/04-not-found.md
+  - slug: analytics
+    name: Record a click
+    difficulty: medium
+    instructions: stages/05-analytics.md
+  - slug: bloom
+    name: Bloom membership
+    difficulty: medium
+    instructions: stages/06-bloom.md
+  - slug: multi-url
+    name: Many URLs
+    difficulty: medium
+    instructions: stages/07-multi-url.md
+  - slug: concurrent
+    name: Parallel shortens
+    difficulty: hard
+    instructions: stages/08-concurrent.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

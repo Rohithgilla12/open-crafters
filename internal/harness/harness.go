@@ -17,6 +17,7 @@ type Stage struct {
 	Instructions string // repo-relative path to the stage's instructions
 	Test         func(*Context) error
 	TestCluster  func(*ClusterContext) error // used when Challenge.ClusterSize > 0
+	TestCompose  func(*ComposeContext) error // used when Challenge.Services is non-empty
 }
 
 // Challenge is a named, ordered list of stages.
@@ -25,6 +26,7 @@ type Challenge struct {
 	Name        string
 	Stages      []Stage
 	ClusterSize int // 0 = single process; >0 = multi-node cluster (e.g. Raft)
+	Services    []ServiceSpec // non-empty → compose mode (gateway + reference sidecars)
 }
 
 // Context is handed to each single-process stage test.
@@ -126,7 +128,7 @@ func Run(ch Challenge, opts RunOptions) error {
 			opts.OnStageStart(stage)
 		}
 		start := time.Now()
-		err := runStage(stage, opts.ProgramPath, ch.ClusterSize, logf)
+		err := runStage(stage, opts.ProgramPath, ch, logf)
 		elapsed := time.Since(start)
 		if opts.OnStageEnd != nil {
 			opts.OnStageEnd(stage, err, elapsed)
@@ -145,12 +147,23 @@ func Run(ch Challenge, opts RunOptions) error {
 	return nil
 }
 
-func runStage(stage Stage, programPath string, clusterSize int, logf func(string, ...any)) error {
-	if clusterSize > 0 {
-		if stage.TestCluster == nil {
-			return fmt.Errorf("stage %q requires TestCluster (cluster size %d)", stage.Slug, clusterSize)
+func runStage(stage Stage, programPath string, ch Challenge, logf func(string, ...any)) error {
+	if len(ch.Services) > 0 {
+		if stage.TestCompose == nil {
+			return fmt.Errorf("stage %q requires TestCompose (compose challenge)", stage.Slug)
 		}
-		cluster, err := NewCluster(programPath, clusterSize, logf)
+		compose, err := NewCompose(programPath, ch.Services, logf)
+		if err != nil {
+			return err
+		}
+		defer compose.Cleanup()
+		return stage.TestCompose(&ComposeContext{compose: compose, Logf: logf})
+	}
+	if ch.ClusterSize > 0 {
+		if stage.TestCluster == nil {
+			return fmt.Errorf("stage %q requires TestCluster (cluster size %d)", stage.Slug, ch.ClusterSize)
+		}
+		cluster, err := NewCluster(programPath, ch.ClusterSize, logf)
 		if err != nil {
 			return err
 		}

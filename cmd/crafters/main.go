@@ -28,6 +28,7 @@ import (
 	opencrafters "github.com/Rohithgilla12/open-crafters"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/bloomfilter"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/distcache"
+	"github.com/Rohithgilla12/open-crafters/internal/challenges/grader"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/distlock"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/idgen"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/hashring"
@@ -40,6 +41,7 @@ import (
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/ratelimiter"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/scheduler"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/temporal"
+	"github.com/Rohithgilla12/open-crafters/internal/challenges/urlshortener"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/wal"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/workflowsdk"
 	"github.com/Rohithgilla12/open-crafters/internal/harness"
@@ -63,6 +65,8 @@ var challenges = map[string]harness.Challenge{
 	"build-your-own-distributed-lock": distlock.Challenge(),
 	"build-your-own-id-generator":          idgen.Challenge(),
 	"build-your-own-distributed-cache":     distcache.Challenge(),
+	"build-your-own-url-shortener":         urlshortener.Challenge(),
+	"build-your-own-harness":               grader.Challenge(),
 }
 
 // challengeOrder re-exports the canonical order from the root module.

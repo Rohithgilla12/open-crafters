@@ -55,4 +55,13 @@ var ChallengePaths = []ChallengePath{
 			"build-your-own-id-generator",
 		},
 	},
+	{
+		Slug:        "integration",
+		Name:        "Compose & meta",
+		Description: "Wire primitives into real systems — URL shortener orchestration and building the grader itself.",
+		Challenges: []string{
+			"build-your-own-url-shortener",
+			"build-your-own-harness",
+		},
+	},
 }

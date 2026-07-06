@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /crafters /usr/local/bin/crafters
+COPY examples/solutions /opt/open-crafters/examples/solutions
+ENV OPEN_CRAFTERS_ROOT=/opt/open-crafters
 
 WORKDIR /work
 ENTRYPOINT ["crafters"]

@@ -12,6 +12,7 @@ var DesignBuildSteps = map[string][]DesignBuildStep{
 		{Challenge: "build-your-own-id-generator", Blurb: "Mint collision-free short codes from a monotonic counter."},
 		{Challenge: "build-your-own-bloom-filter", Blurb: "Fast existence checks before hitting the code database."},
 		{Challenge: "build-your-own-object-store", Blurb: "Archive click logs and cold link metadata at scale."},
+		{Challenge: "build-your-own-url-shortener", Blurb: "Meta-compose — wire the three services in one gateway."},
 	},
 	"design-distributed-scheduler": {
 		{Challenge: "build-your-own-scheduler", Blurb: "Core fire-time queue, leases, and recurring jobs."},

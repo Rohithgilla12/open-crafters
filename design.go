@@ -125,6 +125,7 @@ var DesignProblems = []DesignProblem{
 			"build-your-own-id-generator",
 			"build-your-own-bloom-filter",
 			"build-your-own-object-store",
+			"build-your-own-url-shortener",
 		},
 		DiscussionPrompts: []string{
 			"How do you generate short codes — random, counter, or hash — and handle collisions?",

@@ -34,6 +34,7 @@ var DesignStacks = []DesignStack{
 			{Kind: "build", Slug: "build-your-own-id-generator", Blurb: "Short codes from a monotonic counter"},
 			{Kind: "build", Slug: "build-your-own-bloom-filter", Blurb: "Probable code existence before DB lookup"},
 			{Kind: "build", Slug: "build-your-own-object-store", Blurb: "Click logs and cold metadata blobs"},
+			{Kind: "build", Slug: "build-your-own-url-shortener", Blurb: "Meta-compose — wire the three services in a gateway"},
 		},
 	},
 	{
