@@ -123,6 +123,7 @@ var DesignStacks = []DesignStack{
 			{Kind: "build", Slug: "build-your-own-bloom-filter", Blurb: "Client-side negative cache"},
 			{Kind: "build", Slug: "build-your-own-rate-limiter", Blurb: "Throttle hot-key stampedes"},
 			{Kind: "build", Slug: "build-your-own-distributed-cache", Blurb: "In-memory node — GET/SET/TTL/LRU"},
+			{Kind: "build", Slug: "build-your-own-cache-cluster", Blurb: "Meta-compose — wire ring, bloom, limiter, and nodes"},
 		},
 	},
 }

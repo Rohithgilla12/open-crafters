@@ -30,6 +30,7 @@ challenges=(
   build-your-own-distributed-cache
   build-your-own-url-shortener
   build-your-own-job-platform
+  build-your-own-cache-cluster
   build-your-own-harness
 )
 langs=(python go typescript)
@@ -39,7 +40,7 @@ fail=0
 echo "→ go test ./..."
 go test ./...
 
-echo "→ Grading reference solutions (19 × 3 languages, all stages)"
+echo "→ Grading reference solutions (20 × 3 languages, all stages)"
 for ch in "${challenges[@]}"; do
   for lang in "${langs[@]}"; do
     prog="examples/solutions/${ch}/${lang}/your_program.sh"

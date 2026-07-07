@@ -1,0 +1,49 @@
+slug: build-your-own-cache-cluster
+name: Build your own cache cluster
+short_description: >
+  Meta-compose challenge: implement a distributed cache gateway that routes via
+  reference hash-ring, bloom-filter, rate-limiter, and two cache nodes spawned
+  by the harness.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port>
+tester:
+  challenge_flag: build-your-own-cache-cluster
+stages:
+  - slug: bind
+    name: Boot the stack
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: set-get
+    name: Set and get
+    difficulty: easy
+    instructions: stages/02-set-get.md
+  - slug: delete
+    name: Delete a key
+    difficulty: easy
+    instructions: stages/03-delete.md
+  - slug: routing
+    name: Shard routing
+    difficulty: medium
+    instructions: stages/04-routing.md
+  - slug: bloom
+    name: Bloom membership
+    difficulty: medium
+    instructions: stages/05-bloom.md
+  - slug: bloom-miss
+    name: Fast negative lookup
+    difficulty: medium
+    instructions: stages/06-bloom-miss.md
+  - slug: rate-limit
+    name: Stampede guard
+    difficulty: medium
+    instructions: stages/07-rate-limit.md
+  - slug: mget
+    name: Multi-get
+    difficulty: easy
+    instructions: stages/08-mget.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

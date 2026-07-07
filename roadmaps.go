@@ -111,6 +111,7 @@ var Roadmaps = []Roadmap{
 		Milestones: []RoadmapMilestone{
 			{Challenge: "build-your-own-url-shortener", Blurb: "Meta-compose — gateway + three reference services."},
 			{Challenge: "build-your-own-job-platform", Blurb: "Meta-compose — scheduler + queue + lock orchestration."},
+			{Challenge: "build-your-own-cache-cluster", Blurb: "Meta-compose — hash ring + bloom + limiter + cache nodes."},
 			{Challenge: "build-your-own-harness", Blurb: "Meta grader — spawn, proxy calls, run_case."},
 		},
 	},
@@ -120,7 +121,7 @@ var Roadmaps = []Roadmap{
 		Tagline:     "All five tracks — the complete open-crafters journey.",
 		Description: "A suggested order across every path: durability, workflow, distributed primitives, coordination glue, then compose/meta capstones.",
 		Outcomes: []string{
-			"Complete all 19 challenges across 5 thematic paths",
+			"Complete all 20 challenges across 5 thematic paths",
 			"Understand how production infrastructure primitives compose",
 		},
 		PathSlug: "", // meta-roadmap — milestones are paths
@@ -129,7 +130,7 @@ var Roadmaps = []Roadmap{
 			{Challenge: "__path:workflow__", Blurb: "2 challenges — Temporal server + replay SDK."},
 			{Challenge: "__path:distributed__", Blurb: "4 challenges — Raft, hash ring, Bloom filter, cache node."},
 			{Challenge: "__path:coordination__", Blurb: "4 challenges — scheduler, rate limiter, lock, ID generator."},
-			{Challenge: "__path:integration__", Blurb: "3 capstones — URL shortener, job platform, build the harness."},
+			{Challenge: "__path:integration__", Blurb: "4 capstones — URL shortener, job platform, cache cluster, harness."},
 		},
 	},
 }

@@ -58,10 +58,11 @@ var ChallengePaths = []ChallengePath{
 	{
 		Slug:        "integration",
 		Name:        "Compose & meta",
-		Description: "Wire primitives into real systems — URL shortener and job platform orchestration, then building the grader itself.",
+		Description: "Wire primitives into real systems — URL shortener, job platform, and cache cluster orchestration, then building the grader itself.",
 		Challenges: []string{
 			"build-your-own-url-shortener",
 			"build-your-own-job-platform",
+			"build-your-own-cache-cluster",
 			"build-your-own-harness",
 		},
 	},
