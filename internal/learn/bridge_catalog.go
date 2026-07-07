@@ -12,6 +12,7 @@ type DesignBuildStepView struct {
 	Blurb        string
 	Challenge    *Challenge
 	StartCommand string
+	IsCompose    bool
 }
 
 // DesignStackLink is a short link to a design stack from a problem or challenge page.
@@ -30,18 +31,21 @@ type DesignStackMilestoneView struct {
 	StartCommand string
 	Href         string
 	Label        string
+	IsCompose    bool
+	IsCapstone   bool
 }
 
 // DesignStackView is a rendered whiteboard→build journey.
 type DesignStackView struct {
-	Slug        string
-	Name        string
-	Tagline     string
-	Description string
-	Outcomes    []string
-	Milestones  []DesignStackMilestoneView
-	StepCSV     string
-	TotalSteps  int
+	Slug                string
+	Name                string
+	Tagline             string
+	Description         string
+	Outcomes            []string
+	Milestones          []DesignStackMilestoneView
+	StepCSV             string
+	TotalSteps          int
+	HasComposeCapstone  bool
 }
 
 func enrichDesignBridges(c *Catalog) {
@@ -55,6 +59,7 @@ func enrichDesignBridges(c *Catalog) {
 			}
 			if ch, ok := c.Challenges[step.Challenge]; ok {
 				v.Challenge = ch
+				v.IsCompose = ch.IsCompose
 			}
 			dp.BuildSteps = append(dp.BuildSteps, v)
 		}
@@ -95,7 +100,12 @@ func loadDesignStacks(c *Catalog) {
 				if ch, ok := c.Challenges[m.Slug]; ok {
 					mv.Challenge = ch
 					mv.Label = ch.Name
+					mv.IsCompose = ch.IsCompose
 				}
+			}
+			if i == len(def.Milestones)-1 && mv.IsCompose {
+				mv.IsCapstone = true
+				sv.HasComposeCapstone = true
 			}
 			sv.Milestones = append(sv.Milestones, mv)
 		}

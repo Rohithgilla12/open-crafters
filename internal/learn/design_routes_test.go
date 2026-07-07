@@ -16,13 +16,17 @@ func TestDesignRoutes(t *testing.T) {
 	mux := srv.Handler()
 
 	for _, path := range []string{
+		"/",
 		"/design",
 		"/design/design-chat-at-scale",
 		"/design/roadmaps",
 		"/design/roadmaps/interview-classics",
 		"/design/stacks",
 		"/design/stacks/url-shortener",
+		"/design/stacks/distributed-cache",
 		"/challenges/build-your-own-id-generator",
+		"/challenges/build-your-own-url-shortener",
+		"/roadmaps/integration",
 	} {
 		req := httptest.NewRequest(http.MethodGet, path, nil)
 		rec := httptest.NewRecorder()
@@ -32,9 +36,28 @@ func TestDesignRoutes(t *testing.T) {
 		}
 		body := rec.Body.String()
 		switch path {
+		case "/":
+			if !strings.Contains(body, "Wire graded primitives into real systems") {
+				t.Fatalf("GET %s body missing compose promo", path)
+			}
+		case "/roadmaps/integration":
+			if !strings.Contains(body, "Compose &amp; meta") {
+				t.Fatalf("GET %s body missing integration roadmap title", path)
+			}
 		case "/design/stacks/url-shortener":
 			if !strings.Contains(body, "URL shortener stack") {
 				t.Fatalf("GET %s body missing stack title", path)
+			}
+			if !strings.Contains(body, "Open compose challenge") {
+				t.Fatalf("GET %s body missing compose capstone CTA", path)
+			}
+		case "/design/stacks/distributed-cache":
+			if !strings.Contains(body, "Compose capstone") {
+				t.Fatalf("GET %s body missing compose capstone label", path)
+			}
+		case "/challenges/build-your-own-url-shortener":
+			if !strings.Contains(body, "Compose capstone") {
+				t.Fatalf("GET %s body missing compose callout", path)
 			}
 		case "/challenges/build-your-own-id-generator":
 			if !strings.Contains(body, "Whiteboard first") {

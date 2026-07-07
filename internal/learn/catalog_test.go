@@ -46,4 +46,26 @@ func TestCatalogListsAllChallenges(t *testing.T) {
 			t.Fatalf("design %q has no build steps", slug)
 		}
 	}
+	for _, slug := range opencrafters.ComposeChallenges {
+		ch, ok := c.Challenges[slug]
+		if !ok {
+			t.Fatalf("missing compose challenge %q", slug)
+		}
+		if !ch.IsCompose {
+			t.Fatalf("challenge %q should have IsCompose=true", slug)
+		}
+	}
+	composeStacks := 0
+	for _, st := range c.DesignStacks {
+		if st.HasComposeCapstone {
+			composeStacks++
+			last := st.Milestones[len(st.Milestones)-1]
+			if !last.IsCapstone || !last.IsCompose {
+				t.Fatalf("stack %q: expected compose capstone on last milestone", st.Slug)
+			}
+		}
+	}
+	if composeStacks != 3 {
+		t.Fatalf("want 3 design stacks with compose capstones, got %d", composeStacks)
+	}
 }

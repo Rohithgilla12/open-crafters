@@ -30,6 +30,7 @@ type Challenge struct {
 	Name         string `json:"name"`
 	Tagline      string `json:"tagline"`
 	Difficulty   string `json:"difficulty"`
+	IsCompose    bool   `json:"is_compose"`
 	Stages       []Stage
 	DiffMix      template.HTML
 	ProtocolHTML template.HTML
@@ -100,6 +101,7 @@ func NewCatalog() (*Catalog, error) {
 			Name:       yamlField(y, "name"),
 			Tagline:    tagline(y),
 			Difficulty: yamlField(y, "difficulty"),
+			IsCompose:  opencrafters.IsComposeChallenge(slug),
 		}
 
 		if html, err := md.render(path.Join(slug, "PROTOCOL.md")); err == nil {

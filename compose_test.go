@@ -1,0 +1,22 @@
+package opencrafters
+
+import "testing"
+
+func TestIsComposeChallenge(t *testing.T) {
+	compose := []string{
+		"build-your-own-url-shortener",
+		"build-your-own-job-platform",
+		"build-your-own-cache-cluster",
+	}
+	for _, slug := range compose {
+		if !IsComposeChallenge(slug) {
+			t.Errorf("%q should be a compose challenge", slug)
+		}
+	}
+	if IsComposeChallenge("build-your-own-harness") {
+		t.Error("harness is meta, not compose")
+	}
+	if IsComposeChallenge("build-your-own-wal") {
+		t.Error("wal is not compose")
+	}
+}

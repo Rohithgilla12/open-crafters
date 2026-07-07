@@ -13,6 +13,7 @@ var tmplFuncs = template.FuncMap{
 	"fontLinks": func() template.HTML { return template.HTML(fontLinksHTML) },
 	"diffBadge": difficultyBadgeClass,
 	"diffPill":  difficultyPillClass,
+	"composeBadge": composeBadgeClass,
 	"designShort": func(slug string) string {
 		return strings.TrimPrefix(slug, "design-")
 	},
@@ -42,6 +43,10 @@ func difficultyPillClass(d string) string {
 	default:
 		return "shrink-0 rounded-full border border-muted px-2 py-0.5 text-[0.68rem] font-bold uppercase text-muted"
 	}
+}
+
+func composeBadgeClass() string {
+	return "shrink-0 rounded-full border border-cyan-400/40 bg-cyan-400/10 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-cyan-200"
 }
 
 const fontLinksHTML = `<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -99,6 +104,11 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
   <a class="text-link hover:text-link/80" href="https://runner.gilla.fun">hosted runner</a></p>
   </div>
   <aside class="hidden flex-col gap-3 sm:flex">
+    <a class="block rounded-[14px] border border-border bg-surface p-4 text-ink transition hover:-translate-y-0.5 hover:border-accent/45 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/roadmaps/integration">
+      <span class="mb-1 block text-xs uppercase tracking-widest text-cyan-300">Compose capstones</span>
+      <strong class="block font-display text-base">Wire primitives together</strong>
+      <span class="text-sm text-muted">You build one gateway — we spawn the rest →</span>
+    </a>
     <a class="block rounded-[14px] border border-border bg-surface p-4 text-ink transition hover:-translate-y-0.5 hover:border-accent/45 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/roadmaps">
       <span class="mb-1 block text-xs uppercase tracking-widest text-accent-dim">Start here</span>
       <strong class="block font-display text-base">Learning roadmaps</strong>
@@ -136,7 +146,8 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
   </div>
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
   {{range .Roadmaps}}
-    <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-accent/35 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/roadmaps/{{.Slug}}" data-roadmap-card data-challenges="{{.ChallengeCSV}}" data-total-stages="{{.TotalStages}}">
+    <a class="block rounded-[14px] border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]{{if eq .Slug "integration"}} border-accent/40 ring-1 ring-accent/20 hover:border-accent/55{{else}} border-border hover:border-accent/35{{end}}" href="/roadmaps/{{.Slug}}" data-roadmap-card data-challenges="{{.ChallengeCSV}}" data-total-stages="{{.TotalStages}}">
+      {{if eq .Slug "integration"}}<span class="mb-2 inline-block rounded-full border border-cyan-400/40 bg-cyan-400/10 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-cyan-200">compose + meta</span>{{end}}
       <h3 class="mb-1.5 text-[1.05rem] font-semibold">{{.Name}}</h3>
       <p class="mb-2.5 text-sm leading-snug text-muted">{{.Tagline}}</p>
       <span class="mb-1.5 block font-mono text-xs text-accent"><span data-roadmap-progress-label></span>{{.TotalStages}} stages</span>
@@ -163,18 +174,30 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
   {{end}}
   </div>
 </section>
+<section class="mb-12">
+  <a class="group block overflow-hidden rounded-[16px] border border-accent/35 bg-gradient-to-br from-accent/[0.08] via-surface to-canvas-elevated p-6 text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition hover:-translate-y-0.5 hover:border-accent/55 hover:shadow-[0_16px_48px_rgba(0,0,0,0.35)]" href="/roadmaps/integration" id="compose-capstones">
+    <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-cyan-300">Compose &amp; meta</p>
+    <h2 class="mb-2 font-display text-xl font-semibold group-hover:text-accent">Wire graded primitives into real systems</h2>
+    <p class="mb-4 max-w-[62ch] text-sm leading-relaxed text-muted">Capstone challenges where <strong class="font-medium text-ink">you implement one gateway</strong> and the harness spawns reference id-generators, cache nodes, queues, and locks. Finish the primitives first, then orchestrate them — or jump straight in with our reference sidecars.</p>
+    <span class="font-mono text-xs text-accent">URL shortener · job platform · cache cluster · build the harness →</span>
+  </a>
+</section>
 {{range .Paths}}
-<section class="path-section mb-12 pt-2" id="path-{{.Slug}}" data-path="{{.Slug}}">
-  <div class="path-accent mb-4 border-l-[3px] border-border pl-3.5">
-    <h2 class="mb-1 text-xl"><a class="path-title-link hover:underline" href="/roadmaps/{{.Slug}}">{{.Name}}</a></h2>
+<section class="path-section mb-12 pt-2{{if eq .Slug "integration"}} -mx-1 rounded-[14px] border border-accent/25 bg-accent/[0.03] px-4 pb-2{{end}}" id="path-{{.Slug}}" data-path="{{.Slug}}">
+  <div class="path-accent mb-4 border-l-[3px] pl-3.5{{if eq .Slug "integration"}} border-accent/60{{else}} border-border{{end}}">
+    <h2 class="mb-1 text-xl"><a class="path-title-link hover:underline" href="/roadmaps/{{.Slug}}">{{.Name}}</a>{{if eq .Slug "integration"}} <span class="{{composeBadge}}">compose</span>{{end}}</h2>
     <p class="max-w-[58ch] text-[0.94rem] text-muted">{{.Description}}</p>
+    {{if eq .Slug "integration"}}<p class="mt-2 max-w-[58ch] font-mono text-xs text-cyan-200/90">You build 1 service — the harness spawns the rest.</p>{{end}}
   </div>
   <main class="grid grid-cols-1 gap-4 sm:grid-cols-2">
   {{range .Challenges}}
     <a class="block rounded-[14px] border border-border bg-surface p-5 text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] transition hover:-translate-y-1 hover:border-link/40 hover:bg-surface-hover hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/challenges/{{.Slug}}" data-challenge="{{.Slug}}" data-stages="{{stagesCSV .Stages}}">
       <div class="mb-1 flex items-start justify-between gap-3">
         <h3 class="text-[1.08rem] leading-snug font-semibold">{{.Name}}</h3>
-        <span class="{{diffBadge .Difficulty}}">{{.Difficulty}}</span>
+        <div class="flex shrink-0 flex-wrap items-center justify-end gap-1.5">
+          {{if .IsCompose}}<span class="{{composeBadge}}" title="You build one gateway; the harness spawns reference services">compose</span>{{end}}
+          <span class="{{diffBadge .Difficulty}}">{{.Difficulty}}</span>
+        </div>
       </div>
       <p class="mb-3 text-sm leading-relaxed text-muted">{{.Tagline}}</p>
       <div class="mb-3 flex flex-wrap gap-1.5">{{.DiffMix}}</div>
@@ -269,7 +292,9 @@ var roadmapTmpl = template.Must(template.New("roadmap").Funcs(tmplFuncs).Parse(`
     <a class="flex items-start gap-4 rounded-[14px] border border-border bg-surface p-5 text-ink transition hover:-translate-y-0.5 hover:border-link/40 hover:bg-surface-hover hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/challenges/{{.Challenge.Slug}}" data-challenge="{{.Challenge.Slug}}" data-stages="{{.StageCSV}}" data-roadmap-milestone>
       <span class="num flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full border border-border bg-canvas-elevated font-mono text-sm text-accent">{{.Num}}</span>
       <div class="flex-1">
-        <h2 class="mb-1 flex flex-wrap items-center gap-2 text-[1.08rem] font-semibold">{{.Challenge.Name}} <span class="{{diffBadge .Challenge.Difficulty}}">{{.Challenge.Difficulty}}</span></h2>
+        <h2 class="mb-1 flex flex-wrap items-center gap-2 text-[1.08rem] font-semibold">{{.Challenge.Name}}
+          {{if .Challenge.IsCompose}}<span class="{{composeBadge}}">compose</span>{{end}}
+          <span class="{{diffBadge .Challenge.Difficulty}}">{{.Challenge.Difficulty}}</span></h2>
         <p class="mb-2 text-sm text-muted">{{.Blurb}}</p>
         <span class="challenge-meta font-mono text-xs text-accent"><span data-progress-label></span>{{len .Challenge.Stages}} stages →</span>
       </div>
@@ -304,7 +329,9 @@ var pathTmpl = template.Must(template.New("path").Funcs(tmplFuncs).Parse(`<!doct
     <a class="flex items-start gap-4 rounded-[14px] border border-border bg-surface p-5 text-ink transition hover:-translate-y-0.5 hover:border-link/40 hover:bg-surface-hover" href="/challenges/{{$ch.Slug}}" data-challenge="{{$ch.Slug}}" data-stages="{{stagesCSV $ch.Stages}}">
       <span class="num flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full border border-border bg-canvas-elevated font-mono text-sm text-accent">{{add $i 1}}</span>
       <div class="flex-1">
-        <h2 class="mb-1 flex flex-wrap items-center gap-2 text-[1.08rem] font-semibold">{{$ch.Name}} <span class="{{diffBadge $ch.Difficulty}}">{{$ch.Difficulty}}</span></h2>
+        <h2 class="mb-1 flex flex-wrap items-center gap-2 text-[1.08rem] font-semibold">{{$ch.Name}}
+          {{if $ch.IsCompose}}<span class="{{composeBadge}}">compose</span>{{end}}
+          <span class="{{diffBadge $ch.Difficulty}}">{{$ch.Difficulty}}</span></h2>
         <p class="mb-2 text-sm text-muted">{{$ch.Tagline}}</p>
         <span class="challenge-meta font-mono text-xs text-accent"><span data-progress-label></span>{{len $ch.Stages}} stages →</span>
       </div>
@@ -329,10 +356,14 @@ var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Par
 <div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
 <p class="mb-5 text-sm text-muted"><a class="text-link" href="/">← all challenges</a>{{if .RoadmapSlug}} · <a class="text-link" href="/roadmaps/{{.RoadmapSlug}}">{{.RoadmapName}}</a>{{end}}</p>
 <header class="mb-6 border-b border-border-soft pb-6">
-  <div class="mb-1 flex items-center gap-3">
+  <div class="mb-1 flex flex-wrap items-center gap-2">
     <h1 class="text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">{{.Challenge.Name}}</h1>
+    {{if .Challenge.IsCompose}}<span class="{{composeBadge}}">compose</span>{{end}}
     <span class="{{diffBadge .Challenge.Difficulty}}">{{.Challenge.Difficulty}}</span>
   </div>
+  {{if .Challenge.IsCompose}}
+  <p class="mb-3 max-w-[58ch] rounded-[10px] border border-cyan-400/25 bg-cyan-400/5 px-4 py-3 text-sm leading-relaxed text-muted"><strong class="font-medium text-cyan-100">Compose capstone.</strong> You implement the gateway only — the harness spawns reference primitive services and injects their TCP addresses into your environment before grading.</p>
+  {{end}}
   {{if .RoadmapName}}<p class="mb-2 text-sm text-muted">Roadmap: <a class="text-link" href="/roadmaps/{{.RoadmapSlug}}">{{.RoadmapName}}</a></p>{{end}}
   <p class="max-w-[58ch] text-muted">{{.Challenge.Tagline}}</p>
   <p class="my-1 min-h-[1.2rem] font-mono text-sm text-accent"><span data-progress-label></span></p>
@@ -479,7 +510,7 @@ var designIndexTmpl = template.Must(template.New("design-index").Funcs(tmplFuncs
     <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-violet-400/35 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/design/stacks/{{.Slug}}">
       <h3 class="mb-1.5 text-[1.05rem] font-semibold">{{.Name}}</h3>
       <p class="mb-2.5 text-sm leading-snug text-muted">{{.Tagline}}</p>
-      <span class="font-mono text-xs text-violet-300">{{.TotalSteps}} steps · design → build</span>
+      <span class="font-mono text-xs text-violet-300">{{.TotalSteps}} steps · design → build{{if .HasComposeCapstone}} · compose capstone{{end}}</span>
     </a>
   {{end}}
   </div>
@@ -610,7 +641,7 @@ var designStacksIndexTmpl = template.Must(template.New("design-stacks-index").Fu
   <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-violet-400/35" href="/design/stacks/{{.Slug}}">
     <h2 class="mb-1.5 text-[1.05rem] font-semibold">{{.Name}}</h2>
     <p class="mb-2 text-sm text-muted">{{.Tagline}}</p>
-    <span class="font-mono text-xs text-violet-300">{{.TotalSteps}} milestones</span>
+    <span class="font-mono text-xs text-violet-300">{{.TotalSteps}} milestones{{if .HasComposeCapstone}} · compose capstone{{end}}</span>
   </a>
 {{end}}
 </div>
@@ -633,6 +664,7 @@ var designStackTmpl = template.Must(template.New("design-stack").Funcs(tmplFuncs
   <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-violet-300">Design stack</p>
   <h1 class="mb-2 text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">{{.Name}}</h1>
   <p class="max-w-[58ch] text-muted">{{.Description}}</p>
+  {{if .HasComposeCapstone}}<p class="mt-3 max-w-[58ch] rounded-[10px] border border-cyan-400/25 bg-cyan-400/5 px-4 py-2.5 text-sm text-muted"><strong class="font-medium text-cyan-100">Compose capstone.</strong> The final step wires graded primitives into one gateway — the harness spawns reference services for you.</p>{{end}}
 </header>
 {{if .Outcomes}}
 <h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-accent-dim">What you'll practice</h2>
@@ -647,10 +679,11 @@ var designStackTmpl = template.Must(template.New("design-stack").Funcs(tmplFuncs
     <a class="flex items-start gap-4 rounded-[14px] border border-border bg-surface p-5 text-ink transition hover:-translate-y-0.5 hover:bg-surface-hover{{if eq .Kind "design"}} hover:border-violet-400/35{{else}} hover:border-accent/35{{end}}" href="{{.Href}}">
       <span class="flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full border border-border bg-canvas-elevated font-mono text-sm {{if eq .Kind "design"}}text-violet-300{{else}}text-accent{{end}}">{{.Num}}</span>
       <div class="flex-1">
-        <p class="mb-1 font-mono text-[0.65rem] font-bold uppercase tracking-widest {{if eq .Kind "design"}}text-violet-300{{else}}text-accent-dim{{end}}">{{if eq .Kind "design"}}Whiteboard{{else}}Build{{end}}</p>
-        <h2 class="mb-1 text-[1.08rem] font-semibold">{{.Label}}</h2>
+        <p class="mb-1 font-mono text-[0.65rem] font-bold uppercase tracking-widest {{if eq .Kind "design"}}text-violet-300{{else}}text-accent-dim{{end}}">{{if eq .Kind "design"}}Whiteboard{{else if .IsCompose}}Compose{{else}}Build{{end}}</p>
+        <h2 class="mb-1 flex flex-wrap items-center gap-2 text-[1.08rem] font-semibold">{{.Label}}{{if .IsCompose}} <span class="{{composeBadge}}">gateway</span>{{end}}</h2>
         <p class="mb-2 text-sm text-muted">{{.Blurb}}</p>
-        {{if .StartCommand}}<code class="block overflow-x-auto rounded-[8px] border border-border bg-canvas-elevated px-3 py-2 font-mono text-xs text-code">{{.StartCommand}}</code>{{end}}
+        {{if .StartCommand}}<code class="mb-2 block overflow-x-auto rounded-[8px] border border-border bg-canvas-elevated px-3 py-2 font-mono text-xs text-code">{{.StartCommand}}</code>{{end}}
+        {{if .IsCapstone}}<span class="font-mono text-xs text-cyan-200">Open compose challenge →</span>{{end}}
       </div>
     </a>
   </li>
@@ -709,6 +742,7 @@ var designProblemTmpl = template.Must(template.New("design").Funcs(tmplFuncs).Pa
       <div class="flex-1">
         {{if .Challenge}}
         <a class="text-[1.02rem] font-semibold text-ink hover:text-link" href="/challenges/{{.Challenge.Slug}}">{{.Challenge.Name}}</a>
+        {{if .IsCompose}}<span class="{{composeBadge}}">compose</span>{{end}}
         <span class="ml-2 {{diffBadge .Challenge.Difficulty}}">{{.Challenge.Difficulty}}</span>
         {{end}}
         <p class="mt-1 text-sm text-muted">{{.Blurb}}</p>
