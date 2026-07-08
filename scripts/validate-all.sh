@@ -31,6 +31,7 @@ challenges=(
   build-your-own-url-shortener
   build-your-own-job-platform
   build-your-own-cache-cluster
+  build-your-own-workflow-worker
   build-your-own-harness
 )
 langs=(python go typescript)

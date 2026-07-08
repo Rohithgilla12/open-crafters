@@ -70,6 +70,7 @@ var DesignStacks = []DesignStack{
 			{Kind: "build", Slug: "build-your-own-wal", Blurb: "Append histories before ack"},
 			{Kind: "build", Slug: "build-your-own-temporal", Blurb: "Durable workflow server"},
 			{Kind: "build", Slug: "build-your-own-workflow-sdk", Blurb: "Same history → same commands, every time"},
+			{Kind: "build", Slug: "build-your-own-workflow-worker", Blurb: "Meta-compose — poll Temporal, replay on SDK, complete tasks"},
 		},
 	},
 	{

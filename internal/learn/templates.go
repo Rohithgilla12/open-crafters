@@ -91,7 +91,7 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
 <header class="mb-10 border-b border-border-soft pb-8">
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-[1.35fr_0.85fr] lg:items-start">
   <div>
-  <p class="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">20 challenges · 16 design problems · graded black-box</p>
+  <p class="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">21 challenges · 16 design problems · graded black-box</p>
   <h1 class="mb-4 text-[clamp(1.85rem,4vw,2.65rem)] leading-[1.12]">Build the infrastructure<br>senior engineers actually ship.</h1>
   <p class="max-w-[58ch] text-[1.02rem] text-muted">Open-source <em class="font-medium text-ink not-italic">build-your-own-X</em> challenges for production primitives,
   plus <a class="text-link hover:text-link/80" href="/design">system design scenarios</a> tied to what you build.
@@ -179,7 +179,7 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
     <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-cyan-300">Compose &amp; meta</p>
     <h2 class="mb-2 font-display text-xl font-semibold group-hover:text-accent">Wire graded primitives into real systems</h2>
     <p class="mb-4 max-w-[62ch] text-sm leading-relaxed text-muted">Capstone challenges where <strong class="font-medium text-ink">you implement one gateway</strong> and the harness spawns reference id-generators, cache nodes, queues, and locks. Finish the primitives first, then orchestrate them — or jump straight in with our reference sidecars.</p>
-    <span class="font-mono text-xs text-accent">URL shortener · job platform · cache cluster · build the harness →</span>
+    <span class="font-mono text-xs text-accent">URL shortener · job platform · cache cluster · workflow worker · build the harness →</span>
   </a>
 </section>
 {{range .Paths}}

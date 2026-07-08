@@ -46,6 +46,7 @@ import (
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/urlshortener"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/wal"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/workflowsdk"
+	"github.com/Rohithgilla12/open-crafters/internal/challenges/workflowworker"
 	"github.com/Rohithgilla12/open-crafters/internal/harness"
 	"github.com/Rohithgilla12/open-crafters/internal/progress"
 )
@@ -70,6 +71,7 @@ var challenges = map[string]harness.Challenge{
 	"build-your-own-url-shortener":         urlshortener.Challenge(),
 	"build-your-own-job-platform":          jobplatform.Challenge(),
 	"build-your-own-cache-cluster":         cachecluster.Challenge(),
+	"build-your-own-workflow-worker":         workflowworker.Challenge(),
 	"build-your-own-harness":               grader.Challenge(),
 }
 

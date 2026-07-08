@@ -1,0 +1,48 @@
+slug: build-your-own-workflow-worker
+name: Build your own workflow worker
+short_description: >
+  Meta-compose challenge: implement a worker gateway that polls reference
+  Temporal and replays histories through the workflow SDK until workflows complete.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port>
+tester:
+  challenge_flag: build-your-own-workflow-worker
+stages:
+  - slug: bind
+    name: Boot the stack
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: greet
+    name: Run greet
+    difficulty: easy
+    instructions: stages/02-greet.md
+  - slug: fetch
+    name: Activity workflow
+    difficulty: medium
+    instructions: stages/03-fetch.md
+  - slug: timer
+    name: Timer workflow
+    difficulty: medium
+    instructions: stages/04-timer.md
+  - slug: pipeline
+    name: Activity then timer
+    difficulty: medium
+    instructions: stages/05-pipeline.md
+  - slug: signal
+    name: Signal delivery
+    difficulty: medium
+    instructions: stages/06-signal.md
+  - slug: duplicate
+    name: Reject duplicate start
+    difficulty: easy
+    instructions: stages/07-duplicate.md
+  - slug: concurrent
+    name: Parallel workflows
+    difficulty: hard
+    instructions: stages/08-concurrent.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

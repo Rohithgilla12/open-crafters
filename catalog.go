@@ -10,6 +10,7 @@ var ChallengeOrder = []string{
 	"build-your-own-mvcc",
 	"build-your-own-temporal",
 	"build-your-own-workflow-sdk",
+	"build-your-own-workflow-worker",
 	"build-your-own-raft",
 	"build-your-own-scheduler",
 	"build-your-own-rate-limiter",

@@ -31,6 +31,7 @@ var ChallengePaths = []ChallengePath{
 		Challenges: []string{
 			"build-your-own-temporal",
 			"build-your-own-workflow-sdk",
+			"build-your-own-workflow-worker",
 		},
 	},
 	{

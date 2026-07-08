@@ -29,6 +29,7 @@ var DesignBuildSteps = map[string][]DesignBuildStep{
 		{Challenge: "build-your-own-wal", Blurb: "Append-only event history before ack."},
 		{Challenge: "build-your-own-temporal", Blurb: "Durable histories, timers, and task delivery."},
 		{Challenge: "build-your-own-workflow-sdk", Blurb: "Deterministic replay from that history."},
+		{Challenge: "build-your-own-workflow-worker", Blurb: "Meta-compose — poll tasks, replay, complete."},
 	},
 	"design-chat-at-scale": {
 		{Challenge: "build-your-own-id-generator", Blurb: "Per-conversation sequence or global message IDs."},

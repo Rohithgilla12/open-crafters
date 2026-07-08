@@ -53,11 +53,13 @@ var Roadmaps = []Roadmap{
 			"Model workflow histories and task delivery",
 			"Handle activities, timers, signals, and crash recovery",
 			"Implement deterministic replay from event histories",
+			"Wire Temporal + SDK into a worker gateway",
 		},
 		PathSlug: "workflow",
 		Milestones: []RoadmapMilestone{
 			{Challenge: "build-your-own-temporal", Blurb: "The server — durable histories, leases, and timer wheels."},
 			{Challenge: "build-your-own-workflow-sdk", Blurb: "The worker SDK — same history in, same commands out, every time."},
+			{Challenge: "build-your-own-workflow-worker", Blurb: "Meta-compose — drive the worker loop across Temporal + SDK."},
 		},
 	},
 	{
@@ -121,13 +123,13 @@ var Roadmaps = []Roadmap{
 		Tagline:     "All five tracks — the complete open-crafters journey.",
 		Description: "A suggested order across every path: durability, workflow, distributed primitives, coordination glue, then compose/meta capstones.",
 		Outcomes: []string{
-			"Complete all 20 challenges across 5 thematic paths",
+			"Complete all 21 challenges across 5 thematic paths",
 			"Understand how production infrastructure primitives compose",
 		},
 		PathSlug: "", // meta-roadmap — milestones are paths
 		Milestones: []RoadmapMilestone{
 			{Challenge: "__path:durability__", Blurb: "6 challenges — WAL through object store (recommended first)."},
-			{Challenge: "__path:workflow__", Blurb: "2 challenges — Temporal server + replay SDK."},
+			{Challenge: "__path:workflow__", Blurb: "3 challenges — Temporal server, replay SDK, worker gateway."},
 			{Challenge: "__path:distributed__", Blurb: "4 challenges — Raft, hash ring, Bloom filter, cache node."},
 			{Challenge: "__path:coordination__", Blurb: "4 challenges — scheduler, rate limiter, lock, ID generator."},
 			{Challenge: "__path:integration__", Blurb: "4 capstones — URL shortener, job platform, cache cluster, harness."},
