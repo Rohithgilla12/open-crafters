@@ -11,6 +11,7 @@ var tmplFuncs = template.FuncMap{
 	"add":          func(a, b int) int { return a + b },
 	"siteNav":      func() template.HTML { return template.HTML(siteNavHTML) },
 	"fontLinks":    func() template.HTML { return template.HTML(fontLinksHTML) },
+	"seoHead":      seoHeadHTML,
 	"diffBadge":    difficultyBadgeClass,
 	"diffPill":     difficultyPillClass,
 	"composeBadge": composeBadgeClass,
@@ -62,6 +63,7 @@ const siteNavHTML = `<nav class="sticky top-0 z-50 border-b border-border-soft b
     <div class="flex items-center gap-4 text-sm text-muted">
       <a class="hover:text-ink" href="/roadmaps">Roadmaps</a>
       <a class="hover:text-ink" href="/design">System design</a>
+      <a class="hover:text-ink" href="/blog">Blog</a>
       <a class="hover:text-ink" href="https://runner.gilla.fun">Runner</a>
       <a class="hover:text-ink" href="https://github.com/Rohithgilla12/open-crafters">GitHub</a>
     </div>
@@ -79,8 +81,7 @@ func stagesCSV(stages []Stage) string {
 var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>open-crafters — learn</title>
-<meta name="description" content="Build-your-own-X challenges for production infrastructure primitives. Read stages, study the protocol, then implement and grade over the wire.">
+{{seoHead .SEO}}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 {{fontLinks}}
@@ -200,6 +201,26 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
   </div>
 </section>
 
+{{if .BlogPosts}}
+<section class="mb-12">
+  <div class="mb-4 flex items-baseline justify-between gap-4">
+    <h2 class="font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">From the blog</h2>
+    <a class="text-sm text-link" href="/blog">View all →</a>
+  </div>
+  <div class="divide-y divide-border border border-border">
+  {{range .BlogPosts}}
+    <a class="flex flex-col gap-1 bg-surface px-4 py-3.5 text-ink transition-[background-color] duration-150 hover:bg-surface-hover sm:flex-row sm:items-start sm:justify-between" href="/blog/{{.Slug}}">
+      <div class="min-w-0">
+        <span class="font-semibold">{{.Title}}</span>
+        <p class="text-sm text-muted">{{.Description}}</p>
+      </div>
+      <span class="shrink-0 font-mono text-xs text-muted">{{.DateDisplay}}</span>
+    </a>
+  {{end}}
+  </div>
+</section>
+{{end}}
+
 <footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted">
   <details class="progress-sync mb-6 border border-border bg-surface">
     <summary class="cursor-pointer px-4 py-3 font-display text-sm font-semibold text-ink">Progress sync</summary>
@@ -223,7 +244,7 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
 var roadmapsIndexTmpl = template.Must(template.New("roadmaps").Funcs(tmplFuncs).Parse(`<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Roadmaps — open-crafters learn</title>
+{{seoHead .SEO}}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 {{fontLinks}}
 <link rel="stylesheet" href="/style.css">
@@ -236,7 +257,7 @@ var roadmapsIndexTmpl = template.Must(template.New("roadmaps").Funcs(tmplFuncs).
   <p class="max-w-[58ch] text-muted">Curated journeys through the catalog — each with outcomes, milestones, and suggested order.</p>
 </header>
 <div class="divide-y divide-border border border-border">
-{{range .}}
+{{range .Roadmaps}}
   <a class="flex flex-col gap-1 bg-surface px-4 py-4 text-ink transition-[background-color] duration-150 hover:bg-surface-hover sm:flex-row sm:items-start sm:justify-between" href="/roadmaps/{{.Slug}}" data-roadmap-card data-challenges="{{.ChallengeCSV}}" data-total-stages="{{.TotalStages}}">
     <div class="min-w-0">
       <div class="mb-0.5 flex flex-wrap items-center gap-2">
@@ -257,8 +278,7 @@ var roadmapsIndexTmpl = template.Must(template.New("roadmaps").Funcs(tmplFuncs).
 var roadmapTmpl = template.Must(template.New("roadmap").Funcs(tmplFuncs).Parse(`<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{.Name}} — open-crafters roadmap</title>
-<meta name="description" content="{{.Tagline}}">
+{{seoHead .SEO}}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 {{fontLinks}}
 <link rel="stylesheet" href="/style.css">
@@ -355,8 +375,7 @@ var pathTmpl = template.Must(template.New("path").Funcs(tmplFuncs).Parse(`<!doct
 var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Parse(`<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{.Challenge.Name}} — open-crafters learn</title>
-<meta name="description" content="{{.Challenge.Tagline}}">
+{{seoHead .SEO}}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 {{fontLinks}}
@@ -444,7 +463,7 @@ var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Par
 var stageTmpl = template.Must(template.New("stage").Funcs(tmplFuncs).Parse(`<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{.Stage.Name}} — {{.Challenge.Name}} — open-crafters learn</title>
+{{seoHead .SEO}}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 {{fontLinks}}
@@ -495,8 +514,7 @@ var stageTmpl = template.Must(template.New("stage").Funcs(tmplFuncs).Parse(`<!do
 var designIndexTmpl = template.Must(template.New("design-index").Funcs(tmplFuncs).Parse(`<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>System design — open-crafters learn</title>
-<meta name="description" content="Whiteboard system design scenarios with discussion prompts, hints, and reference architectures tied to build-your-own challenges.">
+{{seoHead .SEO}}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 {{fontLinks}}
 <link rel="stylesheet" href="/style.css">
@@ -561,7 +579,7 @@ var designIndexTmpl = template.Must(template.New("design-index").Funcs(tmplFuncs
 var designRoadmapsIndexTmpl = template.Must(template.New("design-roadmaps-index").Funcs(tmplFuncs).Parse(`<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Design roadmaps — open-crafters learn</title>
+{{seoHead .SEO}}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 {{fontLinks}}
 <link rel="stylesheet" href="/style.css">
@@ -574,7 +592,7 @@ var designRoadmapsIndexTmpl = template.Must(template.New("design-roadmaps-index"
   <p class="max-w-[58ch] text-muted">Curated whiteboard journeys — interview classics, storage, scale, distributed core, and the full 16-problem curriculum.</p>
 </header>
 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-{{range .}}
+{{range .Roadmaps}}
   <a class="block rounded-[14px] border border-border p-5 text-ink transition hover:border-design/40" href="/design/roadmaps/{{.Slug}}" data-design-roadmap-card data-designs="{{.ProblemCSV}}" data-total-problems="{{.TotalProblems}}">
     <h2 class="mb-1.5 text-[1.05rem] font-semibold">{{.Name}}</h2>
     <p class="mb-2 text-sm text-muted">{{.Tagline}}</p>
@@ -589,8 +607,7 @@ var designRoadmapsIndexTmpl = template.Must(template.New("design-roadmaps-index"
 var designRoadmapTmpl = template.Must(template.New("design-roadmap").Funcs(tmplFuncs).Parse(`<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{.Name}} — design roadmap</title>
-<meta name="description" content="{{.Tagline}}">
+{{seoHead .SEO}}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 {{fontLinks}}
 <link rel="stylesheet" href="/style.css">
@@ -634,7 +651,7 @@ var designRoadmapTmpl = template.Must(template.New("design-roadmap").Funcs(tmplF
 var designStacksIndexTmpl = template.Must(template.New("design-stacks-index").Funcs(tmplFuncs).Parse(`<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Design stacks — open-crafters learn</title>
+{{seoHead .SEO}}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 {{fontLinks}}
 <link rel="stylesheet" href="/style.css">
@@ -647,7 +664,7 @@ var designStacksIndexTmpl = template.Must(template.New("design-stacks-index").Fu
   <p class="max-w-[58ch] text-muted">Whiteboard a system, then implement the graded primitives underneath — in dependency order.</p>
 </header>
 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-{{range .}}
+{{range .Stacks}}
   <a class="block rounded-[14px] border border-border p-5 text-ink transition hover:border-design/40" href="/design/stacks/{{.Slug}}">
     <h2 class="mb-1.5 text-[1.05rem] font-semibold">{{.Name}}</h2>
     <p class="mb-2 text-sm text-muted">{{.Tagline}}</p>
@@ -661,8 +678,7 @@ var designStacksIndexTmpl = template.Must(template.New("design-stacks-index").Fu
 var designStackTmpl = template.Must(template.New("design-stack").Funcs(tmplFuncs).Parse(`<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{.Name}} — design stack</title>
-<meta name="description" content="{{.Tagline}}">
+{{seoHead .SEO}}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 {{fontLinks}}
 <link rel="stylesheet" href="/style.css">
@@ -705,8 +721,7 @@ var designStackTmpl = template.Must(template.New("design-stack").Funcs(tmplFuncs
 var designProblemTmpl = template.Must(template.New("design").Funcs(tmplFuncs).Parse(`<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{.Name}} — system design — open-crafters</title>
-<meta name="description" content="{{.Tagline}}">
+{{seoHead .SEO}}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 {{fontLinks}}
 <link rel="stylesheet" href="/style.css">
@@ -799,4 +814,74 @@ var designProblemTmpl = template.Must(template.New("design").Funcs(tmplFuncs).Pa
 <button type="button" id="design-complete-btn" class="mt-4 inline-flex cursor-pointer items-center justify-center rounded-[10px] border border-design/40 bg-design/10 px-4 py-2.5 text-sm font-semibold text-design transition hover:bg-design/20">Mark as completed</button>
 
 <footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted"><a class="text-link" href="/design">← all design problems</a> · <a class="text-link" href="/">build challenges</a></footer>
+</div><script src="/learn.js"></script></body></html>`))
+
+var blogIndexTmpl = template.Must(template.New("blog-index").Funcs(tmplFuncs).Parse(`<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+{{seoHead .SEO}}
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+{{fontLinks}}
+<link rel="stylesheet" href="/style.css">
+</head><body>
+{{siteNav}}
+<div class="mx-auto max-w-[960px] px-5 py-8 pb-16">
+<p class="mb-5 text-sm text-muted"><a class="text-link" href="/">← home</a></p>
+<header class="mb-6 border-b border-border-soft pb-6">
+  <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">Blog</p>
+  <h1 class="mb-2 text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">Infrastructure essays</h1>
+  <p class="max-w-[58ch] text-muted">Durability, workflows, consensus — written to funnel into graded challenges.</p>
+</header>
+<div class="divide-y divide-border border border-border">
+{{range .Posts}}
+  <a class="flex flex-col gap-1 bg-surface px-4 py-4 text-ink transition-[background-color] duration-150 hover:bg-surface-hover sm:flex-row sm:items-start sm:justify-between" href="/blog/{{.Slug}}">
+    <div class="min-w-0">
+      <h2 class="mb-0.5 text-[1.05rem] font-semibold">{{.Title}}</h2>
+      <p class="text-sm text-muted">{{.Description}}</p>
+    </div>
+    <span class="shrink-0 font-mono text-xs text-muted">{{.DateDisplay}}</span>
+  </a>
+{{end}}
+</div>
+<footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted"><a class="text-link" href="/">← home</a></footer>
+</div><script src="/learn.js"></script></body></html>`))
+
+var blogPostTmpl = template.Must(template.New("blog-post").Funcs(tmplFuncs).Parse(`<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+{{seoHead .SEO}}
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+{{fontLinks}}
+<link rel="stylesheet" href="/style.css">
+</head><body>
+{{siteNav}}
+<div class="mx-auto max-w-[720px] px-5 py-8 pb-16">
+<p class="mb-5 text-sm text-muted"><a class="text-link" href="/blog">← blog</a></p>
+<header class="mb-8 border-b border-border-soft pb-6">
+  <p class="mb-2 font-mono text-xs text-muted">{{.Post.DateDisplay}}</p>
+  <h1 class="mb-3 text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">{{.Post.Title}}</h1>
+  <p class="max-w-[58ch] text-muted">{{.Post.Description}}</p>
+  {{if .Post.Tags}}<p class="mt-3 font-mono text-xs text-accent">{{range $i, $t := .Post.Tags}}{{if $i}} · {{end}}{{$t}}{{end}}</p>{{end}}
+</header>
+<article class="md">{{.Post.HTML}}</article>
+{{if or .Related .RelatedDesigns}}
+<section class="mt-10 border-t border-border-soft pt-6">
+  <h2 class="mb-4 font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">Build next</h2>
+  <div class="flex flex-col gap-2">
+  {{range .Related}}
+    <a class="row-link px-4 py-3" href="/challenges/{{.Slug}}">
+      <span class="font-semibold">{{.Name}}</span>
+      <span class="mt-0.5 block text-sm text-muted">{{.Tagline}}</span>
+    </a>
+  {{end}}
+  {{range .RelatedDesigns}}
+    <a class="row-link px-4 py-3" href="/design/{{.Slug}}">
+      <span class="font-semibold">{{.Name}}</span>
+      <span class="mt-0.5 block text-sm text-muted">{{.Tagline}}</span>
+    </a>
+  {{end}}
+  </div>
+</section>
+{{end}}
+<footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted"><a class="text-link" href="/blog">← blog</a> · <a class="text-link" href="/">challenges</a></footer>
 </div><script src="/learn.js"></script></body></html>`))

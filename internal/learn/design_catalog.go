@@ -21,7 +21,7 @@ type DesignProblem struct {
 	Related           []*Challenge // resolved from catalog
 	BuildSteps        []DesignBuildStepView
 	Stacks            []DesignStackLink
-	DiscussionPrompts []string     `json:"discussion_prompts"`
+	DiscussionPrompts []string `json:"discussion_prompts"`
 	ProblemHTML       template.HTML
 	HintsHTML         template.HTML
 	SolutionHTML      template.HTML

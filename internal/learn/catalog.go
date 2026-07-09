@@ -38,14 +38,16 @@ type Challenge struct {
 
 // Catalog holds all challenges indexed by slug.
 type Catalog struct {
-	Order       []string
-	Challenges  map[string]*Challenge
-	DesignOrder      []string
-	Designs          map[string]*DesignProblem
-	DesignRoadmaps   []DesignRoadmapView
-	DesignStacks     []DesignStackView
-	Paths            []Path
-	Roadmaps    []RoadmapView
+	Order          []string
+	Challenges     map[string]*Challenge
+	DesignOrder    []string
+	Designs        map[string]*DesignProblem
+	DesignRoadmaps []DesignRoadmapView
+	DesignStacks   []DesignStackView
+	Paths          []Path
+	Roadmaps       []RoadmapView
+	BlogPosts      []BlogPost
+	BlogBySlug     map[string]*BlogPost
 }
 
 // RoadmapMilestoneView is one step on a roadmap page.
@@ -195,6 +197,16 @@ func NewCatalog() (*Catalog, error) {
 	loadDesignStacks(c)
 	enrichDesignBridges(c)
 
+	posts, err := LoadBlogPosts()
+	if err != nil {
+		return nil, fmt.Errorf("loading blog: %w", err)
+	}
+	c.BlogPosts = posts
+	c.BlogBySlug = make(map[string]*BlogPost, len(posts))
+	for i := range posts {
+		c.BlogBySlug[posts[i].Slug] = &c.BlogPosts[i]
+	}
+
 	return c, nil
 }
 
@@ -219,6 +231,11 @@ func (c *Catalog) GetRoadmap(slug string) (*RoadmapView, bool) {
 		}
 	}
 	return nil, false
+}
+
+func (c *Catalog) GetBlog(slug string) (*BlogPost, bool) {
+	p, ok := c.BlogBySlug[slug]
+	return p, ok
 }
 
 func (c *Catalog) RoadmapForChallenge(slug string) string {

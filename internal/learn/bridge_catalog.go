@@ -37,15 +37,15 @@ type DesignStackMilestoneView struct {
 
 // DesignStackView is a rendered whiteboard→build journey.
 type DesignStackView struct {
-	Slug                string
-	Name                string
-	Tagline             string
-	Description         string
-	Outcomes            []string
-	Milestones          []DesignStackMilestoneView
-	StepCSV             string
-	TotalSteps          int
-	HasComposeCapstone  bool
+	Slug               string
+	Name               string
+	Tagline            string
+	Description        string
+	Outcomes           []string
+	Milestones         []DesignStackMilestoneView
+	StepCSV            string
+	TotalSteps         int
+	HasComposeCapstone bool
 }
 
 func enrichDesignBridges(c *Catalog) {

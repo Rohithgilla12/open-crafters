@@ -39,7 +39,11 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET /api/jobs/{id}", s.handleSubmitJob)
 	mux.HandleFunc("GET /style.css", s.handleCSS)
 	mux.HandleFunc("GET /learn.js", s.handleLearnJS)
+	mux.HandleFunc("GET /robots.txt", s.handleRobots)
+	mux.HandleFunc("GET /sitemap.xml", s.handleSitemap)
 	mux.HandleFunc("GET /{$}", s.handleIndex)
+	mux.HandleFunc("GET /blog", s.handleBlogIndex)
+	mux.HandleFunc("GET /blog/{slug}", s.handleBlogPost)
 	mux.HandleFunc("GET /roadmaps", s.handleRoadmapsIndex)
 	mux.HandleFunc("GET /roadmaps/{slug}", s.handleRoadmap)
 	mux.HandleFunc("GET /design", s.handleDesignIndex)
@@ -53,6 +57,7 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET /challenges/{slug}/stages/{stage}", s.handleStage)
 	mux.Handle("GET /favicon.svg", http.FileServer(http.FS(s.assets)))
 	mux.Handle("GET /apple-touch-icon.png", http.FileServer(http.FS(s.assets)))
+	mux.Handle("GET /og.png", http.FileServer(http.FS(s.assets)))
 	return mux
 }
 
@@ -111,6 +116,8 @@ type indexPageData struct {
 	Roadmaps        []RoadmapView
 	FeaturedDesigns []*DesignProblem
 	Paths           []pathSummary
+	BlogPosts       []BlogPost
+	SEO             SEO
 }
 
 var featuredDesignSlugs = []string{
@@ -168,11 +175,37 @@ func (s *Server) handleIndex(w http.ResponseWriter, _ *http.Request) {
 		Roadmaps:        s.catalog.Roadmaps,
 		FeaturedDesigns: featured,
 		Paths:           paths,
+		BlogPosts:       s.catalog.BlogPosts,
+		SEO: SEO{
+			Title: "open-crafters — learn | build your own infrastructure",
+			Description: "Build-your-own-X challenges for production infrastructure primitives. " +
+				"Read stages, study the protocol, then implement and grade over the wire.",
+			Path:   "/",
+			Type:   "website",
+			JSONLD: websiteJSONLD(),
+		},
 	})
 }
 
 func (s *Server) handleRoadmapsIndex(w http.ResponseWriter, _ *http.Request) {
-	s.render(w, roadmapsIndexTmpl, s.catalog.Roadmaps)
+	s.render(w, roadmapsIndexTmpl, roadmapsIndexData{
+		Roadmaps: s.catalog.Roadmaps,
+		SEO: SEO{
+			Title:       "Learning roadmaps — open-crafters",
+			Description: "Curated journeys through durability, workflows, distributed systems, coordination, and compose capstones.",
+			Path:        "/roadmaps",
+		},
+	})
+}
+
+type roadmapsIndexData struct {
+	Roadmaps []RoadmapView
+	SEO      SEO
+}
+
+type roadmapPageData struct {
+	*RoadmapView
+	SEO SEO
 }
 
 func (s *Server) handleRoadmap(w http.ResponseWriter, r *http.Request) {
@@ -182,7 +215,14 @@ func (s *Server) handleRoadmap(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	s.render(w, roadmapTmpl, rm)
+	s.render(w, roadmapTmpl, roadmapPageData{
+		RoadmapView: rm,
+		SEO: SEO{
+			Title:       rm.Name + " — open-crafters roadmap",
+			Description: rm.Tagline,
+			Path:        "/roadmaps/" + rm.Slug,
+		},
+	})
 }
 
 func (s *Server) handleDesignIndex(w http.ResponseWriter, _ *http.Request) {
@@ -194,11 +234,44 @@ func (s *Server) handleDesignIndex(w http.ResponseWriter, _ *http.Request) {
 		Roadmaps: s.catalog.DesignRoadmaps,
 		Stacks:   s.catalog.DesignStacks,
 		Designs:  designs,
+		SEO: SEO{
+			Title: "System design — open-crafters learn",
+			Description: "Whiteboard system design scenarios with discussion prompts, hints, " +
+				"and reference architectures tied to build-your-own challenges.",
+			Path: "/design",
+		},
 	})
 }
 
+type designRoadmapsIndexData struct {
+	Roadmaps []DesignRoadmapView
+	SEO      SEO
+}
+
+type designRoadmapPageData struct {
+	*DesignRoadmapView
+	SEO SEO
+}
+
+type designStacksIndexData struct {
+	Stacks []DesignStackView
+	SEO    SEO
+}
+
+type designStackPageData struct {
+	*DesignStackView
+	SEO SEO
+}
+
 func (s *Server) handleDesignRoadmapsIndex(w http.ResponseWriter, _ *http.Request) {
-	s.render(w, designRoadmapsIndexTmpl, s.catalog.DesignRoadmaps)
+	s.render(w, designRoadmapsIndexTmpl, designRoadmapsIndexData{
+		Roadmaps: s.catalog.DesignRoadmaps,
+		SEO: SEO{
+			Title:       "Design roadmaps — open-crafters learn",
+			Description: "Curated whiteboard journeys — interview classics, storage, scale, distributed core, and the full curriculum.",
+			Path:        "/design/roadmaps",
+		},
+	})
 }
 
 func (s *Server) handleDesignRoadmap(w http.ResponseWriter, r *http.Request) {
@@ -208,11 +281,25 @@ func (s *Server) handleDesignRoadmap(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	s.render(w, designRoadmapTmpl, rm)
+	s.render(w, designRoadmapTmpl, designRoadmapPageData{
+		DesignRoadmapView: rm,
+		SEO: SEO{
+			Title:       rm.Name + " — design roadmap — open-crafters",
+			Description: rm.Tagline,
+			Path:        "/design/roadmaps/" + rm.Slug,
+		},
+	})
 }
 
 func (s *Server) handleDesignStacksIndex(w http.ResponseWriter, _ *http.Request) {
-	s.render(w, designStacksIndexTmpl, s.catalog.DesignStacks)
+	s.render(w, designStacksIndexTmpl, designStacksIndexData{
+		Stacks: s.catalog.DesignStacks,
+		SEO: SEO{
+			Title:       "Design stacks — open-crafters learn",
+			Description: "Whiteboard a system, then implement the graded primitives underneath — in dependency order.",
+			Path:        "/design/stacks",
+		},
+	})
 }
 
 func (s *Server) handleDesignStack(w http.ResponseWriter, r *http.Request) {
@@ -222,13 +309,26 @@ func (s *Server) handleDesignStack(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	s.render(w, designStackTmpl, st)
+	s.render(w, designStackTmpl, designStackPageData{
+		DesignStackView: st,
+		SEO: SEO{
+			Title:       st.Name + " — design stack — open-crafters",
+			Description: st.Tagline,
+			Path:        "/design/stacks/" + st.Slug,
+		},
+	})
 }
 
 type designIndexData struct {
 	Roadmaps []DesignRoadmapView
 	Stacks   []DesignStackView
 	Designs  []*DesignProblem
+	SEO      SEO
+}
+
+type designProblemPageData struct {
+	*DesignProblem
+	SEO SEO
 }
 
 func (s *Server) handleDesignProblem(w http.ResponseWriter, r *http.Request) {
@@ -238,7 +338,14 @@ func (s *Server) handleDesignProblem(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	s.render(w, designProblemTmpl, d)
+	s.render(w, designProblemTmpl, designProblemPageData{
+		DesignProblem: d,
+		SEO: SEO{
+			Title:       d.Name + " — system design — open-crafters",
+			Description: d.Tagline,
+			Path:        "/design/" + d.Slug,
+		},
+	})
 }
 
 func (s *Server) handlePathRedirect(w http.ResponseWriter, r *http.Request) {
@@ -253,6 +360,7 @@ func (s *Server) handleChallenge(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
+	path := "/challenges/" + ch.Slug
 	s.render(w, challengeTmpl, challengePageData{
 		Challenge:      ch,
 		StageSlugs:     stageSlugs(ch),
@@ -260,6 +368,12 @@ func (s *Server) handleChallenge(w http.ResponseWriter, r *http.Request) {
 		RoadmapName:    roadmapName(s.catalog, slug),
 		RelatedDesigns: s.catalog.DesignsForChallenge(slug),
 		DesignStacks:   s.catalog.StacksForChallenge(slug),
+		SEO: SEO{
+			Title:       ch.Name + " — open-crafters learn",
+			Description: ch.Tagline,
+			Path:        path,
+			JSONLD:      learningResourceJSONLD(ch.Name, ch.Tagline, path),
+		},
 	})
 }
 
@@ -271,14 +385,19 @@ func (s *Server) handleStage(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	data := stagePageData{
+	path := "/challenges/" + ch.Slug + "/stages/" + stage.Slug
+	s.render(w, stageTmpl, stagePageData{
 		Challenge:  ch,
 		Stage:      stage,
 		StageSlugs: stageSlugs(ch),
 		Prev:       neighborStage(ch, stage.Num-2),
 		Next:       neighborStage(ch, stage.Num),
-	}
-	s.render(w, stageTmpl, data)
+		SEO: SEO{
+			Title:       stage.Name + " — " + ch.Name + " — open-crafters learn",
+			Description: stage.Name + " — stage of " + ch.Name + ". " + ch.Tagline,
+			Path:        path,
+		},
+	})
 }
 
 type stageNavLink struct {
@@ -292,6 +411,7 @@ type stagePageData struct {
 	StageSlugs string
 	Prev       *stageNavLink
 	Next       *stageNavLink
+	SEO        SEO
 }
 
 type challengePageData struct {
@@ -301,6 +421,7 @@ type challengePageData struct {
 	RoadmapName    string
 	RelatedDesigns []*DesignProblem
 	DesignStacks   []DesignStackLink
+	SEO            SEO
 }
 
 func stageSlugs(ch *Challenge) string {
