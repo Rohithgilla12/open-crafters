@@ -106,7 +106,7 @@ var Roadmaps = []Roadmap{
 		Slug:        "integration",
 		Name:        "Compose & meta",
 		Tagline:     "Wire primitives together — and build the tester itself.",
-		Description: "Capstone challenges: orchestrate reference primitives into URL shortener, job platform, and cache cluster gateways, then implement spawn/proxy/assert like the real harness. (Workflow worker lives on the workflow track.)",
+		Description: "Capstone challenges: orchestrate reference primitives into URL shortener, job platform, cache cluster, and chat service gateways, then implement spawn/proxy/assert like the real harness. (Workflow worker lives on the workflow track; distributed KV on the distributed track.)",
 		Outcomes: []string{
 			"Compose multiple graded primitives into one gateway",
 			"Implement process spawn, NDJSON proxying, and test assertions",
@@ -116,6 +116,7 @@ var Roadmaps = []Roadmap{
 			{Challenge: "build-your-own-url-shortener", Blurb: "Meta-compose — gateway + three reference services."},
 			{Challenge: "build-your-own-job-platform", Blurb: "Meta-compose — scheduler + queue + lock orchestration."},
 			{Challenge: "build-your-own-cache-cluster", Blurb: "Meta-compose — hash ring + bloom + limiter + cache nodes."},
+			{Challenge: "build-your-own-chat-service", Blurb: "Meta-compose — id gen + log + delivery queue."},
 			{Challenge: "build-your-own-harness", Blurb: "Meta grader — spawn, proxy calls, run_case."},
 		},
 	},
@@ -125,7 +126,7 @@ var Roadmaps = []Roadmap{
 		Tagline:     "All five tracks — the complete open-crafters journey.",
 		Description: "A suggested order across every path: durability, workflow, distributed primitives, coordination glue, then compose/meta capstones.",
 		Outcomes: []string{
-			"Complete all 22 challenges across 5 thematic paths",
+			"Complete all 23 challenges across 5 thematic paths",
 			"Understand how production infrastructure primitives compose",
 		},
 		PathSlug: "", // meta-roadmap — milestones are paths
@@ -134,7 +135,7 @@ var Roadmaps = []Roadmap{
 			{Challenge: "__path:workflow__", Blurb: "3 challenges — Temporal server, replay SDK, worker gateway."},
 			{Challenge: "__path:distributed__", Blurb: "5 challenges — Raft, hash ring, Bloom filter, cache node, KV gateway."},
 			{Challenge: "__path:coordination__", Blurb: "4 challenges — scheduler, rate limiter, lock, ID generator."},
-			{Challenge: "__path:integration__", Blurb: "4 capstones — URL shortener, job platform, cache cluster, harness (workflow worker is on the workflow track)."},
+			{Challenge: "__path:integration__", Blurb: "5 capstones — URL shortener, job platform, cache cluster, chat service, harness (workflow worker is on the workflow track)."},
 		},
 	},
 }

@@ -107,7 +107,7 @@ var DesignStacks = []DesignStack{
 			{Kind: "build", Slug: "build-your-own-id-generator", Blurb: "Monotonic per-conversation sequences"},
 			{Kind: "build", Slug: "build-your-own-log", Blurb: "Durable conversation log"},
 			{Kind: "build", Slug: "build-your-own-queue", Blurb: "Push delivery to online clients"},
-			{Kind: "build", Slug: "build-your-own-raft", Blurb: "Optional — leader per conversation shard"},
+			{Kind: "build", Slug: "build-your-own-chat-service", Blurb: "Meta-compose — id gen, log, and delivery queue"},
 		},
 	},
 	{

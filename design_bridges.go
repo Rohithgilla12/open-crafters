@@ -35,7 +35,7 @@ var DesignBuildSteps = map[string][]DesignBuildStep{
 		{Challenge: "build-your-own-id-generator", Blurb: "Per-conversation sequence or global message IDs."},
 		{Challenge: "build-your-own-log", Blurb: "Durable conversation append log."},
 		{Challenge: "build-your-own-queue", Blurb: "Fan-out delivery to online devices."},
-		{Challenge: "build-your-own-raft", Blurb: "Per-shard ordering and leader election."},
+		{Challenge: "build-your-own-chat-service", Blurb: "Meta-compose — wire id gen, log, and queue in a gateway."},
 	},
 	"design-payment-ledger": {
 		{Challenge: "build-your-own-wal", Blurb: "Append entries before acknowledging transfers."},

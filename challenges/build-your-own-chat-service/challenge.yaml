@@ -1,0 +1,49 @@
+slug: build-your-own-chat-service
+name: Build your own chat service
+short_description: >
+  Meta-compose challenge: implement a messaging gateway that orchestrates
+  reference id-generator, log, and queue services spawned by the harness —
+  graded over the wire.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port>
+tester:
+  challenge_flag: build-your-own-chat-service
+stages:
+  - slug: bind
+    name: Boot the stack
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: send
+    name: Send a message
+    difficulty: easy
+    instructions: stages/02-send.md
+  - slug: read
+    name: Read the log
+    difficulty: easy
+    instructions: stages/03-read.md
+  - slug: delivery
+    name: Fan-out queue
+    difficulty: medium
+    instructions: stages/04-delivery.md
+  - slug: ack
+    name: Ack delivery
+    difficulty: easy
+    instructions: stages/05-ack.md
+  - slug: ordering
+    name: Message order
+    difficulty: medium
+    instructions: stages/06-ordering.md
+  - slug: two-chats
+    name: Two conversations
+    difficulty: medium
+    instructions: stages/07-two-chats.md
+  - slug: concurrent
+    name: Parallel sends
+    difficulty: hard
+    instructions: stages/08-concurrent.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

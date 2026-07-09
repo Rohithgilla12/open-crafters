@@ -257,9 +257,19 @@ jobs:
         run: ./crafters grade --challenge build-your-own-distributed-kv --all
           --program examples/solutions/build-your-own-distributed-kv/typescript/your_program.sh
 
+      - name: "Reference: Build your own chat service — Python"
+        run: ./crafters grade --challenge build-your-own-chat-service --all
+          --program examples/solutions/build-your-own-chat-service/python/your_program.sh
+      - name: "Reference: Build your own chat service — Go"
+        run: ./crafters grade --challenge build-your-own-chat-service --all
+          --program examples/solutions/build-your-own-chat-service/go/your_program.sh
+      - name: "Reference: Build your own chat service — TypeScript/Bun"
+        run: ./crafters grade --challenge build-your-own-chat-service --all
+          --program examples/solutions/build-your-own-chat-service/typescript/your_program.sh
+
       - name: "Starters pass stage 1 (Python, Go, TypeScript — all challenges)"
         run: |
-          for ch in build-your-own-temporal build-your-own-wal build-your-own-queue build-your-own-mvcc build-your-own-log build-your-own-lsm build-your-own-workflow-sdk build-your-own-raft build-your-own-scheduler build-your-own-rate-limiter build-your-own-object-store build-your-own-bloom-filter build-your-own-hash-ring build-your-own-distributed-lock build-your-own-id-generator build-your-own-distributed-cache build-your-own-url-shortener build-your-own-job-platform build-your-own-cache-cluster build-your-own-workflow-worker build-your-own-distributed-kv build-your-own-harness; do
+          for ch in build-your-own-temporal build-your-own-wal build-your-own-queue build-your-own-mvcc build-your-own-log build-your-own-lsm build-your-own-workflow-sdk build-your-own-raft build-your-own-scheduler build-your-own-rate-limiter build-your-own-object-store build-your-own-bloom-filter build-your-own-hash-ring build-your-own-distributed-lock build-your-own-id-generator build-your-own-distributed-cache build-your-own-url-shortener build-your-own-job-platform build-your-own-cache-cluster build-your-own-workflow-worker build-your-own-distributed-kv build-your-own-chat-service build-your-own-harness; do
             for lang in python go typescript; do
               ./crafters grade --challenge "$ch" --stage bind \
                 --program "challenges/$ch/starters/$lang/your_program.sh"

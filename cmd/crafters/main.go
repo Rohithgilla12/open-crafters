@@ -28,6 +28,7 @@ import (
 	opencrafters "github.com/Rohithgilla12/open-crafters"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/bloomfilter"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/cachecluster"
+	"github.com/Rohithgilla12/open-crafters/internal/challenges/chatservice"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/distcache"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/distkv"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/grader"
@@ -74,6 +75,7 @@ var challenges = map[string]harness.Challenge{
 	"build-your-own-cache-cluster":         cachecluster.Challenge(),
 	"build-your-own-workflow-worker":         workflowworker.Challenge(),
 	"build-your-own-distributed-kv":          distkv.Challenge(),
+	"build-your-own-chat-service":          chatservice.Challenge(),
 	"build-your-own-harness":               grader.Challenge(),
 }
 

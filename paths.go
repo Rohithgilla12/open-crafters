@@ -60,11 +60,12 @@ var ChallengePaths = []ChallengePath{
 	{
 		Slug:        "integration",
 		Name:        "Compose & meta",
-		Description: "Wire primitives into real systems — URL shortener, job platform, and cache cluster gateways, plus building the grader itself. You build one service; the harness spawns the rest. (The workflow worker compose capstone lives on the workflow track.)",
+		Description: "Wire primitives into real systems — URL shortener, job platform, cache cluster, and chat service gateways, plus building the grader itself. You build one service; the harness spawns the rest. (The workflow worker compose capstone lives on the workflow track; distributed KV on the distributed track.)",
 		Challenges: []string{
 			"build-your-own-url-shortener",
 			"build-your-own-job-platform",
 			"build-your-own-cache-cluster",
+			"build-your-own-chat-service",
 			"build-your-own-harness",
 		},
 	},

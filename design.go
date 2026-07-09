@@ -105,8 +105,9 @@ var DesignProblems = []DesignProblem{
 		TimeMinutes: 45,
 		RelatedChallenges: []string{
 			"build-your-own-queue",
+			"build-your-own-log",
 			"build-your-own-id-generator",
-			"build-your-own-raft",
+			"build-your-own-chat-service",
 		},
 		DiscussionPrompts: []string{
 			"How do you order messages in a group with concurrent senders?",

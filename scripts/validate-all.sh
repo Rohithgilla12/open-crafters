@@ -33,6 +33,7 @@ challenges=(
   build-your-own-cache-cluster
   build-your-own-workflow-worker
   build-your-own-distributed-kv
+  build-your-own-chat-service
   build-your-own-harness
 )
 langs=(python go typescript)
