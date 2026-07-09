@@ -203,12 +203,6 @@
     applyDesignProgressUI();
   }
 
-    if (!p.challenges[slug]) p.challenges[slug] = { read: {}, passed: {} };
-    const c = p.challenges[slug];
-    if (!c.read) c.read = {};
-    if (!c.passed) c.passed = {};
-    return c;
-  }
 
   function markRead(slug, stageSlug) {
     if (!slug || !stageSlug) return;
@@ -452,6 +446,19 @@
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  function initInstallCTA() {
+    document.querySelectorAll('[data-scroll-to-install]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const el = document.getElementById('install');
+        if (!el) return;
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const code = el.querySelector('code');
+        if (code) code.focus?.();
+      });
+    });
+  }
+
   function initProgressSync() {
     const exportBtn = document.getElementById("progress-export");
     const importInput = document.getElementById("progress-import");
@@ -493,5 +500,6 @@
     applyRoadmapProgress();
     initSubmitForm();
     initProgressSync();
+    initInstallCTA();
   });
 })();

@@ -6,13 +6,13 @@ import (
 )
 
 var tmplFuncs = template.FuncMap{
-	"short":     shortSlug,
-	"stagesCSV": stagesCSV,
-	"add":       func(a, b int) int { return a + b },
-	"siteNav":   func() template.HTML { return template.HTML(siteNavHTML) },
-	"fontLinks": func() template.HTML { return template.HTML(fontLinksHTML) },
-	"diffBadge": difficultyBadgeClass,
-	"diffPill":  difficultyPillClass,
+	"short":        shortSlug,
+	"stagesCSV":    stagesCSV,
+	"add":          func(a, b int) int { return a + b },
+	"siteNav":      func() template.HTML { return template.HTML(siteNavHTML) },
+	"fontLinks":    func() template.HTML { return template.HTML(fontLinksHTML) },
+	"diffBadge":    difficultyBadgeClass,
+	"diffPill":     difficultyPillClass,
 	"composeBadge": composeBadgeClass,
 	"designShort": func(slug string) string {
 		return strings.TrimPrefix(slug, "design-")
@@ -22,42 +22,42 @@ var tmplFuncs = template.FuncMap{
 func difficultyBadgeClass(d string) string {
 	switch d {
 	case "easy":
-		return "shrink-0 rounded-full bg-emerald-300 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-canvas"
+		return "shrink-0 border border-accent/40 bg-accent/15 px-1.5 py-0.5 font-mono text-[0.62rem] font-semibold uppercase tracking-wider text-accent"
 	case "medium":
-		return "shrink-0 rounded-full bg-amber-300 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-canvas"
+		return "shrink-0 border border-code/40 bg-code/10 px-1.5 py-0.5 font-mono text-[0.62rem] font-semibold uppercase tracking-wider text-code"
 	case "hard":
-		return "shrink-0 rounded-full bg-red-400 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-canvas"
+		return "shrink-0 border border-ink/25 bg-ink/5 px-1.5 py-0.5 font-mono text-[0.62rem] font-semibold uppercase tracking-wider text-muted"
 	default:
-		return "shrink-0 rounded-full bg-muted px-2 py-0.5 text-[0.62rem] font-bold uppercase text-canvas"
+		return "shrink-0 border border-border px-1.5 py-0.5 font-mono text-[0.62rem] font-semibold uppercase tracking-wider text-muted"
 	}
 }
 
 func difficultyPillClass(d string) string {
 	switch d {
 	case "easy":
-		return "shrink-0 rounded-full border border-emerald-300 px-2 py-0.5 text-[0.68rem] font-bold uppercase tracking-wide text-emerald-300"
+		return "shrink-0 border border-accent/35 px-1.5 py-0.5 font-mono text-[0.62rem] font-semibold uppercase tracking-wide text-accent"
 	case "medium":
-		return "shrink-0 rounded-full border border-amber-300 px-2 py-0.5 text-[0.68rem] font-bold uppercase tracking-wide text-amber-300"
+		return "shrink-0 border border-code/35 px-1.5 py-0.5 font-mono text-[0.62rem] font-semibold uppercase tracking-wide text-code"
 	case "hard":
-		return "shrink-0 rounded-full border border-red-400 px-2 py-0.5 text-[0.68rem] font-bold uppercase tracking-wide text-red-400"
+		return "shrink-0 border border-border px-1.5 py-0.5 font-mono text-[0.62rem] font-semibold uppercase tracking-wide text-muted"
 	default:
-		return "shrink-0 rounded-full border border-muted px-2 py-0.5 text-[0.68rem] font-bold uppercase text-muted"
+		return "shrink-0 border border-border px-1.5 py-0.5 font-mono text-[0.62rem] font-semibold uppercase tracking-wide text-muted"
 	}
 }
 
 func composeBadgeClass() string {
-	return "shrink-0 rounded-full border border-cyan-400/40 bg-cyan-400/10 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-cyan-200"
+	return "shrink-0 border border-compose/40 bg-compose/10 px-1.5 py-0.5 font-mono text-[0.62rem] font-semibold uppercase tracking-wider text-compose"
 }
 
 const fontLinksHTML = `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">`
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Martian+Mono:wght@400;500;600&display=swap" rel="stylesheet">`
 
-const siteNavHTML = `<nav class="sticky top-0 z-50 border-b border-border-soft bg-canvas/80 backdrop-blur-md" aria-label="Main">
-  <div class="mx-auto flex max-w-[1120px] items-center justify-between gap-4 px-5 py-3.5">
+const siteNavHTML = `<nav class="sticky top-0 z-50 border-b border-border-soft bg-canvas/90 backdrop-blur-sm" aria-label="Main">
+  <div class="mx-auto flex max-w-[960px] items-center justify-between gap-4 px-5 py-3">
     <a class="inline-flex items-center gap-1.5 font-display text-[0.95rem] font-semibold text-ink hover:text-accent" href="/">
       <span class="font-mono font-medium text-accent">$</span> open-crafters
-      <span class="rounded-full border border-accent/20 bg-accent/10 px-1.5 py-0.5 text-[0.62rem] font-bold uppercase tracking-widest text-accent-dim">learn</span>
+      <span class="border border-accent/25 bg-accent/10 px-1.5 py-0.5 font-mono text-[0.62rem] font-semibold uppercase tracking-widest text-accent-dim">learn</span>
     </a>
     <div class="flex items-center gap-4 text-sm text-muted">
       <a class="hover:text-ink" href="/roadmaps">Roadmaps</a>
@@ -87,129 +87,132 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
 <link rel="stylesheet" href="/style.css">
 </head><body>
 {{siteNav}}
-<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
-<header class="mb-10 border-b border-border-soft pb-8">
-  <div class="grid grid-cols-1 gap-6 lg:grid-cols-[1.35fr_0.85fr] lg:items-start">
-  <div>
-  <p class="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">23 challenges · 16 design problems · graded black-box</p>
-  <h1 class="mb-4 text-[clamp(1.85rem,4vw,2.65rem)] leading-[1.12]">Build the infrastructure<br>senior engineers actually ship.</h1>
-  <p class="max-w-[58ch] text-[1.02rem] text-muted">Open-source <em class="font-medium text-ink not-italic">build-your-own-X</em> challenges for production primitives,
-  plus <a class="text-link hover:text-link/80" href="/design">system design scenarios</a> tied to what you build.
-  Implement in any language, grade over the wire — crashes included.</p>
-  <div class="mt-5 mb-2">
-    <span class="mb-1.5 block text-xs font-semibold uppercase tracking-widest text-muted">Install</span>
-    <code class="block overflow-x-auto rounded-[10px] border border-border bg-surface px-4 py-3.5 font-mono text-[0.86rem] text-code shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">curl -fsSL https://raw.githubusercontent.com/Rohithgilla12/open-crafters/main/install.sh | sh</code>
+<div class="mx-auto max-w-[960px] px-5 py-8 pb-16">
+<header class="mb-12 border-b border-border-soft pb-10">
+  <p class="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">{{.ChallengeCount}} challenges · {{.DesignCount}} design problems · graded black-box</p>
+  <h1 class="mb-4 max-w-[18ch] text-[clamp(1.9rem,4.2vw,2.75rem)] leading-[1.08]">Build the infrastructure senior engineers actually ship.</h1>
+  <p class="mb-7 max-w-[58ch] text-[1.02rem] leading-relaxed text-muted">Open-source <em class="font-medium text-ink not-italic">build-your-own-X</em> challenges for production primitives, plus system design scenarios tied to what you build.</p>
+  <div class="flex flex-wrap gap-3">
+    <a class="cta-primary" href="#install" data-scroll-to-install>Build locally</a>
+    <a class="cta-secondary" href="/roadmaps">Browse journeys</a>
   </div>
-  <p class="mt-2 text-sm text-muted">then <code class="rounded bg-accent/10 px-1.5 py-0.5 text-accent">crafters start wal</code> locally, or submit to the
-  <a class="text-link hover:text-link/80" href="https://runner.gilla.fun">hosted runner</a></p>
+</header>
+
+<section id="install" class="mb-12 scroll-mt-24">
+  <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-muted">Install</p>
+  <code tabindex="-1" class="mb-3 block overflow-x-auto border border-border bg-surface px-4 py-3.5 font-mono text-[0.86rem] text-code outline-none">curl -fsSL https://raw.githubusercontent.com/Rohithgilla12/open-crafters/main/install.sh | sh</code>
+  <p class="text-sm text-muted">Then <code class="border border-accent/20 bg-accent/10 px-1.5 py-0.5 font-mono text-accent">crafters start wal</code> locally, or submit to the <a class="text-link hover:text-ink" href="https://runner.gilla.fun">hosted runner</a>.</p>
+</section>
+
+{{if .StartHere}}
+<section class="mb-12">
+  <p class="mb-3 font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">Start here</p>
+  <a class="row-link p-5" href="/roadmaps/{{.StartHere.Slug}}" data-roadmap-card data-challenges="{{.StartHere.ChallengeCSV}}" data-total-stages="{{.StartHere.TotalStages}}">
+    <div class="mb-1 flex flex-wrap items-baseline justify-between gap-2">
+      <h2 class="text-xl font-semibold">{{.StartHere.Name}}</h2>
+      <span class="font-mono text-xs text-accent"><span data-roadmap-progress-label></span>{{.StartHere.TotalStages}} stages</span>
+    </div>
+    <p class="mb-3 max-w-[62ch] text-sm text-muted">{{.StartHere.Tagline}} Begin with WAL — write-before-ack is the discipline every other challenge leans on.</p>
+    <span class="roadmap-bar mb-1 block h-1 overflow-hidden bg-white/6"><span class="roadmap-bar-fill"></span></span>
+    <span class="font-mono text-xs text-accent">Open durability roadmap →</span>
+  </a>
+</section>
+{{end}}
+
+<section class="mb-12">
+  <div class="mb-4 flex items-baseline justify-between gap-4">
+    <h2 class="font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">Journeys</h2>
+    <a class="text-sm text-link" href="/roadmaps">View all →</a>
   </div>
-  <aside class="hidden flex-col gap-3 sm:flex">
-    <a class="block rounded-[14px] border border-border bg-surface p-4 text-ink transition hover:-translate-y-0.5 hover:border-accent/45 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/roadmaps/integration">
-      <span class="mb-1 block text-xs uppercase tracking-widest text-cyan-300">Compose capstones</span>
-      <strong class="block font-display text-base">Wire primitives together</strong>
-      <span class="text-sm text-muted">You build one gateway — we spawn the rest →</span>
+  <div class="divide-y divide-border border border-border">
+  {{range .Roadmaps}}
+    <a class="flex flex-col gap-1 bg-surface px-4 py-3.5 text-ink transition-[background-color] duration-150 hover:bg-surface-hover sm:flex-row sm:items-center sm:justify-between" href="/roadmaps/{{.Slug}}" data-roadmap-card data-challenges="{{.ChallengeCSV}}" data-total-stages="{{.TotalStages}}">
+      <div class="min-w-0">
+        <div class="mb-0.5 flex flex-wrap items-center gap-2">
+          <span class="font-semibold">{{.Name}}</span>
+          {{if eq .Slug "integration"}}<span class="{{composeBadge}}">compose + meta</span>{{end}}
+          {{if eq .Slug "workflow"}}<span class="{{composeBadge}}">includes compose</span>{{end}}
+        </div>
+        <p class="text-sm text-muted">{{.Tagline}}</p>
+      </div>
+      <span class="shrink-0 font-mono text-xs text-accent"><span data-roadmap-progress-label></span>{{.TotalStages}} stages</span>
     </a>
-    <a class="block rounded-[14px] border border-border bg-surface p-4 text-ink transition hover:-translate-y-0.5 hover:border-accent/45 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/roadmaps">
-      <span class="mb-1 block text-xs uppercase tracking-widest text-accent-dim">Start here</span>
-      <strong class="block font-display text-base">Learning roadmaps</strong>
-      <span class="text-sm text-muted">Curated journeys with outcomes →</span>
-    </a>
-    <a class="block rounded-[14px] border border-border bg-surface p-4 text-ink transition hover:-translate-y-0.5 hover:border-accent/45 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/design">
-      <span class="mb-1 block text-xs uppercase tracking-widest text-accent-dim">Whiteboard mode</span>
-      <strong class="block font-display text-base">System design</strong>
-      <span class="text-sm text-muted">Scenarios + reference architectures →</span>
-    </a>
-    <a class="block rounded-[14px] border border-border bg-surface p-4 text-ink transition hover:-translate-y-0.5 hover:border-accent/45 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="https://runner.gilla.fun">
-      <span class="mb-1 block text-xs uppercase tracking-widest text-accent-dim">Remote grading</span>
-      <strong class="block font-display text-base">Hosted runner</strong>
-      <span class="text-sm text-muted">Submit zips from the browser →</span>
-    </a>
-  </aside>
+  {{end}}
   </div>
-  <details class="progress-sync mt-6 overflow-hidden rounded-[14px] border border-border bg-surface">
-    <summary class="cursor-pointer px-4 py-4 font-display text-sm font-semibold text-ink">Progress sync</summary>
-    <p class="progress-sync-help px-4 text-sm leading-relaxed text-muted">Sync with local <code class="rounded bg-white/6 px-1 text-code">crafters test</code> via <code class="rounded bg-white/6 px-1 text-code">progress.json</code> —
-    export from the CLI (<code class="rounded bg-white/6 px-1 text-code">crafters progress export</code>) and import here, or export to back up browser progress.</p>
+</section>
+
+<section class="mb-12" id="compose-capstones">
+  <a class="row-link block border-compose/35 bg-compose/5 p-5 hover:border-compose/55" href="/roadmaps/integration">
+    <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-compose">Compose &amp; meta</p>
+    <h2 class="mb-2 text-lg font-semibold">Wire graded primitives into real systems</h2>
+    <p class="mb-3 max-w-[62ch] text-sm leading-relaxed text-muted">You implement one gateway; the harness spawns reference services. Workflow worker lives on the <span class="text-ink">workflow</span> roadmap; the rest are under Compose &amp; meta.</p>
+    <span class="font-mono text-xs text-compose">URL shortener · job platform · cache cluster · harness →</span>
+  </a>
+</section>
+
+<section class="mb-12">
+  <div class="mb-4 flex items-baseline justify-between gap-4">
+    <h2 class="font-mono text-xs font-semibold uppercase tracking-widest text-design">System design</h2>
+    <a class="text-sm text-link" href="/design">View all {{.DesignCount}} →</a>
+  </div>
+  <div class="divide-y divide-border border border-border">
+  {{range .FeaturedDesigns}}
+    <a class="flex flex-col gap-1 bg-surface px-4 py-3.5 text-ink transition-[background-color] duration-150 hover:bg-surface-hover sm:flex-row sm:items-start sm:justify-between" href="/design/{{.Slug}}" data-design="{{.Slug}}">
+      <div class="min-w-0">
+        <div class="mb-0.5 flex flex-wrap items-center gap-2">
+          <span class="font-semibold">{{.Name}}</span>
+          <span class="{{diffBadge .Difficulty}}">{{.Difficulty}}</span>
+        </div>
+        <p class="text-sm text-muted">{{.Tagline}}</p>
+      </div>
+      <span class="shrink-0 font-mono text-xs text-design"><span data-design-progress-label></span>~{{.TimeMinutes}} min</span>
+    </a>
+  {{end}}
+  </div>
+</section>
+
+<section class="mb-12">
+  <div class="mb-4 flex items-baseline justify-between gap-4">
+    <h2 class="font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">Challenge paths</h2>
+    <a class="text-sm text-link" href="/roadmaps">Open a roadmap →</a>
+  </div>
+  <div class="flex flex-col gap-3">
+  {{range .Paths}}
+    <div class="path-section border border-border bg-surface p-4" data-path="{{.Slug}}">
+      <div class="mb-2 flex flex-wrap items-baseline justify-between gap-2">
+        <h3 class="text-base font-semibold"><a class="path-title-link hover:underline" href="/roadmaps/{{.Slug}}">{{.Name}}</a>{{if .HasCompose}} <span class="{{composeBadge}}">compose</span>{{end}}</h3>
+        <span class="font-mono text-xs text-muted">{{.Count}} challenges · {{.TotalStages}} stages</span>
+      </div>
+      <p class="mb-3 max-w-[62ch] text-sm text-muted">{{.Description}}</p>
+      <ul class="flex flex-col gap-1.5 border-t border-border-soft pt-3">
+      {{range .Samples}}
+        <li>
+          <a class="flex items-center justify-between gap-3 text-sm text-ink hover:text-accent" href="/challenges/{{.Slug}}" data-challenge="{{.Slug}}" data-stages="{{stagesCSV .Stages}}">
+            <span>{{.Name}}{{if .IsCompose}} <span class="{{composeBadge}}">compose</span>{{end}}</span>
+            <span class="challenge-meta shrink-0 font-mono text-xs text-muted"><span data-progress-label></span>{{len .Stages}} stages</span>
+          </a>
+        </li>
+      {{end}}
+      </ul>
+      <a class="mt-3 inline-block font-mono text-xs text-accent" href="/roadmaps/{{.Slug}}">See full path →</a>
+    </div>
+  {{end}}
+  </div>
+</section>
+
+<footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted">
+  <details class="progress-sync mb-6 border border-border bg-surface">
+    <summary class="cursor-pointer px-4 py-3 font-display text-sm font-semibold text-ink">Progress sync</summary>
+    <p class="px-4 text-sm leading-relaxed text-muted">Sync with local <code class="bg-white/6 px-1 font-mono text-code">crafters test</code> via <code class="bg-white/6 px-1 font-mono text-code">progress.json</code> —
+    export from the CLI (<code class="bg-white/6 px-1 font-mono text-code">crafters progress export</code>) and import here.</p>
     <div class="flex flex-wrap gap-2 px-4 pb-4">
-      <button type="button" class="inline-flex cursor-pointer items-center justify-center rounded-[10px] border border-border bg-canvas-elevated px-4 py-2 text-sm font-semibold text-ink transition hover:border-link hover:bg-surface-hover" id="progress-export">Export progress.json</button>
-      <label class="inline-flex cursor-pointer items-center justify-center rounded-[10px] border border-border bg-canvas-elevated px-4 py-2 text-sm font-semibold text-ink transition hover:border-link hover:bg-surface-hover">Import progress.json
+      <button type="button" class="cta-secondary !py-2" id="progress-export">Export progress.json</button>
+      <label class="cta-secondary !py-2 cursor-pointer">Import progress.json
         <input type="file" id="progress-import" accept="application/json,.json" hidden>
       </label>
     </div>
     <p id="progress-sync-status" class="min-h-[1.1rem] px-4 pb-4 text-sm text-link" aria-live="polite"></p>
   </details>
-</header>
-<section class="mb-12">
-  <div class="mb-4 flex items-baseline justify-between gap-4">
-    <h2 class="font-display text-xs font-semibold uppercase tracking-widest text-accent-dim">Learning roadmaps</h2>
-    <a class="text-sm text-link" href="/roadmaps">View all →</a>
-  </div>
-  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-  {{range .Roadmaps}}
-    <a class="block rounded-[14px] border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]{{if or (eq .Slug "integration") (eq .Slug "workflow")}} border-accent/40 ring-1 ring-accent/20 hover:border-accent/55{{else}} border-border hover:border-accent/35{{end}}" href="/roadmaps/{{.Slug}}" data-roadmap-card data-challenges="{{.ChallengeCSV}}" data-total-stages="{{.TotalStages}}">
-      {{if eq .Slug "integration"}}<span class="mb-2 inline-block rounded-full border border-cyan-400/40 bg-cyan-400/10 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-cyan-200">compose + meta</span>{{end}}
-      {{if eq .Slug "workflow"}}<span class="mb-2 inline-block rounded-full border border-cyan-400/40 bg-cyan-400/10 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-cyan-200">includes compose</span>{{end}}
-      <h3 class="mb-1.5 text-[1.05rem] font-semibold">{{.Name}}</h3>
-      <p class="mb-2.5 text-sm leading-snug text-muted">{{.Tagline}}</p>
-      <span class="mb-1.5 block font-mono text-xs text-accent"><span data-roadmap-progress-label></span>{{.TotalStages}} stages</span>
-      <span class="roadmap-bar block h-1.5 overflow-hidden rounded-full bg-white/6"><span class="roadmap-bar-fill"></span></span>
-    </a>
-  {{end}}
-  </div>
-</section>
-<section class="mb-12">
-  <div class="mb-4 flex items-baseline justify-between gap-4">
-    <h2 class="font-display text-xs font-semibold uppercase tracking-widest text-accent-dim">System design</h2>
-    <a class="text-sm text-link" href="/design">View all →</a>
-  </div>
-  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-  {{range .Designs}}
-    <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-violet-400/35 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/design/{{.Slug}}" data-design="{{.Slug}}">
-      <div class="mb-1 flex items-start justify-between gap-3">
-        <h3 class="text-[1.05rem] leading-snug font-semibold">{{.Name}}</h3>
-        <span class="{{diffBadge .Difficulty}}">{{.Difficulty}}</span>
-      </div>
-      <p class="mb-3 text-sm leading-relaxed text-muted">{{.Tagline}}</p>
-      <span class="font-mono text-xs text-violet-300"><span data-design-progress-label></span>~{{.TimeMinutes}} min · whiteboard</span>
-    </a>
-  {{end}}
-  </div>
-</section>
-<section class="mb-12">
-  <a class="group block overflow-hidden rounded-[16px] border border-accent/35 bg-gradient-to-br from-accent/[0.08] via-surface to-canvas-elevated p-6 text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition hover:-translate-y-0.5 hover:border-accent/55 hover:shadow-[0_16px_48px_rgba(0,0,0,0.35)]" href="/roadmaps/integration" id="compose-capstones">
-    <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-cyan-300">Compose &amp; meta</p>
-    <h2 class="mb-2 font-display text-xl font-semibold group-hover:text-accent">Wire graded primitives into real systems</h2>
-    <p class="mb-4 max-w-[62ch] text-sm leading-relaxed text-muted">Capstone challenges where <strong class="font-medium text-ink">you implement one gateway</strong> and the harness spawns reference Temporal + SDK, id-generators, cache nodes, queues, and locks. Finish the primitives first, then orchestrate them — or jump straight in with our reference sidecars. Workflow worker lives on the <a class="text-link hover:text-link/80" href="/roadmaps/workflow">workflow roadmap</a>; the rest are under Compose &amp; meta.</p>
-    <span class="font-mono text-xs text-accent">URL shortener · job platform · cache cluster · harness · workflow worker →</span>
-  </a>
-</section>
-{{range .Paths}}
-<section class="path-section mb-12 pt-2{{if or (eq .Slug "integration") (eq .Slug "workflow")}} -mx-1 rounded-[14px] border border-accent/25 bg-accent/[0.03] px-4 pb-2{{end}}" id="path-{{.Slug}}" data-path="{{.Slug}}">
-  <div class="path-accent mb-4 border-l-[3px] pl-3.5{{if or (eq .Slug "integration") (eq .Slug "workflow")}} border-accent/60{{else}} border-border{{end}}">
-    <h2 class="mb-1 text-xl"><a class="path-title-link hover:underline" href="/roadmaps/{{.Slug}}">{{.Name}}</a>{{if or (eq .Slug "integration") (eq .Slug "workflow")}} <span class="{{composeBadge}}">compose</span>{{end}}</h2>
-    <p class="max-w-[58ch] text-[0.94rem] text-muted">{{.Description}}</p>
-    {{if eq .Slug "integration"}}<p class="mt-2 max-w-[58ch] font-mono text-xs text-cyan-200/90">You build 1 service — the harness spawns the rest.</p>{{end}}
-    {{if eq .Slug "workflow"}}<p class="mt-2 max-w-[58ch] font-mono text-xs text-cyan-200/90">Ends with a compose capstone — Temporal + SDK as reference sidecars.</p>{{end}}
-  </div>
-  <main class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-  {{range .Challenges}}
-    <a class="block rounded-[14px] border border-border bg-surface p-5 text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.02)] transition hover:-translate-y-1 hover:border-link/40 hover:bg-surface-hover hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/challenges/{{.Slug}}" data-challenge="{{.Slug}}" data-stages="{{stagesCSV .Stages}}">
-      <div class="mb-1 flex items-start justify-between gap-3">
-        <h3 class="text-[1.08rem] leading-snug font-semibold">{{.Name}}</h3>
-        <div class="flex shrink-0 flex-wrap items-center justify-end gap-1.5">
-          {{if .IsCompose}}<span class="{{composeBadge}}" title="You build one gateway; the harness spawns reference services">compose</span>{{end}}
-          <span class="{{diffBadge .Difficulty}}">{{.Difficulty}}</span>
-        </div>
-      </div>
-      <p class="mb-3 text-sm leading-relaxed text-muted">{{.Tagline}}</p>
-      <div class="mb-3 flex flex-wrap gap-1.5">{{.DiffMix}}</div>
-      <span class="challenge-meta font-mono text-xs text-accent"><span data-progress-label></span>{{len .Stages}} stages →</span>
-    </a>
-  {{end}}
-  </main>
-</section>
-{{end}}
-<footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted">
   <a class="text-link" href="/design">System design</a> ·
   <a class="text-link" href="https://github.com/Rohithgilla12/open-crafters">GitHub</a> ·
   <a class="text-link" href="https://runner.gilla.fun">hosted runner</a> ·
@@ -226,20 +229,25 @@ var roadmapsIndexTmpl = template.Must(template.New("roadmaps").Funcs(tmplFuncs).
 <link rel="stylesheet" href="/style.css">
 </head><body>
 {{siteNav}}
-<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
+<div class="mx-auto max-w-[960px] px-5 py-8 pb-16">
 <p class="mb-5 text-sm text-muted"><a class="text-link" href="/">← home</a></p>
 <header class="mb-6 border-b border-border-soft pb-6">
   <h1 class="mb-2 text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">Learning roadmaps</h1>
   <p class="max-w-[58ch] text-muted">Curated journeys through the catalog — each with outcomes, milestones, and suggested order.</p>
 </header>
-<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+<div class="divide-y divide-border border border-border">
 {{range .}}
-  <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-accent/35 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/roadmaps/{{.Slug}}" data-roadmap-card data-challenges="{{.ChallengeCSV}}" data-total-stages="{{.TotalStages}}">
-    <h2 class="mb-1.5 text-[1.05rem] font-semibold">{{.Name}}</h2>
-    <p class="mb-2 text-sm text-muted">{{.Tagline}}</p>
-    <p class="mb-2 text-[0.86rem] text-muted">{{.Description}}</p>
-    <span class="mb-1.5 block font-mono text-xs text-accent"><span data-roadmap-progress-label></span>{{.TotalStages}} stages · {{len .Milestones}} milestones</span>
-    <span class="roadmap-bar block h-1.5 overflow-hidden rounded-full bg-white/6"><span class="roadmap-bar-fill"></span></span>
+  <a class="flex flex-col gap-1 bg-surface px-4 py-4 text-ink transition-[background-color] duration-150 hover:bg-surface-hover sm:flex-row sm:items-start sm:justify-between" href="/roadmaps/{{.Slug}}" data-roadmap-card data-challenges="{{.ChallengeCSV}}" data-total-stages="{{.TotalStages}}">
+    <div class="min-w-0">
+      <div class="mb-0.5 flex flex-wrap items-center gap-2">
+        <h2 class="text-[1.05rem] font-semibold">{{.Name}}</h2>
+        {{if eq .Slug "integration"}}<span class="{{composeBadge}}">compose + meta</span>{{end}}
+        {{if eq .Slug "workflow"}}<span class="{{composeBadge}}">includes compose</span>{{end}}
+      </div>
+      <p class="mb-1 text-sm text-muted">{{.Tagline}}</p>
+      <p class="text-[0.86rem] text-muted">{{.Description}}</p>
+    </div>
+    <span class="shrink-0 font-mono text-xs text-accent"><span data-roadmap-progress-label></span>{{.TotalStages}} stages · {{len .Milestones}} milestones</span>
   </a>
 {{end}}
 </div>
@@ -256,7 +264,7 @@ var roadmapTmpl = template.Must(template.New("roadmap").Funcs(tmplFuncs).Parse(`
 <link rel="stylesheet" href="/style.css">
 </head><body data-roadmap-page data-challenges="{{.ChallengeCSV}}">
 {{siteNav}}
-<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
+<div class="mx-auto max-w-[960px] px-5 py-8 pb-16">
 <p class="mb-5 text-sm text-muted"><a class="text-link" href="/roadmaps">← all roadmaps</a></p>
 <header class="mb-6 border-b border-border-soft pb-6">
   <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-accent-dim">Roadmap</p>
@@ -282,7 +290,7 @@ var roadmapTmpl = template.Must(template.New("roadmap").Funcs(tmplFuncs).Parse(`
 {{range .Milestones}}
   <li class="roadmap-milestone">
     {{if .PathSlug}}
-    <a class="flex items-start gap-4 rounded-[14px] border border-border bg-surface p-5 text-ink transition hover:-translate-y-0.5 hover:border-link/40 hover:bg-surface-hover hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/roadmaps/{{.PathSlug}}" data-roadmap-milestone>
+    <a class="flex items-start gap-4 rounded-[14px] border border-border bg-surface p-5 text-ink transition hover:border-accent/40 hover:bg-surface-hover" href="/roadmaps/{{.PathSlug}}" data-roadmap-milestone>
       <span class="num flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full border border-border bg-canvas-elevated font-mono text-sm text-accent">{{.Num}}</span>
       <div class="flex-1">
         <h2 class="mb-1 text-[1.08rem] font-semibold">{{.PathName}}</h2>
@@ -291,7 +299,7 @@ var roadmapTmpl = template.Must(template.New("roadmap").Funcs(tmplFuncs).Parse(`
       </div>
     </a>
     {{else}}
-    <a class="flex items-start gap-4 rounded-[14px] border border-border bg-surface p-5 text-ink transition hover:-translate-y-0.5 hover:border-link/40 hover:bg-surface-hover hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/challenges/{{.Challenge.Slug}}" data-challenge="{{.Challenge.Slug}}" data-stages="{{.StageCSV}}" data-roadmap-milestone>
+    <a class="flex items-start gap-4 rounded-[14px] border border-border bg-surface p-5 text-ink transition hover:border-accent/40 hover:bg-surface-hover" href="/challenges/{{.Challenge.Slug}}" data-challenge="{{.Challenge.Slug}}" data-stages="{{.StageCSV}}" data-roadmap-milestone>
       <span class="num flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full border border-border bg-canvas-elevated font-mono text-sm text-accent">{{.Num}}</span>
       <div class="flex-1">
         <h2 class="mb-1 flex flex-wrap items-center gap-2 text-[1.08rem] font-semibold">{{.Challenge.Name}}
@@ -319,7 +327,7 @@ var pathTmpl = template.Must(template.New("path").Funcs(tmplFuncs).Parse(`<!doct
 <link rel="stylesheet" href="/style.css">
 </head><body>
 {{siteNav}}
-<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
+<div class="mx-auto max-w-[960px] px-5 py-8 pb-16">
 <p class="mb-5 text-sm text-muted"><a class="text-link" href="/">← all paths</a></p>
 <header class="mb-6 border-b border-border-soft pb-6">
   <h1 class="mb-2 text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">{{.Name}}</h1>
@@ -328,7 +336,7 @@ var pathTmpl = template.Must(template.New("path").Funcs(tmplFuncs).Parse(`<!doct
 <ol class="flex flex-col gap-3">
 {{range $i, $ch := .Challenges}}
   <li>
-    <a class="flex items-start gap-4 rounded-[14px] border border-border bg-surface p-5 text-ink transition hover:-translate-y-0.5 hover:border-link/40 hover:bg-surface-hover" href="/challenges/{{$ch.Slug}}" data-challenge="{{$ch.Slug}}" data-stages="{{stagesCSV $ch.Stages}}">
+    <a class="flex items-start gap-4 rounded-[14px] border border-border bg-surface p-5 text-ink transition hover:border-accent/40 hover:bg-surface-hover" href="/challenges/{{$ch.Slug}}" data-challenge="{{$ch.Slug}}" data-stages="{{stagesCSV $ch.Stages}}">
       <span class="num flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full border border-border bg-canvas-elevated font-mono text-sm text-accent">{{add $i 1}}</span>
       <div class="flex-1">
         <h2 class="mb-1 flex flex-wrap items-center gap-2 text-[1.08rem] font-semibold">{{$ch.Name}}
@@ -355,7 +363,7 @@ var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Par
 <link rel="stylesheet" href="/style.css">
 </head><body data-challenge="{{.Challenge.Slug}}" data-stages="{{.StageSlugs}}">
 {{siteNav}}
-<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
+<div class="mx-auto max-w-[960px] px-5 py-8 pb-16">
 <p class="mb-5 text-sm text-muted"><a class="text-link" href="/">← all challenges</a>{{if .RoadmapSlug}} · <a class="text-link" href="/roadmaps/{{.RoadmapSlug}}">{{.RoadmapName}}</a>{{end}}</p>
 <header class="mb-6 border-b border-border-soft pb-6">
   <div class="mb-1 flex flex-wrap items-center gap-2">
@@ -364,7 +372,7 @@ var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Par
     <span class="{{diffBadge .Challenge.Difficulty}}">{{.Challenge.Difficulty}}</span>
   </div>
   {{if .Challenge.IsCompose}}
-  <p class="mb-3 max-w-[58ch] rounded-[10px] border border-cyan-400/25 bg-cyan-400/5 px-4 py-3 text-sm leading-relaxed text-muted"><strong class="font-medium text-cyan-100">Compose capstone.</strong> You implement the gateway only — the harness spawns reference primitive services and injects their TCP addresses into your environment before grading.</p>
+  <p class="mb-3 max-w-[58ch] rounded-[10px] border border-compose/30 bg-compose/5 px-4 py-3 text-sm leading-relaxed text-muted"><strong class="font-medium text-compose">Compose capstone.</strong> You implement the gateway only — the harness spawns reference primitive services and injects their TCP addresses into your environment before grading.</p>
   {{end}}
   {{if .RoadmapName}}<p class="mb-2 text-sm text-muted">Roadmap: <a class="text-link" href="/roadmaps/{{.RoadmapSlug}}">{{.RoadmapName}}</a></p>{{end}}
   <p class="max-w-[58ch] text-muted">{{.Challenge.Tagline}}</p>
@@ -405,11 +413,11 @@ var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Par
 </ol>
 
 {{if .RelatedDesigns}}
-<h2 class="mb-4 mt-10 font-display text-xs font-semibold uppercase tracking-widest text-violet-300">Whiteboard first</h2>
+<h2 class="mb-4 mt-10 font-display text-xs font-semibold uppercase tracking-widest text-design">Whiteboard first</h2>
 <p class="mb-3 text-sm text-muted">System design problems that use this challenge as a building block — sketch the full system before you implement.</p>
 <div class="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
 {{range .RelatedDesigns}}
-  <a class="block rounded-[10px] border border-violet-400/25 bg-violet-400/5 px-4 py-3 text-ink transition hover:border-violet-400/45 hover:bg-violet-400/10" href="/design/{{.Slug}}">
+  <a class="block rounded-[10px] border border-design/30 bg-design/5 px-4 py-3 text-ink transition hover:border-design/45 hover:bg-design/10" href="/design/{{.Slug}}">
     <span class="block text-sm font-semibold">{{.Name}}</span>
     <span class="text-xs text-muted">{{.Tagline}}</span>
   </a>
@@ -418,11 +426,11 @@ var challengeTmpl = template.Must(template.New("challenge").Funcs(tmplFuncs).Par
 {{end}}
 
 {{if .DesignStacks}}
-<h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-violet-300">Part of a design stack</h2>
+<h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-design">Part of a design stack</h2>
 <p class="mb-3 text-sm text-muted">Curated whiteboard→build journeys that include this challenge.</p>
 <div class="mb-8 flex flex-wrap gap-2">
 {{range .DesignStacks}}
-  <a class="rounded-full border border-violet-400/30 bg-violet-400/10 px-3 py-1.5 text-sm font-medium text-violet-200 transition hover:border-violet-400/50 hover:bg-violet-400/15" href="/design/stacks/{{.Slug}}">{{.Name}}</a>
+  <a class="rounded-full border border-design/30 bg-design/10 px-3 py-1.5 text-sm font-medium text-design transition hover:border-design/50 hover:bg-design/15" href="/design/stacks/{{.Slug}}">{{.Name}}</a>
 {{end}}
 </div>
 {{end}}
@@ -443,7 +451,7 @@ var stageTmpl = template.Must(template.New("stage").Funcs(tmplFuncs).Parse(`<!do
 <link rel="stylesheet" href="/style.css">
 </head><body data-challenge="{{.Challenge.Slug}}" data-stage="{{.Stage.Slug}}" data-stages="{{.StageSlugs}}">
 {{siteNav}}
-<div class="mx-auto max-w-[1120px] px-5 py-8 pb-16">
+<div class="mx-auto max-w-[960px] px-5 py-8 pb-16">
 <p class="mb-5 text-sm text-muted"><a class="text-link" href="/challenges/{{.Challenge.Slug}}">← {{.Challenge.Name}}</a></p>
 
 <div class="grid grid-cols-1 gap-6 lg:grid-cols-[260px_1fr]">
@@ -451,7 +459,7 @@ var stageTmpl = template.Must(template.New("stage").Funcs(tmplFuncs).Parse(`<!do
   <h2 class="mb-3 font-display text-xs font-semibold uppercase tracking-widest text-accent-dim">Stages</h2>
   <nav class="flex flex-col gap-0.5">
   {{range .Challenge.Stages}}
-    <a class="sidebar-item flex items-center gap-2 rounded-[10px] px-2 py-2 text-sm text-muted transition hover:bg-surface-hover hover:text-ink{{if eq .Slug $.Stage.Slug}} active border-l-2 border-accent bg-accent/8 pl-1.5 text-ink{{end}}" href="/challenges/{{$.Challenge.Slug}}/stages/{{.Slug}}" data-stage-slug="{{.Slug}}">
+    <a class="sidebar-item flex items-center gap-2 rounded-[10px] px-2 py-2 text-sm text-muted transition hover:bg-surface-hover hover:text-ink{{if eq .Slug $.Stage.Slug}} active border border-accent/40 bg-accent/8 text-ink{{end}}" href="/challenges/{{$.Challenge.Slug}}/stages/{{.Slug}}" data-stage-slug="{{.Slug}}">
       <span class="num flex h-[1.45rem] min-w-[1.45rem] items-center justify-center rounded-full border border-border bg-canvas-elevated font-mono text-[0.72rem] text-accent">{{.Num}}</span>
       <span class="min-w-0 flex-1 truncate">{{.Name}}</span>
       <span class="{{diffPill .Difficulty}} !px-1 !text-[0.58rem]">{{.Difficulty}}</span>
@@ -468,7 +476,7 @@ var stageTmpl = template.Must(template.New("stage").Funcs(tmplFuncs).Parse(`<!do
     <span class="slug mono font-mono text-xs text-muted">{{.Stage.Slug}}</span>
   </header>
   {{if .Stage.Hint}}
-  <details class="mb-5 rounded-[10px] border border-link/20 border-l-[3px] border-l-link bg-link/6 px-4 py-3">
+  <details class="mb-5 rounded-[10px] border border-link/30 bg-link/6 px-4 py-3">
     <summary class="cursor-pointer text-sm font-semibold text-link">Stuck? Here's a nudge</summary>
     <p class="mt-2 text-sm text-muted">{{.Stage.Hint}}</p>
   </details>
@@ -494,40 +502,40 @@ var designIndexTmpl = template.Must(template.New("design-index").Funcs(tmplFuncs
 <link rel="stylesheet" href="/style.css">
 </head><body>
 {{siteNav}}
-<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
+<div class="mx-auto max-w-[960px] px-5 py-8 pb-16">
 <p class="mb-5 text-sm text-muted"><a class="text-link" href="/">← home</a></p>
 <header class="mb-6 border-b border-border-soft pb-6">
-  <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-violet-300">Whiteboard mode</p>
+  <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-design">Whiteboard mode</p>
   <h1 class="mb-2 text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">System design problems</h1>
   <p class="max-w-[58ch] text-muted">Realistic scenarios with scale numbers, discussion prompts, and spoiler-gated hints. Each problem links to open-crafters build challenges — whiteboard first, then implement the primitives.</p>
 </header>
 <section class="mb-10">
   <div class="mb-4 flex items-baseline justify-between gap-4">
-    <h2 class="font-display text-xs font-semibold uppercase tracking-widest text-violet-300">Design stacks</h2>
+    <h2 class="font-display text-xs font-semibold uppercase tracking-widest text-design">Design stacks</h2>
     <a class="text-sm text-link" href="/design/stacks">View all →</a>
   </div>
   <p class="mb-4 max-w-[58ch] text-sm text-muted">End-to-end journeys — whiteboard one problem, then build the primitives underneath in order.</p>
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
   {{range .Stacks}}
-    <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-violet-400/35 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/design/stacks/{{.Slug}}">
+    <a class="block rounded-[14px] border border-border p-5 text-ink transition hover:border-design/40" href="/design/stacks/{{.Slug}}">
       <h3 class="mb-1.5 text-[1.05rem] font-semibold">{{.Name}}</h3>
       <p class="mb-2.5 text-sm leading-snug text-muted">{{.Tagline}}</p>
-      <span class="font-mono text-xs text-violet-300">{{.TotalSteps}} steps · design → build{{if .HasComposeCapstone}} · compose capstone{{end}}</span>
+      <span class="font-mono text-xs text-design">{{.TotalSteps}} steps · design → build{{if .HasComposeCapstone}} · compose capstone{{end}}</span>
     </a>
   {{end}}
   </div>
 </section>
 <section class="mb-10">
   <div class="mb-4 flex items-baseline justify-between gap-4">
-    <h2 class="font-display text-xs font-semibold uppercase tracking-widest text-violet-300">Design roadmaps</h2>
+    <h2 class="font-display text-xs font-semibold uppercase tracking-widest text-design">Design roadmaps</h2>
     <a class="text-sm text-link" href="/design/roadmaps">View all →</a>
   </div>
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
   {{range .Roadmaps}}
-    <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-violet-400/35 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/design/roadmaps/{{.Slug}}" data-design-roadmap-card data-designs="{{.ProblemCSV}}" data-total-problems="{{.TotalProblems}}">
+    <a class="block rounded-[14px] border border-border p-5 text-ink transition hover:border-design/40" href="/design/roadmaps/{{.Slug}}" data-design-roadmap-card data-designs="{{.ProblemCSV}}" data-total-problems="{{.TotalProblems}}">
       <h3 class="mb-1.5 text-[1.05rem] font-semibold">{{.Name}}</h3>
       <p class="mb-2.5 text-sm leading-snug text-muted">{{.Tagline}}</p>
-      <span class="mb-1.5 block font-mono text-xs text-violet-300"><span data-design-roadmap-progress-label></span>{{.TotalProblems}} problems</span>
+      <span class="mb-1.5 block font-mono text-xs text-design"><span data-design-roadmap-progress-label></span>{{.TotalProblems}} problems</span>
       <span class="roadmap-bar block h-1.5 overflow-hidden rounded-full bg-white/6"><span class="roadmap-bar-fill"></span></span>
     </a>
   {{end}}
@@ -536,14 +544,14 @@ var designIndexTmpl = template.Must(template.New("design-index").Funcs(tmplFuncs
 <h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-accent-dim">All problems</h2>
 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 {{range .Designs}}
-  <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-violet-400/35 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]" href="/design/{{.Slug}}" data-design="{{.Slug}}">
+  <a class="block rounded-[14px] border border-border p-5 text-ink transition hover:border-design/40" href="/design/{{.Slug}}" data-design="{{.Slug}}">
     <div class="mb-1 flex items-start justify-between gap-3">
       <h2 class="text-[1.05rem] font-semibold">{{.Name}}</h2>
       <span class="{{diffBadge .Difficulty}}">{{.Difficulty}}</span>
     </div>
     <p class="mb-2 text-sm text-muted">{{.Tagline}}</p>
-    <span class="mb-1 block font-mono text-xs uppercase tracking-wide text-violet-300/80">{{.Category}} · ~{{.TimeMinutes}} min</span>
-    <span class="font-mono text-xs text-violet-300"><span data-design-progress-label></span>discussion prompts inside</span>
+    <span class="mb-1 block font-mono text-xs uppercase tracking-wide text-design/80">{{.Category}} · ~{{.TimeMinutes}} min</span>
+    <span class="font-mono text-xs text-design"><span data-design-progress-label></span>discussion prompts inside</span>
   </a>
 {{end}}
 </div>
@@ -559,7 +567,7 @@ var designRoadmapsIndexTmpl = template.Must(template.New("design-roadmaps-index"
 <link rel="stylesheet" href="/style.css">
 </head><body>
 {{siteNav}}
-<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
+<div class="mx-auto max-w-[960px] px-5 py-8 pb-16">
 <p class="mb-5 text-sm text-muted"><a class="text-link" href="/design">← system design</a></p>
 <header class="mb-6 border-b border-border-soft pb-6">
   <h1 class="mb-2 text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">Design roadmaps</h1>
@@ -567,10 +575,10 @@ var designRoadmapsIndexTmpl = template.Must(template.New("design-roadmaps-index"
 </header>
 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 {{range .}}
-  <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-violet-400/35" href="/design/roadmaps/{{.Slug}}" data-design-roadmap-card data-designs="{{.ProblemCSV}}" data-total-problems="{{.TotalProblems}}">
+  <a class="block rounded-[14px] border border-border p-5 text-ink transition hover:border-design/40" href="/design/roadmaps/{{.Slug}}" data-design-roadmap-card data-designs="{{.ProblemCSV}}" data-total-problems="{{.TotalProblems}}">
     <h2 class="mb-1.5 text-[1.05rem] font-semibold">{{.Name}}</h2>
     <p class="mb-2 text-sm text-muted">{{.Tagline}}</p>
-    <span class="mb-1.5 block font-mono text-xs text-violet-300"><span data-design-roadmap-progress-label></span>{{.TotalProblems}} problems</span>
+    <span class="mb-1.5 block font-mono text-xs text-design"><span data-design-roadmap-progress-label></span>{{.TotalProblems}} problems</span>
     <span class="roadmap-bar block h-1.5 overflow-hidden rounded-full bg-white/6"><span class="roadmap-bar-fill"></span></span>
   </a>
 {{end}}
@@ -588,14 +596,14 @@ var designRoadmapTmpl = template.Must(template.New("design-roadmap").Funcs(tmplF
 <link rel="stylesheet" href="/style.css">
 </head><body data-design-roadmap-page data-designs="{{.ProblemCSV}}">
 {{siteNav}}
-<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
+<div class="mx-auto max-w-[960px] px-5 py-8 pb-16">
 <p class="mb-5 text-sm text-muted"><a class="text-link" href="/design/roadmaps">← all design roadmaps</a></p>
 <header class="mb-6 border-b border-border-soft pb-6">
-  <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-violet-300">Design roadmap</p>
+  <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-design">Design roadmap</p>
   <h1 class="mb-2 text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">{{.Name}}</h1>
   <p class="max-w-[58ch] text-muted">{{.Description}}</p>
   <div class="mt-4 max-w-md" data-design-roadmap-bar data-total-problems="{{.TotalProblems}}">
-    <span data-design-roadmap-progress-label class="mb-1 block font-mono text-sm text-violet-300">0/{{.TotalProblems}} complete</span>
+    <span data-design-roadmap-progress-label class="mb-1 block font-mono text-sm text-design">0/{{.TotalProblems}} complete</span>
     <span class="roadmap-bar block h-1.5 overflow-hidden rounded-full bg-white/6"><span class="roadmap-bar-fill"></span></span>
   </div>
 </header>
@@ -609,12 +617,12 @@ var designRoadmapTmpl = template.Must(template.New("design-roadmap").Funcs(tmplF
 <ol class="flex flex-col gap-3">
 {{range .Milestones}}
   <li>
-    <a class="flex items-start gap-4 rounded-[14px] border border-border bg-surface p-5 text-ink transition hover:-translate-y-0.5 hover:border-violet-400/35 hover:bg-surface-hover" href="/design/{{.Problem.Slug}}" data-design="{{.Problem.Slug}}">
-      <span class="flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full border border-border bg-canvas-elevated font-mono text-sm text-violet-300">{{.Num}}</span>
+    <a class="flex items-start gap-4 rounded-[14px] border border-border bg-surface p-5 text-ink transition hover:border-design/40 hover:bg-surface-hover" href="/design/{{.Problem.Slug}}" data-design="{{.Problem.Slug}}">
+      <span class="flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full border border-border bg-canvas-elevated font-mono text-sm text-design">{{.Num}}</span>
       <div class="flex-1">
         <h2 class="mb-1 flex flex-wrap items-center gap-2 text-[1.08rem] font-semibold">{{.Problem.Name}} <span class="{{diffBadge .Problem.Difficulty}}">{{.Problem.Difficulty}}</span></h2>
         <p class="mb-2 text-sm text-muted">{{.Blurb}}</p>
-        <span class="font-mono text-xs text-violet-300"><span data-design-progress-label></span>~{{.Problem.TimeMinutes}} min whiteboard →</span>
+        <span class="font-mono text-xs text-design"><span data-design-progress-label></span>~{{.Problem.TimeMinutes}} min whiteboard →</span>
       </div>
     </a>
   </li>
@@ -632,7 +640,7 @@ var designStacksIndexTmpl = template.Must(template.New("design-stacks-index").Fu
 <link rel="stylesheet" href="/style.css">
 </head><body>
 {{siteNav}}
-<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
+<div class="mx-auto max-w-[960px] px-5 py-8 pb-16">
 <p class="mb-5 text-sm text-muted"><a class="text-link" href="/design">← system design</a></p>
 <header class="mb-6 border-b border-border-soft pb-6">
   <h1 class="mb-2 text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">Design stacks</h1>
@@ -640,10 +648,10 @@ var designStacksIndexTmpl = template.Must(template.New("design-stacks-index").Fu
 </header>
 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 {{range .}}
-  <a class="block rounded-[14px] border border-border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:border-violet-400/35" href="/design/stacks/{{.Slug}}">
+  <a class="block rounded-[14px] border border-border p-5 text-ink transition hover:border-design/40" href="/design/stacks/{{.Slug}}">
     <h2 class="mb-1.5 text-[1.05rem] font-semibold">{{.Name}}</h2>
     <p class="mb-2 text-sm text-muted">{{.Tagline}}</p>
-    <span class="font-mono text-xs text-violet-300">{{.TotalSteps}} milestones{{if .HasComposeCapstone}} · compose capstone{{end}}</span>
+    <span class="font-mono text-xs text-design">{{.TotalSteps}} milestones{{if .HasComposeCapstone}} · compose capstone{{end}}</span>
   </a>
 {{end}}
 </div>
@@ -660,13 +668,13 @@ var designStackTmpl = template.Must(template.New("design-stack").Funcs(tmplFuncs
 <link rel="stylesheet" href="/style.css">
 </head><body data-design-stack-page data-steps="{{.StepCSV}}">
 {{siteNav}}
-<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
+<div class="mx-auto max-w-[960px] px-5 py-8 pb-16">
 <p class="mb-5 text-sm text-muted"><a class="text-link" href="/design/stacks">← all design stacks</a></p>
 <header class="mb-6 border-b border-border-soft pb-6">
-  <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-violet-300">Design stack</p>
+  <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-design">Design stack</p>
   <h1 class="mb-2 text-[clamp(1.6rem,3vw,2.2rem)] leading-tight">{{.Name}}</h1>
   <p class="max-w-[58ch] text-muted">{{.Description}}</p>
-  {{if .HasComposeCapstone}}<p class="mt-3 max-w-[58ch] rounded-[10px] border border-cyan-400/25 bg-cyan-400/5 px-4 py-2.5 text-sm text-muted"><strong class="font-medium text-cyan-100">Compose capstone.</strong> The final step wires graded primitives into one gateway — the harness spawns reference services for you.</p>{{end}}
+  {{if .HasComposeCapstone}}<p class="mt-3 max-w-[58ch] rounded-[10px] border border-compose/30 bg-compose/5 px-4 py-2.5 text-sm text-muted"><strong class="font-medium text-compose">Compose capstone.</strong> The final step wires graded primitives into one gateway — the harness spawns reference services for you.</p>{{end}}
 </header>
 {{if .Outcomes}}
 <h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-accent-dim">What you'll practice</h2>
@@ -678,14 +686,14 @@ var designStackTmpl = template.Must(template.New("design-stack").Funcs(tmplFuncs
 <ol class="flex flex-col gap-3">
 {{range .Milestones}}
   <li>
-    <a class="flex items-start gap-4 rounded-[14px] border border-border bg-surface p-5 text-ink transition hover:-translate-y-0.5 hover:bg-surface-hover{{if eq .Kind "design"}} hover:border-violet-400/35{{else}} hover:border-accent/35{{end}}" href="{{.Href}}">
-      <span class="flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full border border-border bg-canvas-elevated font-mono text-sm {{if eq .Kind "design"}}text-violet-300{{else}}text-accent{{end}}">{{.Num}}</span>
+    <a class="flex items-start gap-4 rounded-[14px] border border-border bg-surface p-5 text-ink transition hover:bg-surface-hover{{if eq .Kind "design"}} hover:border-design/40{{else}} hover:border-accent/35{{end}}" href="{{.Href}}">
+      <span class="flex h-8 min-w-8 shrink-0 items-center justify-center rounded-full border border-border bg-canvas-elevated font-mono text-sm {{if eq .Kind "design"}}text-design{{else}}text-accent{{end}}">{{.Num}}</span>
       <div class="flex-1">
-        <p class="mb-1 font-mono text-[0.65rem] font-bold uppercase tracking-widest {{if eq .Kind "design"}}text-violet-300{{else}}text-accent-dim{{end}}">{{if eq .Kind "design"}}Whiteboard{{else if .IsCompose}}Compose{{else}}Build{{end}}</p>
+        <p class="mb-1 font-mono text-[0.65rem] font-bold uppercase tracking-widest {{if eq .Kind "design"}}text-design{{else}}text-accent-dim{{end}}">{{if eq .Kind "design"}}Whiteboard{{else if .IsCompose}}Compose{{else}}Build{{end}}</p>
         <h2 class="mb-1 flex flex-wrap items-center gap-2 text-[1.08rem] font-semibold">{{.Label}}{{if .IsCompose}} <span class="{{composeBadge}}">gateway</span>{{end}}</h2>
         <p class="mb-2 text-sm text-muted">{{.Blurb}}</p>
         {{if .StartCommand}}<code class="mb-2 block overflow-x-auto rounded-[8px] border border-border bg-canvas-elevated px-3 py-2 font-mono text-xs text-code">{{.StartCommand}}</code>{{end}}
-        {{if .IsCapstone}}<span class="font-mono text-xs text-cyan-200">Open compose challenge →</span>{{end}}
+        {{if .IsCapstone}}<span class="font-mono text-xs text-compose">Open compose challenge →</span>{{end}}
       </div>
     </a>
   </li>
@@ -704,16 +712,16 @@ var designProblemTmpl = template.Must(template.New("design").Funcs(tmplFuncs).Pa
 <link rel="stylesheet" href="/style.css">
 </head><body data-design="{{.Slug}}">
 {{siteNav}}
-<div class="mx-auto max-w-[920px] px-5 py-8 pb-16">
+<div class="mx-auto max-w-[960px] px-5 py-8 pb-16">
 <p class="mb-5 text-sm text-muted"><a class="text-link" href="/design">← all design problems</a></p>
 <header class="mb-6 border-b border-border-soft pb-6">
-  <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-violet-300">System design · {{.Category}}</p>
+  <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-design">System design · {{.Category}}</p>
   <div class="mb-1 flex flex-wrap items-center gap-3">
     <h1 class="text-[clamp(1.5rem,3vw,2.2rem)] leading-tight">{{.Name}}</h1>
     <span class="{{diffBadge .Difficulty}}">{{.Difficulty}}</span>
   </div>
   <p class="max-w-[58ch] text-muted">{{.Tagline}}</p>
-  <p class="mt-2 font-mono text-sm text-violet-300"><span data-design-progress-label></span>~{{.TimeMinutes}} min whiteboard</p>
+  <p class="mt-2 font-mono text-sm text-design"><span data-design-progress-label></span>~{{.TimeMinutes}} min whiteboard</p>
 </header>
 
 <div class="md mb-8">{{.ProblemHTML}}</div>
@@ -724,7 +732,7 @@ var designProblemTmpl = template.Must(template.New("design").Funcs(tmplFuncs).Pa
 <ol class="mb-8 flex flex-col gap-2">
 {{range $i, $p := .DiscussionPrompts}}
   <li>
-    <label class="flex cursor-pointer items-start gap-3 rounded-[10px] border border-border bg-surface px-4 py-3 transition hover:border-violet-400/30">
+    <label class="flex cursor-pointer items-start gap-3 rounded-[10px] border border-border bg-surface px-4 py-3 transition hover:border-design/35">
       <input type="checkbox" class="design-prompt-check mt-1" data-prompt-idx="{{$i}}">
       <span class="text-sm leading-relaxed text-ink">{{$p}}</span>
     </label>
@@ -757,10 +765,10 @@ var designProblemTmpl = template.Must(template.New("design").Funcs(tmplFuncs).Pa
 {{end}}
 
 {{if .Stacks}}
-<h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-violet-300">Part of a design stack</h2>
+<h2 class="mb-4 font-display text-xs font-semibold uppercase tracking-widest text-design">Part of a design stack</h2>
 <div class="mb-8 flex flex-wrap gap-2">
 {{range .Stacks}}
-  <a class="rounded-full border border-violet-400/30 bg-violet-400/10 px-3 py-1.5 text-sm font-medium text-violet-200 transition hover:border-violet-400/50 hover:bg-violet-400/15" href="/design/stacks/{{.Slug}}">{{.Name}}</a>
+  <a class="rounded-full border border-design/30 bg-design/10 px-3 py-1.5 text-sm font-medium text-design transition hover:border-design/50 hover:bg-design/15" href="/design/stacks/{{.Slug}}">{{.Name}}</a>
 {{end}}
 </div>
 {{end}}
@@ -783,12 +791,12 @@ var designProblemTmpl = template.Must(template.New("design").Funcs(tmplFuncs).Pa
   <div class="md mt-4">{{.HintsHTML}}</div>
 </details>
 
-<details class="mb-4 rounded-[14px] border border-violet-400/25 bg-violet-400/5 px-5 py-4">
-  <summary class="cursor-pointer font-display text-sm font-semibold text-violet-200">Reference architecture (spoiler)</summary>
+<details class="mb-4 rounded-[14px] border border-design/30 bg-design/5 px-5 py-4">
+  <summary class="cursor-pointer font-display text-sm font-semibold text-design">Reference architecture (spoiler)</summary>
   <div class="md mt-4">{{.SolutionHTML}}</div>
 </details>
 
-<button type="button" id="design-complete-btn" class="mt-4 inline-flex cursor-pointer items-center justify-center rounded-[10px] border border-violet-400/40 bg-violet-400/10 px-4 py-2.5 text-sm font-semibold text-violet-200 transition hover:bg-violet-400/20">Mark as completed</button>
+<button type="button" id="design-complete-btn" class="mt-4 inline-flex cursor-pointer items-center justify-center rounded-[10px] border border-design/40 bg-design/10 px-4 py-2.5 text-sm font-semibold text-design transition hover:bg-design/20">Mark as completed</button>
 
 <footer class="mt-14 border-t border-border-soft pt-6 text-sm text-muted"><a class="text-link" href="/design">← all design problems</a> · <a class="text-link" href="/">build challenges</a></footer>
 </div><script src="/learn.js"></script></body></html>`))

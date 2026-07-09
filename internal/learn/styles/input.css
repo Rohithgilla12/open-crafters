@@ -4,28 +4,32 @@
 @source "../client.js";
 
 @theme {
-  --font-sans: "DM Sans", system-ui, sans-serif;
-  --font-display: "Sora", "DM Sans", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "Hanken Grotesk", system-ui, sans-serif;
+  --font-display: "Hanken Grotesk", system-ui, sans-serif;
+  --font-mono: "Martian Mono", ui-monospace, monospace;
 
-  --color-canvas: #0c0f16;
-  --color-canvas-elevated: #111622;
-  --color-surface: #151b28;
-  --color-surface-hover: #1a2233;
-  --color-border: #273044;
-  --color-border-soft: #1e2738;
-  --color-ink: #e8ecf4;
-  --color-muted: #9aa6bc;
-  --color-accent: #6ee7b7;
-  --color-accent-dim: #3d9e82;
-  --color-link: #8eb4ff;
-  --color-code: #e8d98a;
-  --color-path-durability: #5eead4;
-  --color-path-workflow: #c4b5fd;
-  --color-path-distributed: #7dd3fc;
-  --color-path-coordination: #fcd34d;
+  /* Neutrals tinted toward mint/teal (oklch-inspired hex) */
+  --color-canvas: #0b100f;
+  --color-canvas-elevated: #101816;
+  --color-surface: #141c1a;
+  --color-surface-hover: #1a2421;
+  --color-border: #2a3834;
+  --color-border-soft: #1e2a27;
+  --color-ink: #e6efe9;
+  --color-muted: #8fa399;
+  --color-accent: #5ecf9a;
+  --color-accent-dim: #3d8f6e;
+  --color-link: #7eb8a8;
+  --color-code: #d4c48a;
+  --color-path-durability: #5ecf9a;
+  --color-path-workflow: #9bb8a8;
+  --color-path-distributed: #7eb8c8;
+  --color-path-coordination: #c4b07a;
+  --color-path-integration: #6eb8a0;
+  --color-compose: #6eb8a0;
+  --color-design: #a8b89b;
 
-  --radius-card: 0.875rem;
+  --radius-card: 0.375rem;
 }
 
 @layer base {
@@ -35,14 +39,24 @@
 
   body {
     @apply min-h-screen font-sans text-ink antialiased;
-    background:
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(110, 231, 183, 0.08), transparent 60%),
-      radial-gradient(ellipse 60% 40% at 100% 0%, rgba(142, 180, 255, 0.06), transparent 55%),
-      linear-gradient(180deg, #0a0d14 0%, var(--color-canvas) 40%, #0a0d14 100%);
+    background: var(--color-canvas);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 
   ::selection {
-    background: rgba(110, 231, 183, 0.25);
+    background: color-mix(in oklab, var(--color-accent) 28%, transparent);
     color: var(--color-ink);
   }
 
@@ -57,36 +71,30 @@
   .mono {
     @apply font-mono;
   }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
 }
 
 @layer components {
-  /* Path accent borders (dynamic slug via data-path) */
-  .path-section[data-path="durability"] .path-accent {
-    @apply border-path-durability;
-  }
   .path-section[data-path="durability"] .path-title-link {
     @apply text-path-durability;
-  }
-  .path-section[data-path="workflow"] .path-accent {
-    @apply border-path-workflow;
   }
   .path-section[data-path="workflow"] .path-title-link {
     @apply text-path-workflow;
   }
-  .path-section[data-path="distributed"] .path-accent {
-    @apply border-path-distributed;
-  }
   .path-section[data-path="distributed"] .path-title-link {
     @apply text-path-distributed;
-  }
-  .path-section[data-path="coordination"] .path-accent {
-    @apply border-path-coordination;
   }
   .path-section[data-path="coordination"] .path-title-link {
     @apply text-path-coordination;
   }
+  .path-section[data-path="integration"] .path-title-link {
+    @apply text-path-integration;
+  }
 
-  /* Progress sync <details> marker */
   .progress-sync > summary {
     list-style: none;
   }
@@ -95,7 +103,7 @@
   }
   .progress-sync > summary::after {
     content: "+";
-    @apply float-right font-normal text-muted;
+    @apply float-right font-mono font-normal text-muted;
   }
   .progress-sync[open] > summary::after {
     content: "−";
@@ -104,40 +112,35 @@
     @apply border-b border-border-soft;
   }
 
-  /* Roadmap timeline connector */
   .roadmap-timeline::before {
     content: "";
-    @apply absolute top-2 bottom-2 left-[1.05rem] w-0.5 rounded-full;
-    background: linear-gradient(180deg, var(--color-accent-dim), var(--color-border));
+    @apply absolute top-2 bottom-2 left-[1.05rem] w-px;
+    background: var(--color-border);
   }
 
-  /* Progress bar fill (width set by JS) */
   .roadmap-bar-fill {
-    @apply block h-full w-0 rounded-full transition-[width] duration-300 ease-out;
-    background: linear-gradient(90deg, var(--color-accent), var(--color-link));
+    @apply block h-full w-0 transition-[width] duration-300 ease-out;
+    background: var(--color-accent);
   }
 
-  /* Progress states (toggled by client.js) */
   .progress-read .num {
     @apply border-link text-link;
   }
   .progress-passed .num {
     @apply border-accent text-accent;
-    background: rgba(110, 231, 183, 0.15);
+    background: color-mix(in oklab, var(--color-accent) 12%, transparent);
   }
   .progress-passed.stage-link,
   .progress-passed.sidebar-item {
-    border-color: rgba(110, 231, 183, 0.3);
-    background: rgba(110, 231, 183, 0.04);
+    border-color: color-mix(in oklab, var(--color-accent) 35%, transparent);
+    background: color-mix(in oklab, var(--color-accent) 6%, transparent);
   }
 
-  /* Challenge card progress label separator */
   .challenge-meta [data-progress-label]:not(:empty)::after {
     content: " · ";
     @apply text-muted;
   }
 
-  /* Submit log — show when non-empty */
   .submit-log {
     @apply hidden;
   }
@@ -145,7 +148,30 @@
     @apply block;
   }
 
-  /* Goldmark-rendered markdown */
+  .panel {
+    @apply border border-border bg-surface;
+  }
+
+  .row-link {
+    @apply block border border-border bg-surface text-ink transition-[border-color,background-color] duration-150;
+  }
+  .row-link:hover {
+    @apply border-accent/40 bg-surface-hover;
+  }
+
+  .cta-primary {
+    @apply inline-flex items-center justify-center border border-accent bg-accent px-4 py-2.5 text-sm font-semibold text-canvas transition-[filter] duration-150;
+  }
+  .cta-primary:hover {
+    filter: brightness(1.05);
+  }
+  .cta-secondary {
+    @apply inline-flex items-center justify-center border border-border bg-transparent px-4 py-2.5 text-sm font-semibold text-ink transition-[border-color,background-color] duration-150;
+  }
+  .cta-secondary:hover {
+    @apply border-accent/50 bg-surface;
+  }
+
   .md {
     @apply py-1 pb-4;
   }
@@ -166,10 +192,10 @@
     @apply text-link;
   }
   .md code {
-    @apply rounded bg-white/6 px-1.5 py-0.5 text-[0.86em] text-code;
+    @apply rounded-sm bg-white/6 px-1.5 py-0.5 text-[0.86em] text-code;
   }
   .md pre {
-    @apply overflow-x-auto rounded-[10px] border border-border bg-[#080b12] p-4;
+    @apply overflow-x-auto border border-border bg-canvas-elevated p-4;
   }
   .md pre code {
     @apply bg-transparent p-0 text-ink;
@@ -185,6 +211,6 @@
     @apply bg-canvas-elevated font-display text-xs text-accent;
   }
   .md blockquote {
-    @apply my-4 border-l-[3px] border-link py-1 pl-4 text-muted;
+    @apply my-4 border border-border bg-canvas-elevated py-2 pl-4 text-muted;
   }
 }

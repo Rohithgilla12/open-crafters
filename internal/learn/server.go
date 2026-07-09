@@ -93,21 +93,81 @@ func (s *Server) handleLearnJS(w http.ResponseWriter, _ *http.Request) {
 	_, _ = w.Write([]byte(learnJS))
 }
 
+type pathSummary struct {
+	Slug         string
+	Name         string
+	Description  string
+	Count        int
+	Samples      []*Challenge
+	HasCompose   bool
+	ChallengeCSV string
+	TotalStages  int
+}
+
 type indexPageData struct {
-	Roadmaps []RoadmapView
-	Designs  []*DesignProblem
-	Paths    []Path
+	ChallengeCount  int
+	DesignCount     int
+	StartHere       *RoadmapView
+	Roadmaps        []RoadmapView
+	FeaturedDesigns []*DesignProblem
+	Paths           []pathSummary
+}
+
+var featuredDesignSlugs = []string{
+	"design-distributed-scheduler",
+	"design-workflow-platform",
+	"design-url-shortener",
+	"design-distributed-cache",
 }
 
 func (s *Server) handleIndex(w http.ResponseWriter, _ *http.Request) {
-	designs := make([]*DesignProblem, 0, len(s.catalog.DesignOrder))
-	for _, slug := range s.catalog.DesignOrder {
-		designs = append(designs, s.catalog.Designs[slug])
+	var startHere *RoadmapView
+	for i := range s.catalog.Roadmaps {
+		if s.catalog.Roadmaps[i].Slug == "durability" {
+			startHere = &s.catalog.Roadmaps[i]
+			break
+		}
 	}
+
+	featured := make([]*DesignProblem, 0, len(featuredDesignSlugs))
+	for _, slug := range featuredDesignSlugs {
+		if d, ok := s.catalog.Designs[slug]; ok {
+			featured = append(featured, d)
+		}
+	}
+
+	paths := make([]pathSummary, 0, len(s.catalog.Paths))
+	for _, p := range s.catalog.Paths {
+		ps := pathSummary{
+			Slug:        p.Slug,
+			Name:        p.Name,
+			Description: p.Description,
+			Count:       len(p.Challenges),
+		}
+		totalStages := 0
+		var ids []string
+		for i, ch := range p.Challenges {
+			ids = append(ids, ch.Slug)
+			totalStages += len(ch.Stages)
+			if ch.IsCompose {
+				ps.HasCompose = true
+			}
+			if i < 2 {
+				ps.Samples = append(ps.Samples, ch)
+			}
+		}
+		ps.ChallengeCSV = strings.Join(ids, ",")
+		ps.TotalStages = totalStages
+		paths = append(paths, ps)
+	}
+
 	s.render(w, indexTmpl, indexPageData{
-		Roadmaps: s.catalog.Roadmaps,
-		Designs:  designs,
-		Paths:    s.catalog.Paths,
+		ChallengeCount:  len(s.catalog.Order),
+		DesignCount:     len(s.catalog.DesignOrder),
+		StartHere:       startHere,
+		Roadmaps:        s.catalog.Roadmaps,
+		FeaturedDesigns: featured,
+		Paths:           paths,
 	})
 }
 
@@ -194,12 +254,12 @@ func (s *Server) handleChallenge(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.render(w, challengeTmpl, challengePageData{
-		Challenge:       ch,
-		StageSlugs:      stageSlugs(ch),
-		RoadmapSlug:     s.catalog.RoadmapForChallenge(slug),
-		RoadmapName:     roadmapName(s.catalog, slug),
-		RelatedDesigns:  s.catalog.DesignsForChallenge(slug),
-		DesignStacks:    s.catalog.StacksForChallenge(slug),
+		Challenge:      ch,
+		StageSlugs:     stageSlugs(ch),
+		RoadmapSlug:    s.catalog.RoadmapForChallenge(slug),
+		RoadmapName:    roadmapName(s.catalog, slug),
+		RelatedDesigns: s.catalog.DesignsForChallenge(slug),
+		DesignStacks:   s.catalog.StacksForChallenge(slug),
 	})
 }
 

@@ -41,8 +41,17 @@ func TestDesignRoutes(t *testing.T) {
 		body := rec.Body.String()
 		switch path {
 		case "/":
+			if !strings.Contains(body, "Build locally") || !strings.Contains(body, "Browse journeys") {
+				t.Fatalf("GET %s body missing dual CTAs", path)
+			}
 			if !strings.Contains(body, "Wire graded primitives into real systems") {
 				t.Fatalf("GET %s body missing compose promo", path)
+			}
+			if !strings.Contains(body, "Start here") {
+				t.Fatalf("GET %s body missing start-here section", path)
+			}
+			if strings.Contains(body, "Compose capstones") && strings.Contains(body, "Whiteboard mode") && strings.Contains(body, "Remote grading") {
+				t.Fatalf("GET %s still has old four-card hero promo stack", path)
 			}
 		case "/roadmaps/integration":
 			if !strings.Contains(body, "Compose &amp; meta") {
