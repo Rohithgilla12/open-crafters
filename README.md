@@ -121,6 +121,7 @@ go build -o crafters ./cmd/crafters
 | [Build your own log](challenges/build-your-own-log/) — a Kafka-style append log: absolute offsets, replayable reads, consumer-group offsets, retention without renumbering | 9 | ✅ ready |
 | [Build your own LSM-tree](challenges/build-your-own-lsm/) — a log-structured merge-tree KV store: memtable, byte-exact SSTables, range scans, compaction, tombstones | 9 | ✅ ready |
 | [Build your own workflow SDK](challenges/build-your-own-workflow-sdk/) — deterministic replay: given an event history, emit the commands workflow code would produce | 9 | ✅ ready |
+| [Build your own workflow worker](challenges/build-your-own-workflow-worker/) — meta-compose: poll reference Temporal, replay on the SDK, complete tasks until workflows finish | 9 | ✅ ready |
 | [Build your own Raft](challenges/build-your-own-raft/) — a 3-node Raft cluster: leader election, log replication, crash recovery, and partition safety | 9 | ✅ ready |
 | [Build your own scheduler](challenges/build-your-own-scheduler/) — a durable job scheduler: delayed and recurring jobs, worker polling, leases, and retries | 9 | ✅ ready |
 | [Build your own rate limiter](challenges/build-your-own-rate-limiter/) — a rate-limiting service: fixed windows, token buckets, sliding windows, per-key limits, atomic admission under concurrency, crash-durable state, and a throughput floor | 9 | ✅ ready |
@@ -129,21 +130,27 @@ go build -o crafters ./cmd/crafters
 | [Build your own hash ring](challenges/build-your-own-hash-ring/) — a consistent hash ring: FNV-1a vnode placement, clockwise lookup, minimal key movement on add/remove, virtual nodes, and concurrent multi-ring churn | 9 | ✅ ready |
 | [Build your own distributed lock](challenges/build-your-own-distributed-lock/) — a distributed lock service: exclusive acquire with leases, try-acquire without blocking, token-gated release and renew, crash-durable state, and concurrent multi-lock churn | 9 | ✅ ready |
 | [Build your own ID generator](challenges/build-your-own-id-generator/) — a snowflake-style ID service: time-ordered 64-bit IDs, worker partitioning, per-ms sequences, batch allocation, and crash-safe monotonic issuance | 9 | ✅ ready |
+| [Build your own distributed cache](challenges/build-your-own-distributed-cache/) — an in-memory cache node: GET/SET with TTL, delete, set-if-not-exists, compare-and-swap, multi-get, and LRU eviction | 9 | ✅ ready |
+| [Build your own URL shortener](challenges/build-your-own-url-shortener/) — meta-compose: gateway over reference id-generator, bloom-filter, and object-store services | 9 | ✅ ready |
+| [Build your own job platform](challenges/build-your-own-job-platform/) — meta-compose: gateway over reference scheduler, queue, and distributed-lock services | 9 | ✅ ready |
+| [Build your own cache cluster](challenges/build-your-own-cache-cluster/) — meta-compose: gateway over reference hash-ring, bloom-filter, rate-limiter, and two cache nodes | 9 | ✅ ready |
+| [Build your own harness](challenges/build-your-own-harness/) — meta grader: spawn programs, proxy RPC calls, and assert results — the real harness tests your harness | 9 | ✅ ready |
 
 ### Learning roadmaps
 
-Five curated journeys add narrative, outcomes, and milestone blurbs on top of the
+Six curated journeys add narrative, outcomes, and milestone blurbs on top of the
 paths (`crafters roadmap` or [learn.gilla.fun/roadmaps](https://learn.gilla.fun/roadmaps)):
 
 | Roadmap | What you'll build |
 |---|---|
 | **Durability & storage** | WAL → Queue → Log → LSM → MVCC → Object store |
-| **Workflow engines** | Temporal → Workflow SDK |
-| **Distributed systems** | Raft → Hash ring → Bloom filter |
+| **Workflow engines** | Temporal → Workflow SDK → Workflow worker |
+| **Distributed systems** | Raft → Hash ring → Bloom filter → Cache node |
 | **Coordination & control** | Scheduler → Rate limiter → Distributed lock → ID generator |
-| **Full platform** | All four tracks in suggested order |
+| **Compose & meta** | URL shortener → Job platform → Cache cluster → Harness |
+| **Full platform** | All five tracks in suggested order |
 
-`crafters list --paths` still lists the four thematic paths. Roadmap pages show
+`crafters list --paths` lists the five thematic paths. Roadmap pages show
 progress bars synced from browser localStorage (or import `progress.json`).
 
 ### System design problems
@@ -185,36 +192,39 @@ first, then implement the primitives.
 
 ### Learning paths
 
-Four curated tracks group the challenges by theme (`crafters list --paths`):
+Five curated tracks group the challenges by theme (`crafters list --paths`):
 
 | Path | Challenges |
 |---|---|
 | **Durability & storage** | WAL → Queue → Log → LSM → MVCC → Object store |
-| **Workflow engines** | Temporal → Workflow SDK |
-| **Distributed systems** | Raft → Hash ring → Bloom filter |
+| **Workflow engines** | Temporal → Workflow SDK → Workflow worker |
+| **Distributed systems** | Raft → Hash ring → Bloom filter → Cache node |
 | **Coordination & control** | Scheduler → Rate limiter → Distributed lock → ID generator |
+| **Compose & meta** | URL shortener → Job platform → Cache cluster → Harness |
 
 ### Which challenge should I start with?
 
-All three are meaty, but they build on a shared idea — **make a promise
-durable before you acknowledge it** — in increasing order of scope:
+These build on a shared idea — **make a promise durable before you acknowledge
+it** — in increasing order of scope:
 
-1. **Build your own WAL** — *start here.* The most self-contained of the
-   three, and it teaches the write-before-ack discipline the other two lean
-   on. You get crisp, byte-level feedback (the tester parses and crafts your
-   log), so mistakes are concrete and easy to localize.
+1. **Build your own WAL** — *start here.* The most self-contained entry point,
+   and it teaches the write-before-ack discipline the others lean on. You get
+   crisp, byte-level feedback (the tester parses and crafts your log), so
+   mistakes are concrete and easy to localize.
 2. **Build your own message queue** — next. Reuses that durability discipline
    but the lesson is *delivery semantics*: at-least-once, visibility timeouts,
    and the receipt-fencing bug that quietly loses work in real systems. Graded
    purely by behavior, so you choose your own on-disk format.
-3. **Build your own Temporal** — the biggest. A full durable workflow engine —
-   task queues, event-sourced histories, retries, durable timers, crash
-   recovery. Easier to reason about once durability (WAL) and queue mechanics
-   (message queue) are already second nature.
+3. **Build your own Temporal** — the biggest server challenge. A full durable
+   workflow engine — task queues, event-sourced histories, retries, durable
+   timers, crash recovery. Easier once durability (WAL) and queue mechanics
+   are second nature.
 4. **Build your own workflow SDK** — the other half of Temporal. After the
    server, build the deterministic replay engine workers use: same history in,
    same commands out.
-5. **Build your own Raft** — consensus. After WAL, replicate a log across three
+5. **Build your own workflow worker** — the compose capstone. Poll reference
+   Temporal, replay on the SDK, complete tasks until workflows finish.
+6. **Build your own Raft** — consensus. After WAL, replicate a log across three
    nodes with leader election, crash recovery, and partition safety.
 
 **Build your own MVCC** sits on a different axis — concurrency control rather

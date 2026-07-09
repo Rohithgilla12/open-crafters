@@ -146,8 +146,9 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
   </div>
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
   {{range .Roadmaps}}
-    <a class="block rounded-[14px] border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]{{if eq .Slug "integration"}} border-accent/40 ring-1 ring-accent/20 hover:border-accent/55{{else}} border-border hover:border-accent/35{{end}}" href="/roadmaps/{{.Slug}}" data-roadmap-card data-challenges="{{.ChallengeCSV}}" data-total-stages="{{.TotalStages}}">
+    <a class="block rounded-[14px] border bg-gradient-to-br from-surface to-canvas-elevated p-5 text-ink transition hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.35)]{{if or (eq .Slug "integration") (eq .Slug "workflow")}} border-accent/40 ring-1 ring-accent/20 hover:border-accent/55{{else}} border-border hover:border-accent/35{{end}}" href="/roadmaps/{{.Slug}}" data-roadmap-card data-challenges="{{.ChallengeCSV}}" data-total-stages="{{.TotalStages}}">
       {{if eq .Slug "integration"}}<span class="mb-2 inline-block rounded-full border border-cyan-400/40 bg-cyan-400/10 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-cyan-200">compose + meta</span>{{end}}
+      {{if eq .Slug "workflow"}}<span class="mb-2 inline-block rounded-full border border-cyan-400/40 bg-cyan-400/10 px-2 py-0.5 text-[0.62rem] font-bold uppercase tracking-wider text-cyan-200">includes compose</span>{{end}}
       <h3 class="mb-1.5 text-[1.05rem] font-semibold">{{.Name}}</h3>
       <p class="mb-2.5 text-sm leading-snug text-muted">{{.Tagline}}</p>
       <span class="mb-1.5 block font-mono text-xs text-accent"><span data-roadmap-progress-label></span>{{.TotalStages}} stages</span>
@@ -178,16 +179,17 @@ var indexTmpl = template.Must(template.New("index").Funcs(tmplFuncs).Parse(`<!do
   <a class="group block overflow-hidden rounded-[16px] border border-accent/35 bg-gradient-to-br from-accent/[0.08] via-surface to-canvas-elevated p-6 text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition hover:-translate-y-0.5 hover:border-accent/55 hover:shadow-[0_16px_48px_rgba(0,0,0,0.35)]" href="/roadmaps/integration" id="compose-capstones">
     <p class="mb-2 font-mono text-xs font-semibold uppercase tracking-widest text-cyan-300">Compose &amp; meta</p>
     <h2 class="mb-2 font-display text-xl font-semibold group-hover:text-accent">Wire graded primitives into real systems</h2>
-    <p class="mb-4 max-w-[62ch] text-sm leading-relaxed text-muted">Capstone challenges where <strong class="font-medium text-ink">you implement one gateway</strong> and the harness spawns reference id-generators, cache nodes, queues, and locks. Finish the primitives first, then orchestrate them — or jump straight in with our reference sidecars.</p>
-    <span class="font-mono text-xs text-accent">URL shortener · job platform · cache cluster · workflow worker · build the harness →</span>
+    <p class="mb-4 max-w-[62ch] text-sm leading-relaxed text-muted">Capstone challenges where <strong class="font-medium text-ink">you implement one gateway</strong> and the harness spawns reference Temporal + SDK, id-generators, cache nodes, queues, and locks. Finish the primitives first, then orchestrate them — or jump straight in with our reference sidecars. Workflow worker lives on the <a class="text-link hover:text-link/80" href="/roadmaps/workflow">workflow roadmap</a>; the rest are under Compose &amp; meta.</p>
+    <span class="font-mono text-xs text-accent">URL shortener · job platform · cache cluster · harness · workflow worker →</span>
   </a>
 </section>
 {{range .Paths}}
-<section class="path-section mb-12 pt-2{{if eq .Slug "integration"}} -mx-1 rounded-[14px] border border-accent/25 bg-accent/[0.03] px-4 pb-2{{end}}" id="path-{{.Slug}}" data-path="{{.Slug}}">
-  <div class="path-accent mb-4 border-l-[3px] pl-3.5{{if eq .Slug "integration"}} border-accent/60{{else}} border-border{{end}}">
-    <h2 class="mb-1 text-xl"><a class="path-title-link hover:underline" href="/roadmaps/{{.Slug}}">{{.Name}}</a>{{if eq .Slug "integration"}} <span class="{{composeBadge}}">compose</span>{{end}}</h2>
+<section class="path-section mb-12 pt-2{{if or (eq .Slug "integration") (eq .Slug "workflow")}} -mx-1 rounded-[14px] border border-accent/25 bg-accent/[0.03] px-4 pb-2{{end}}" id="path-{{.Slug}}" data-path="{{.Slug}}">
+  <div class="path-accent mb-4 border-l-[3px] pl-3.5{{if or (eq .Slug "integration") (eq .Slug "workflow")}} border-accent/60{{else}} border-border{{end}}">
+    <h2 class="mb-1 text-xl"><a class="path-title-link hover:underline" href="/roadmaps/{{.Slug}}">{{.Name}}</a>{{if or (eq .Slug "integration") (eq .Slug "workflow")}} <span class="{{composeBadge}}">compose</span>{{end}}</h2>
     <p class="max-w-[58ch] text-[0.94rem] text-muted">{{.Description}}</p>
     {{if eq .Slug "integration"}}<p class="mt-2 max-w-[58ch] font-mono text-xs text-cyan-200/90">You build 1 service — the harness spawns the rest.</p>{{end}}
+    {{if eq .Slug "workflow"}}<p class="mt-2 max-w-[58ch] font-mono text-xs text-cyan-200/90">Ends with a compose capstone — Temporal + SDK as reference sidecars.</p>{{end}}
   </div>
   <main class="grid grid-cols-1 gap-4 sm:grid-cols-2">
   {{range .Challenges}}

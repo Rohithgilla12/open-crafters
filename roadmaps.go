@@ -48,7 +48,7 @@ var Roadmaps = []Roadmap{
 		Slug:        "workflow",
 		Name:        "Workflow engines",
 		Tagline:     "Orchestrate long-running work like Temporal.",
-		Description: "Workflow systems split into a durable server (histories, timers, task queues) and a deterministic SDK that replays code against those histories. Build both sides.",
+		Description: "Workflow systems split into a durable server (histories, timers, task queues) and a deterministic SDK that replays code against those histories. Build both sides, then the worker gateway that wires them together.",
 		Outcomes: []string{
 			"Model workflow histories and task delivery",
 			"Handle activities, timers, signals, and crash recovery",
@@ -104,7 +104,7 @@ var Roadmaps = []Roadmap{
 		Slug:        "integration",
 		Name:        "Compose & meta",
 		Tagline:     "Wire primitives together — and build the tester itself.",
-		Description: "Capstone challenges: orchestrate reference primitives into URL shortener and job platform gateways, then implement spawn/proxy/assert like the real harness.",
+		Description: "Capstone challenges: orchestrate reference primitives into URL shortener, job platform, and cache cluster gateways, then implement spawn/proxy/assert like the real harness. (Workflow worker lives on the workflow track.)",
 		Outcomes: []string{
 			"Compose multiple graded primitives into one gateway",
 			"Implement process spawn, NDJSON proxying, and test assertions",
@@ -132,7 +132,7 @@ var Roadmaps = []Roadmap{
 			{Challenge: "__path:workflow__", Blurb: "3 challenges — Temporal server, replay SDK, worker gateway."},
 			{Challenge: "__path:distributed__", Blurb: "4 challenges — Raft, hash ring, Bloom filter, cache node."},
 			{Challenge: "__path:coordination__", Blurb: "4 challenges — scheduler, rate limiter, lock, ID generator."},
-			{Challenge: "__path:integration__", Blurb: "4 capstones — URL shortener, job platform, cache cluster, harness."},
+			{Challenge: "__path:integration__", Blurb: "4 capstones — URL shortener, job platform, cache cluster, harness (workflow worker is on the workflow track)."},
 		},
 	},
 }

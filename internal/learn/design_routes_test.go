@@ -26,7 +26,11 @@ func TestDesignRoutes(t *testing.T) {
 		"/design/stacks/distributed-cache",
 		"/challenges/build-your-own-id-generator",
 		"/challenges/build-your-own-url-shortener",
+		"/challenges/build-your-own-workflow-worker",
 		"/roadmaps/integration",
+		"/roadmaps/workflow",
+		"/design/stacks/workflow-platform",
+		"/design/design-workflow-platform",
 	} {
 		req := httptest.NewRequest(http.MethodGet, path, nil)
 		rec := httptest.NewRecorder()
@@ -58,6 +62,28 @@ func TestDesignRoutes(t *testing.T) {
 		case "/challenges/build-your-own-url-shortener":
 			if !strings.Contains(body, "Compose capstone") {
 				t.Fatalf("GET %s body missing compose callout", path)
+			}
+		case "/challenges/build-your-own-workflow-worker":
+			if !strings.Contains(body, "Compose capstone") {
+				t.Fatalf("GET %s body missing compose callout", path)
+			}
+		case "/roadmaps/workflow":
+			if !strings.Contains(body, "Workflow engines") {
+				t.Fatalf("GET %s body missing workflow roadmap title", path)
+			}
+			if !strings.Contains(body, "compose") {
+				t.Fatalf("GET %s body missing compose badge on workflow worker", path)
+			}
+		case "/design/stacks/workflow-platform":
+			if !strings.Contains(body, "Workflow platform stack") {
+				t.Fatalf("GET %s body missing stack title", path)
+			}
+			if !strings.Contains(body, "Open compose challenge") {
+				t.Fatalf("GET %s body missing compose capstone CTA", path)
+			}
+		case "/design/design-workflow-platform":
+			if !strings.Contains(body, "workflow-worker") && !strings.Contains(body, "workflow worker") {
+				t.Fatalf("GET %s body missing workflow worker build step", path)
 			}
 		case "/challenges/build-your-own-id-generator":
 			if !strings.Contains(body, "Whiteboard first") {

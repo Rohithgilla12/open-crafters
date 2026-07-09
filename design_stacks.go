@@ -64,6 +64,7 @@ var DesignStacks = []DesignStack{
 			"Design event histories and timer delivery",
 			"Build append-only durability under the server",
 			"Implement deterministic replay in the worker SDK",
+			"Wire Temporal + SDK into a worker gateway",
 		},
 		Milestones: []DesignStackMilestone{
 			{Kind: "design", Slug: "design-workflow-platform", Blurb: "Whiteboard — server vs SDK, replay, timers"},

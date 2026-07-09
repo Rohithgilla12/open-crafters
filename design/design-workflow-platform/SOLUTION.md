@@ -70,5 +70,6 @@ Shard timers by `fire_at` bucket (hour/minute). Scanner writes `TimerFired` even
 | History append + match | `build-your-own-temporal` |
 | Deterministic replay | `build-your-own-workflow-sdk` |
 | Durable log | `build-your-own-wal` |
+| Worker gateway (compose) | `build-your-own-workflow-worker` |
 
 Whiteboard here, then implement — the challenges are a miniature of this diagram with NDJSON instead of gRPC.

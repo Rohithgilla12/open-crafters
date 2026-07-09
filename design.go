@@ -83,9 +83,10 @@ var DesignProblems = []DesignProblem{
 		Category:    "workflow",
 		TimeMinutes: 55,
 		RelatedChallenges: []string{
+			"build-your-own-wal",
 			"build-your-own-temporal",
 			"build-your-own-workflow-sdk",
-			"build-your-own-wal",
+			"build-your-own-workflow-worker",
 		},
 		DiscussionPrompts: []string{
 			"Split responsibilities: what does the server own vs the worker SDK?",

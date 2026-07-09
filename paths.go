@@ -27,7 +27,7 @@ var ChallengePaths = []ChallengePath{
 	{
 		Slug:        "workflow",
 		Name:        "Workflow engines",
-		Description: "Build the server and the deterministic replay SDK behind Temporal-style orchestration.",
+		Description: "Build the Temporal-style server, the deterministic replay SDK, and the worker gateway that wires them together.",
 		Challenges: []string{
 			"build-your-own-temporal",
 			"build-your-own-workflow-sdk",
@@ -59,7 +59,7 @@ var ChallengePaths = []ChallengePath{
 	{
 		Slug:        "integration",
 		Name:        "Compose & meta",
-		Description: "Wire primitives into real systems — URL shortener, job platform, and cache cluster gateways, plus building the grader itself. You build one service; the harness spawns the rest.",
+		Description: "Wire primitives into real systems — URL shortener, job platform, and cache cluster gateways, plus building the grader itself. You build one service; the harness spawns the rest. (The workflow worker compose capstone lives on the workflow track.)",
 		Challenges: []string{
 			"build-your-own-url-shortener",
 			"build-your-own-job-platform",
