@@ -1,0 +1,48 @@
+slug: build-your-own-distributed-kv
+name: Build your own distributed KV
+short_description: >
+  Meta-compose challenge: implement a sharded KV gateway over reference
+  hash-ring, a 3-node Raft cluster, and an LSM storage shard.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port>
+tester:
+  challenge_flag: build-your-own-distributed-kv
+stages:
+  - slug: bind
+    name: Boot the stack
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: put-get
+    name: Put and get
+    difficulty: easy
+    instructions: stages/02-put-get.md
+  - slug: routing
+    name: Shard routing
+    difficulty: medium
+    instructions: stages/03-routing.md
+  - slug: raft-write
+    name: Replicated shard
+    difficulty: medium
+    instructions: stages/04-raft-write.md
+  - slug: raft-read
+    name: Read from follower
+    difficulty: medium
+    instructions: stages/05-raft-read.md
+  - slug: delete
+    name: Delete on LSM shard
+    difficulty: easy
+    instructions: stages/06-delete.md
+  - slug: lsm-durable
+    name: LSM flush
+    difficulty: medium
+    instructions: stages/07-lsm-durable.md
+  - slug: concurrent
+    name: Parallel writes
+    difficulty: hard
+    instructions: stages/08-concurrent.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

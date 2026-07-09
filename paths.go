@@ -43,6 +43,7 @@ var ChallengePaths = []ChallengePath{
 			"build-your-own-hash-ring",
 			"build-your-own-bloom-filter",
 			"build-your-own-distributed-cache",
+			"build-your-own-distributed-kv",
 		},
 	},
 	{

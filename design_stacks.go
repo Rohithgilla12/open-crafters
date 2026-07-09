@@ -89,6 +89,7 @@ var DesignStacks = []DesignStack{
 			{Kind: "build", Slug: "build-your-own-hash-ring", Blurb: "Key → node routing"},
 			{Kind: "build", Slug: "build-your-own-raft", Blurb: "Leader election + replicated log"},
 			{Kind: "build", Slug: "build-your-own-lsm", Blurb: "Memtable + SSTables per node"},
+			{Kind: "build", Slug: "build-your-own-distributed-kv", Blurb: "Meta-compose — ring, Raft shard, and LSM shard"},
 		},
 	},
 	{

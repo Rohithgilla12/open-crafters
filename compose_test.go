@@ -8,6 +8,7 @@ func TestIsComposeChallenge(t *testing.T) {
 		"build-your-own-job-platform",
 		"build-your-own-cache-cluster",
 		"build-your-own-workflow-worker",
+		"build-your-own-distributed-kv",
 	}
 	for _, slug := range compose {
 		if !IsComposeChallenge(slug) {

@@ -72,6 +72,7 @@ var Roadmaps = []Roadmap{
 			"Route keys with consistent hashing and virtual nodes",
 			"Build a Bloom filter with zero false negatives",
 			"Ship an in-memory cache node with TTL and LRU eviction",
+			"Compose hash ring, Raft replication, and LSM into a sharded gateway",
 		},
 		PathSlug: "distributed",
 		Milestones: []RoadmapMilestone{
@@ -79,6 +80,7 @@ var Roadmaps = []Roadmap{
 			{Challenge: "build-your-own-hash-ring", Blurb: "Vnode placement — add/remove nodes without reshuffling everything."},
 			{Challenge: "build-your-own-bloom-filter", Blurb: "Probabilistic membership — compact, fast, no false negatives."},
 			{Challenge: "build-your-own-distributed-cache", Blurb: "In-memory cache node — TTL, CAS, LRU eviction."},
+			{Challenge: "build-your-own-distributed-kv", Blurb: "Meta-compose — sharded gateway over ring + Raft + LSM."},
 		},
 	},
 	{
@@ -123,14 +125,14 @@ var Roadmaps = []Roadmap{
 		Tagline:     "All five tracks — the complete open-crafters journey.",
 		Description: "A suggested order across every path: durability, workflow, distributed primitives, coordination glue, then compose/meta capstones.",
 		Outcomes: []string{
-			"Complete all 21 challenges across 5 thematic paths",
+			"Complete all 22 challenges across 5 thematic paths",
 			"Understand how production infrastructure primitives compose",
 		},
 		PathSlug: "", // meta-roadmap — milestones are paths
 		Milestones: []RoadmapMilestone{
 			{Challenge: "__path:durability__", Blurb: "6 challenges — WAL through object store (recommended first)."},
 			{Challenge: "__path:workflow__", Blurb: "3 challenges — Temporal server, replay SDK, worker gateway."},
-			{Challenge: "__path:distributed__", Blurb: "4 challenges — Raft, hash ring, Bloom filter, cache node."},
+			{Challenge: "__path:distributed__", Blurb: "5 challenges — Raft, hash ring, Bloom filter, cache node, KV gateway."},
 			{Challenge: "__path:coordination__", Blurb: "4 challenges — scheduler, rate limiter, lock, ID generator."},
 			{Challenge: "__path:integration__", Blurb: "4 capstones — URL shortener, job platform, cache cluster, harness (workflow worker is on the workflow track)."},
 		},

@@ -3,6 +3,7 @@ package harness
 import (
 	"fmt"
 	"path/filepath"
+	"strconv"
 )
 
 // ServiceSpec describes a reference sidecar in a compose challenge.
@@ -12,6 +13,9 @@ type ServiceSpec struct {
 	ReferenceLang      string // default "go"
 	EnvAddrKey         string // env var injected into gateway, e.g. IDGEN_ADDR
 	ExtraArgs          []string
+	// ClusterSize > 0 spawns a multi-node reference cluster (e.g. 3 Raft nodes).
+	// Env vars become <EnvAddrKey>1_ADDR, <EnvAddrKey>2_ADDR, … (e.g. RAFT1_ADDR).
+	ClusterSize int
 }
 
 // Compose manages a user gateway plus reference service subprocesses.
@@ -24,6 +28,7 @@ type Compose struct {
 type serviceProc struct {
 	spec    ServiceSpec
 	program *Program
+	cluster *Cluster
 }
 
 // ComposeContext is passed to compose stage tests.
@@ -40,6 +45,20 @@ func (c *ComposeContext) DialGateway() (*Client, error) {
 // DialService opens a client to a reference service by name.
 func (c *ComposeContext) DialService(name string) (*Client, error) {
 	addr, err := c.compose.ServiceAddr(name)
+	if err != nil {
+		return nil, err
+	}
+	return Dial(addr)
+}
+
+// ClusterNodeAddr returns the loopback address for a node in a reference cluster.
+func (c *ComposeContext) ClusterNodeAddr(service string, nodeID int) (string, error) {
+	return c.compose.ClusterNodeAddr(service, nodeID)
+}
+
+// DialClusterNode opens a client to a node in a reference cluster service.
+func (c *ComposeContext) DialClusterNode(service string, nodeID int) (*Client, error) {
+	addr, err := c.compose.ClusterNodeAddr(service, nodeID)
 	if err != nil {
 		return nil, err
 	}
@@ -73,6 +92,33 @@ func NewCompose(gatewayPath string, specs []ServiceSpec, logf func(string, ...an
 			c.Cleanup()
 			return nil, fmt.Errorf("service %q: %w", spec.Name, err)
 		}
+		sp := serviceProc{spec: spec}
+		if spec.ClusterSize > 0 {
+			cluster, err := NewCluster(refPath, spec.ClusterSize, logf)
+			if err != nil {
+				c.Cleanup()
+				return nil, fmt.Errorf("service %q cluster: %w", spec.Name, err)
+			}
+			if err := cluster.StartAll(); err != nil {
+				cluster.Cleanup()
+				c.Cleanup()
+				return nil, fmt.Errorf("starting reference cluster %q: %w", spec.Name, err)
+			}
+			sp.cluster = cluster
+			if spec.EnvAddrKey != "" {
+				for i := 1; i <= spec.ClusterSize; i++ {
+					addr, err := cluster.Addr(i)
+					if err != nil {
+						cluster.Cleanup()
+						c.Cleanup()
+						return nil, err
+					}
+					env[spec.EnvAddrKey+strconv.Itoa(i)+"_ADDR"] = addr
+				}
+			}
+			c.services = append(c.services, sp)
+			continue
+		}
 		prog, err := NewProgram(refPath, logf)
 		if err != nil {
 			c.Cleanup()
@@ -83,7 +129,8 @@ func NewCompose(gatewayPath string, specs []ServiceSpec, logf func(string, ...an
 			c.Cleanup()
 			return nil, fmt.Errorf("starting reference %q: %w", spec.Name, err)
 		}
-		c.services = append(c.services, serviceProc{spec: spec, program: prog})
+		sp.program = prog
+		c.services = append(c.services, sp)
 		if spec.EnvAddrKey != "" {
 			env[spec.EnvAddrKey] = prog.Addr()
 		}
@@ -103,15 +150,35 @@ func NewCompose(gatewayPath string, specs []ServiceSpec, logf func(string, ...an
 
 	logf("compose: gateway=%s", gw.Addr())
 	for _, sp := range c.services {
+		if sp.cluster != nil {
+			for i := 1; i <= sp.cluster.Size(); i++ {
+				addr, _ := sp.cluster.Addr(i)
+				logf("  %s (%s) node%d → %s", sp.spec.Name, sp.spec.ReferenceChallenge, i, addr)
+			}
+			continue
+		}
 		logf("  %s (%s) → %s", sp.spec.Name, sp.spec.ReferenceChallenge, sp.program.Addr())
 	}
 	return c, nil
+}
+
+// ClusterNodeAddr returns the address of a node in a reference cluster service.
+func (c *Compose) ClusterNodeAddr(name string, nodeID int) (string, error) {
+	for _, sp := range c.services {
+		if sp.spec.Name == name && sp.cluster != nil {
+			return sp.cluster.Addr(nodeID)
+		}
+	}
+	return "", fmt.Errorf("unknown compose cluster service %q", name)
 }
 
 // ServiceAddr returns the address of a named reference service.
 func (c *Compose) ServiceAddr(name string) (string, error) {
 	for _, sp := range c.services {
 		if sp.spec.Name == name {
+			if sp.cluster != nil {
+				return sp.cluster.Addr(1)
+			}
 			return sp.program.Addr(), nil
 		}
 	}
@@ -125,7 +192,9 @@ func (c *Compose) Cleanup() {
 		c.gateway = nil
 	}
 	for _, sp := range c.services {
-		if sp.program != nil {
+		if sp.cluster != nil {
+			sp.cluster.Cleanup()
+		} else if sp.program != nil {
 			sp.program.Cleanup()
 		}
 	}

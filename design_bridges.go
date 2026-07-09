@@ -51,6 +51,7 @@ var DesignBuildSteps = map[string][]DesignBuildStep{
 		{Challenge: "build-your-own-hash-ring", Blurb: "Key → partition placement and rebalancing."},
 		{Challenge: "build-your-own-raft", Blurb: "Leader election and replicated log per shard."},
 		{Challenge: "build-your-own-lsm", Blurb: "On-disk engine inside each partition."},
+		{Challenge: "build-your-own-distributed-kv", Blurb: "Meta-compose — ring + Raft shard + LSM shard."},
 	},
 	"design-api-gateway": {
 		{Challenge: "build-your-own-rate-limiter", Blurb: "Per-key token buckets and sliding windows."},

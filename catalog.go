@@ -20,6 +20,7 @@ var ChallengeOrder = []string{
 	"build-your-own-distributed-lock",
 	"build-your-own-id-generator",
 	"build-your-own-distributed-cache",
+	"build-your-own-distributed-kv",
 	"build-your-own-url-shortener",
 	"build-your-own-job-platform",
 	"build-your-own-cache-cluster",

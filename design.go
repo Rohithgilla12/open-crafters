@@ -188,6 +188,7 @@ var DesignProblems = []DesignProblem{
 			"build-your-own-raft",
 			"build-your-own-hash-ring",
 			"build-your-own-lsm",
+			"build-your-own-distributed-kv",
 		},
 		DiscussionPrompts: []string{
 			"How do keys map to partitions, and who is the leader for a key?",
