@@ -12,8 +12,8 @@ func TestSEOAndBlogRoutes(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(catalog.BlogPosts) < 4 {
-		t.Fatalf("expected >= 4 blog posts, got %d", len(catalog.BlogPosts))
+	if len(catalog.BlogPosts) < 9 {
+		t.Fatalf("expected >= 9 blog posts, got %d", len(catalog.BlogPosts))
 	}
 	mux := NewServer(catalog, Config{}).Handler()
 
@@ -41,6 +41,7 @@ func TestSEOAndBlogRoutes(t *testing.T) {
 			"https://learn.gilla.fun/",
 			"https://learn.gilla.fun/blog",
 			"https://learn.gilla.fun/blog/write-ahead-log-durability",
+			"https://learn.gilla.fun/blog/object-store-durability",
 			"https://learn.gilla.fun/challenges/build-your-own-wal",
 			"https://learn.gilla.fun/roadmaps",
 			"https://learn.gilla.fun/design",
