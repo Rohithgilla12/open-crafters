@@ -80,18 +80,24 @@ class Engine {
   }
 
   async raftCall(method: string, params: Record<string, unknown>) {
+    // Raft election can take a beat after compose boot; retry NOT_LEADER.
+    const deadline = Date.now() + 5000;
     let last: RPCError | null = null;
-    for (const addr of this.raft) {
-      if (!addr) continue;
-      try {
-        return await rpc(addr, method, params);
-      } catch (e) {
-        if (e instanceof RPCError && e.code === "NOT_LEADER") {
-          last = e;
-          continue;
+    while (true) {
+      for (const addr of this.raft) {
+        if (!addr) continue;
+        try {
+          return await rpc(addr, method, params);
+        } catch (e) {
+          if (e instanceof RPCError && e.code === "NOT_LEADER") {
+            last = e;
+            continue;
+          }
+          throw e;
         }
-        throw e;
       }
+      if (Date.now() >= deadline) break;
+      await new Promise((r) => setTimeout(r, 50));
     }
     if (last) throw last;
     throw new GWError("NOT_LEADER", "no raft leader available");
