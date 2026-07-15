@@ -471,6 +471,9 @@
   ];
 
   let cmdkItems = null;
+  let cmdkLoaded = false;
+  let cmdkIndexPromise = null;
+  let cmdkOpenGen = 0;
   let cmdkState = { open: false, query: "", active: 0, filtered: [] };
   let cmdkEls = null;
 
@@ -508,68 +511,73 @@
   }
 
   async function loadCmdkIndex() {
-    if (cmdkItems) return cmdkItems;
-    const items = PAGES.map((p) => ({ ...p, slug: "" }));
-    try {
-      const [chRes, rmRes, desRes, blogRes] = await Promise.all([
-        fetch("/api/challenges"),
-        fetch("/api/roadmaps"),
-        fetch("/api/design"),
-        fetch("/api/blog"),
-      ]);
-      if (chRes.ok) {
-        const data = await chRes.json();
-        for (const c of data.challenges || []) {
-          items.push({
-            group: "Challenges",
-            label: c.name || c.slug,
-            slug: c.slug || "",
-            href: "/challenges/" + c.slug,
-            keywords: (c.tagline || "") + " " + (c.difficulty || ""),
-          });
+    if (cmdkLoaded && cmdkItems) return cmdkItems;
+    if (cmdkIndexPromise) return cmdkIndexPromise;
+    cmdkIndexPromise = (async () => {
+      const items = PAGES.map((p) => ({ ...p, slug: "" }));
+      try {
+        const [chRes, rmRes, desRes, blogRes] = await Promise.all([
+          fetch("/api/challenges"),
+          fetch("/api/roadmaps"),
+          fetch("/api/design"),
+          fetch("/api/blog"),
+        ]);
+        if (chRes.ok) {
+          const data = await chRes.json();
+          for (const c of data.challenges || []) {
+            items.push({
+              group: "Challenges",
+              label: c.name || c.slug,
+              slug: c.slug || "",
+              href: "/challenges/" + c.slug,
+              keywords: (c.tagline || "") + " " + (c.difficulty || ""),
+            });
+          }
         }
-      }
-      if (rmRes.ok) {
-        const data = await rmRes.json();
-        for (const r of data.roadmaps || []) {
-          items.push({
-            group: "Roadmaps",
-            label: r.name || r.slug,
-            slug: r.slug || "",
-            href: "/roadmaps/" + r.slug,
-            keywords: r.tagline || "",
-          });
+        if (rmRes.ok) {
+          const data = await rmRes.json();
+          for (const r of data.roadmaps || []) {
+            items.push({
+              group: "Roadmaps",
+              label: r.name || r.slug,
+              slug: r.slug || "",
+              href: "/roadmaps/" + r.slug,
+              keywords: r.tagline || "",
+            });
+          }
         }
-      }
-      if (desRes.ok) {
-        const data = await desRes.json();
-        for (const d of data.design || []) {
-          items.push({
-            group: "Design",
-            label: d.name || d.slug,
-            slug: d.slug || "",
-            href: "/design/" + d.slug,
-            keywords: (d.tagline || "") + " " + (d.category || ""),
-          });
+        if (desRes.ok) {
+          const data = await desRes.json();
+          for (const d of data.design || []) {
+            items.push({
+              group: "Design",
+              label: d.name || d.slug,
+              slug: d.slug || "",
+              href: "/design/" + d.slug,
+              keywords: (d.tagline || "") + " " + (d.category || ""),
+            });
+          }
         }
-      }
-      if (blogRes.ok) {
-        const data = await blogRes.json();
-        for (const p of data.posts || []) {
-          items.push({
-            group: "Blog",
-            label: p.title || p.slug,
-            slug: p.slug || "",
-            href: "/blog/" + p.slug,
-            keywords: p.description || "",
-          });
+        if (blogRes.ok) {
+          const data = await blogRes.json();
+          for (const p of data.posts || []) {
+            items.push({
+              group: "Blog",
+              label: p.title || p.slug,
+              slug: p.slug || "",
+              href: "/blog/" + p.slug,
+              keywords: p.description || "",
+            });
+          }
         }
+      } catch {
+        /* pages-only fallback */
       }
-    } catch {
-      /* pages-only fallback */
-    }
-    cmdkItems = items;
-    return items;
+      cmdkItems = items;
+      cmdkLoaded = true;
+      return items;
+    })();
+    return cmdkIndexPromise;
   }
 
   function ensureCmdkDOM() {
@@ -581,13 +589,13 @@
     root.innerHTML =
       '<div data-cmdk-backdrop class="absolute inset-0 bg-canvas/90 backdrop-blur-sm"></div>' +
       '<div class="relative mx-auto mt-[12vh] flex max-h-[70vh] w-full max-w-[580px] flex-col overflow-hidden rounded-[14px] border border-border bg-surface shadow-[0_4px_20px_rgba(110,231,183,0.08)]" role="dialog" aria-modal="true" aria-label="Jump anywhere">' +
-      '<div class="flex items-center gap-2 border-b border-border-soft px-4 py-3">' +
+      '<div class="flex shrink-0 items-center gap-2 border-b border-border-soft px-4 py-3">' +
       '<span class="font-mono text-accent">$</span>' +
       '<input data-cmdk-input type="text" autocomplete="off" spellcheck="false" placeholder="Jump to challenge, roadmap, design, blog…" class="min-w-0 flex-1 bg-transparent font-mono text-sm text-ink outline-none placeholder:text-muted" />' +
       '<kbd class="hidden rounded border border-border-soft bg-canvas-elevated px-1.5 py-0.5 font-mono text-[0.58rem] text-muted sm:inline">esc</kbd>' +
       "</div>" +
-      '<div data-cmdk-list class="overflow-auto py-2" role="listbox"></div>' +
-      '<div data-cmdk-empty class="hidden px-4 py-6 text-center font-mono text-sm text-muted">No matches</div>' +
+      '<div data-cmdk-list class="min-h-0 flex-1 overflow-auto py-2" role="listbox"></div>' +
+      '<div data-cmdk-empty class="hidden shrink-0 px-4 py-6 text-center font-mono text-sm text-muted">No matches</div>' +
       "</div>";
     document.body.appendChild(root);
     cmdkEls = {
@@ -694,7 +702,7 @@
 
   async function openCmdk() {
     const els = ensureCmdkDOM();
-    await loadCmdkIndex();
+    const openId = ++cmdkOpenGen;
     cmdkState.open = true;
     cmdkState.query = "";
     cmdkState.active = 0;
@@ -702,13 +710,20 @@
     els.root.classList.remove("hidden");
     els.root.setAttribute("aria-hidden", "false");
     document.documentElement.classList.add("overflow-hidden");
+    if (!cmdkItems) {
+      cmdkItems = PAGES.map((p) => ({ ...p, slug: "" }));
+    }
     renderCmdkList();
     requestAnimationFrame(() => els.input.focus());
+    await loadCmdkIndex();
+    if (!cmdkState.open || openId !== cmdkOpenGen) return;
+    renderCmdkList();
   }
 
   function closeCmdk() {
     if (!cmdkEls || !cmdkState.open) return;
     cmdkState.open = false;
+    cmdkOpenGen++;
     cmdkEls.root.classList.add("hidden");
     cmdkEls.root.setAttribute("aria-hidden", "true");
     document.documentElement.classList.remove("overflow-hidden");
