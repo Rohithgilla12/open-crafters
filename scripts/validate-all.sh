@@ -34,6 +34,8 @@ challenges=(
   build-your-own-workflow-worker
   build-your-own-distributed-kv
   build-your-own-chat-service
+  build-your-own-notification-platform
+  build-your-own-payment-ledger
   build-your-own-harness
 )
 langs=(python go typescript)
@@ -43,7 +45,7 @@ fail=0
 echo "→ go test ./..."
 go test ./...
 
-echo "→ Grading reference solutions (20 × 3 languages, all stages)"
+echo "→ Grading reference solutions (25 × 3 languages, all stages)"
 for ch in "${challenges[@]}"; do
   for lang in "${langs[@]}"; do
     prog="examples/solutions/${ch}/${lang}/your_program.sh"

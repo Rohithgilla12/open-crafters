@@ -41,11 +41,13 @@ var DesignBuildSteps = map[string][]DesignBuildStep{
 		{Challenge: "build-your-own-wal", Blurb: "Append entries before acknowledging transfers."},
 		{Challenge: "build-your-own-id-generator", Blurb: "Idempotent transaction and idempotency keys."},
 		{Challenge: "build-your-own-mvcc", Blurb: "Snapshot balance reads under concurrent writes."},
+		{Challenge: "build-your-own-payment-ledger", Blurb: "Meta-compose — wire WAL, id gen, and MVCC in a gateway."},
 	},
 	"design-notification-system": {
 		{Challenge: "build-your-own-queue", Blurb: "Durable per-channel delivery jobs."},
 		{Challenge: "build-your-own-scheduler", Blurb: "Digests, quiet hours, and delayed sends."},
 		{Challenge: "build-your-own-rate-limiter", Blurb: "Per-user and per-provider caps."},
+		{Challenge: "build-your-own-notification-platform", Blurb: "Meta-compose — wire queue, scheduler, and rate limiter in a gateway."},
 	},
 	"design-distributed-kv": {
 		{Challenge: "build-your-own-hash-ring", Blurb: "Key → partition placement and rebalancing."},

@@ -25,5 +25,7 @@ var ChallengeOrder = []string{
 	"build-your-own-url-shortener",
 	"build-your-own-job-platform",
 	"build-your-own-cache-cluster",
+	"build-your-own-notification-platform",
+	"build-your-own-payment-ledger",
 	"build-your-own-harness",
 }

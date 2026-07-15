@@ -134,6 +134,8 @@ go build -o crafters ./cmd/crafters
 | [Build your own URL shortener](challenges/build-your-own-url-shortener/) — meta-compose: gateway over reference id-generator, bloom-filter, and object-store services | 9 | ✅ ready |
 | [Build your own job platform](challenges/build-your-own-job-platform/) — meta-compose: gateway over reference scheduler, queue, and distributed-lock services | 9 | ✅ ready |
 | [Build your own cache cluster](challenges/build-your-own-cache-cluster/) — meta-compose: gateway over reference hash-ring, bloom-filter, rate-limiter, and two cache nodes | 9 | ✅ ready |
+| [Build your own notification platform](challenges/build-your-own-notification-platform/) — meta-compose: gateway over reference queue, scheduler, and rate-limiter services | 9 | ✅ ready |
+| [Build your own payment ledger](challenges/build-your-own-payment-ledger/) — meta-compose: gateway over reference WAL, id-generator, and MVCC services | 9 | ✅ ready |
 | [Build your own harness](challenges/build-your-own-harness/) — meta grader: spawn programs, proxy RPC calls, and assert results — the real harness tests your harness | 9 | ✅ ready |
 
 ### Learning roadmaps
@@ -147,7 +149,7 @@ paths (`crafters roadmap` or [learn.gilla.fun/roadmaps](https://learn.gilla.fun/
 | **Workflow engines** | Temporal → Workflow SDK → Workflow worker |
 | **Distributed systems** | Raft → Hash ring → Bloom filter → Cache node |
 | **Coordination & control** | Scheduler → Rate limiter → Distributed lock → ID generator |
-| **Compose & meta** | URL shortener → Job platform → Cache cluster → Harness |
+| **Compose & meta** | URL shortener → Job platform → Cache cluster → Chat service → Notification platform → Payment ledger → Harness |
 | **Full platform** | All five tracks in suggested order |
 
 `crafters list --paths` lists the five thematic paths. Roadmap pages show
@@ -200,7 +202,7 @@ Five curated tracks group the challenges by theme (`crafters list --paths`):
 | **Workflow engines** | Temporal → Workflow SDK → Workflow worker |
 | **Distributed systems** | Raft → Hash ring → Bloom filter → Cache node |
 | **Coordination & control** | Scheduler → Rate limiter → Distributed lock → ID generator |
-| **Compose & meta** | URL shortener → Job platform → Cache cluster → Harness |
+| **Compose & meta** | URL shortener → Job platform → Cache cluster → Chat service → Notification platform → Payment ledger → Harness |
 
 ### Which challenge should I start with?
 

@@ -1,0 +1,49 @@
+slug: build-your-own-payment-ledger
+name: Build your own payment ledger
+short_description: >
+  Meta-compose challenge: implement a payment ledger gateway that orchestrates
+  reference WAL, id-generator, and MVCC services spawned by the harness —
+  graded over the wire.
+difficulty: hard
+language_agnostic: true
+protocol: PROTOCOL.md
+entry_point: your_program.sh --port <port>
+tester:
+  challenge_flag: build-your-own-payment-ledger
+stages:
+  - slug: bind
+    name: Boot the stack
+    difficulty: easy
+    instructions: stages/01-bind.md
+  - slug: open
+    name: Open accounts
+    difficulty: easy
+    instructions: stages/02-open.md
+  - slug: transfer
+    name: Transfer funds
+    difficulty: medium
+    instructions: stages/03-transfer.md
+  - slug: balance
+    name: Read balances
+    difficulty: easy
+    instructions: stages/04-balance.md
+  - slug: insufficient
+    name: Insufficient funds
+    difficulty: medium
+    instructions: stages/05-insufficient.md
+  - slug: idempotent
+    name: Idempotent transfer
+    difficulty: medium
+    instructions: stages/06-idempotent.md
+  - slug: multi
+    name: Several transfers
+    difficulty: medium
+    instructions: stages/07-multi.md
+  - slug: concurrent
+    name: Parallel transfers
+    difficulty: hard
+    instructions: stages/08-concurrent.md
+  - slug: gauntlet
+    name: The gauntlet
+    difficulty: hard
+    instructions: stages/09-gauntlet.md

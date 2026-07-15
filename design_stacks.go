@@ -129,6 +129,42 @@ var DesignStacks = []DesignStack{
 			{Kind: "build", Slug: "build-your-own-cache-cluster", Blurb: "Meta-compose — wire ring, bloom, limiter, and nodes"},
 		},
 	},
+	{
+		Slug:        "notification-platform",
+		Name:        "Notification platform stack",
+		Tagline:     "Whiteboard fan-out, then build queue, scheduler, limits, and the gateway.",
+		Description: "Product events become email, push, and SMS. Design preferences and delivery first, then build the queue, delayed digests, rate limits, and the compose gateway that wires them.",
+		Outcomes: []string{
+			"Design channel preferences, retries, and provider caps",
+			"Build durable delivery queues and delayed digests",
+			"Wire queue, scheduler, and rate limiter in one gateway",
+		},
+		Milestones: []DesignStackMilestone{
+			{Kind: "design", Slug: "design-notification-system", Blurb: "Whiteboard — preferences, fan-out, quiet hours"},
+			{Kind: "build", Slug: "build-your-own-queue", Blurb: "Per-channel delivery jobs"},
+			{Kind: "build", Slug: "build-your-own-scheduler", Blurb: "Digests and delayed sends"},
+			{Kind: "build", Slug: "build-your-own-rate-limiter", Blurb: "Per-user and per-provider caps"},
+			{Kind: "build", Slug: "build-your-own-notification-platform", Blurb: "Meta-compose — wire the three services in a gateway"},
+		},
+	},
+	{
+		Slug:        "payment-ledger",
+		Name:        "Payment ledger stack",
+		Tagline:     "Whiteboard double-entry, then build WAL, IDs, MVCC, and the gateway.",
+		Description: "Ledgers need durable appends, unique transfer IDs, and snapshot-isolated balances. Design the money path, then implement the primitives and the compose gateway that wires them.",
+		Outcomes: []string{
+			"Design idempotent transfers and audit trails",
+			"Build WAL durability, snowflake IDs, and MVCC balances",
+			"Wire the three primitives into a ledger gateway",
+		},
+		Milestones: []DesignStackMilestone{
+			{Kind: "design", Slug: "design-payment-ledger", Blurb: "Whiteboard — accounts, entries, idempotency"},
+			{Kind: "build", Slug: "build-your-own-wal", Blurb: "Append before ack"},
+			{Kind: "build", Slug: "build-your-own-id-generator", Blurb: "Transfer and idempotency IDs"},
+			{Kind: "build", Slug: "build-your-own-mvcc", Blurb: "Snapshot balance reads"},
+			{Kind: "build", Slug: "build-your-own-payment-ledger", Blurb: "Meta-compose — wire WAL, id gen, and MVCC"},
+		},
+	},
 }
 
 // DesignStackBySlug returns a design stack or false.
