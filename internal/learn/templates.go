@@ -60,12 +60,16 @@ const siteNavHTML = `<nav class="sticky top-0 z-50 border-b border-border-soft b
       <span class="font-mono font-medium text-accent">$</span> open-crafters
       <span class="border border-accent/25 bg-accent/10 px-1.5 py-0.5 font-mono text-[0.62rem] font-semibold uppercase tracking-widest text-accent-dim">learn</span>
     </a>
-    <div class="flex items-center gap-4 text-sm text-muted">
+    <div class="flex items-center gap-3 text-sm text-muted sm:gap-4">
       <a class="hover:text-ink" href="/roadmaps">Roadmaps</a>
       <a class="hover:text-ink" href="/design">System design</a>
       <a class="hover:text-ink" href="/blog">Blog</a>
       <a class="hover:text-ink" href="https://runner.gilla.fun">Runner</a>
       <a class="hover:text-ink" href="https://github.com/Rohithgilla12/open-crafters">GitHub</a>
+      <button type="button" data-cmdk-open class="inline-flex items-center gap-1.5 border border-border bg-surface px-2 py-1 font-mono text-[0.62rem] uppercase tracking-wider text-muted transition-[border-color,background-color] duration-150 hover:border-accent/40 hover:bg-surface-hover hover:text-ink" aria-label="Open command palette" title="Jump anywhere">
+        <span class="hidden sm:inline">Jump</span>
+        <kbd data-cmdk-hint class="rounded border border-border-soft bg-canvas-elevated px-1 py-0.5 text-[0.58rem] text-muted">⌘K</kbd>
+      </button>
     </div>
   </div>
 </nav>`

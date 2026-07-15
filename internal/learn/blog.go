@@ -28,6 +28,31 @@ type BlogPost struct {
 	HTML        template.HTML
 }
 
+// APIBlogPost is the JSON shape for /api/blog.
+type APIBlogPost struct {
+	Slug        string `json:"slug"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Date        string `json:"date,omitempty"`
+}
+
+// APIBlogList returns lightweight blog entries for the command palette.
+func (c *Catalog) APIBlogList() []APIBlogPost {
+	out := make([]APIBlogPost, 0, len(c.BlogPosts))
+	for _, p := range c.BlogPosts {
+		ap := APIBlogPost{
+			Slug:        p.Slug,
+			Title:       p.Title,
+			Description: p.Description,
+		}
+		if !p.Date.IsZero() {
+			ap.Date = p.Date.Format("2006-01-02")
+		}
+		out = append(out, ap)
+	}
+	return out
+}
+
 // LoadBlogPosts reads embedded markdown posts from content/blog.
 func LoadBlogPosts() ([]BlogPost, error) {
 	bfs := opencrafters.BlogFS()

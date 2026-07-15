@@ -459,6 +459,306 @@
     });
   }
 
+  // --- Cmd+K jump palette -------------------------------------------------
+
+  const PAGES = [
+    { group: "Pages", label: "Home", href: "/", keywords: "index challenges" },
+    { group: "Pages", label: "Roadmaps", href: "/roadmaps", keywords: "paths learning" },
+    { group: "Pages", label: "System design", href: "/design", keywords: "whiteboard interview" },
+    { group: "Pages", label: "Design roadmaps", href: "/design/roadmaps", keywords: "" },
+    { group: "Pages", label: "Design stacks", href: "/design/stacks", keywords: "compose" },
+    { group: "Pages", label: "Blog", href: "/blog", keywords: "posts articles" },
+  ];
+
+  let cmdkItems = null;
+  let cmdkLoaded = false;
+  let cmdkIndexPromise = null;
+  let cmdkOpenGen = 0;
+  let cmdkState = { open: false, query: "", active: 0, filtered: [] };
+  let cmdkEls = null;
+
+  function isEditableTarget(el) {
+    if (!el || el === document.body) return false;
+    const tag = (el.tagName || "").toLowerCase();
+    if (tag === "input" || tag === "textarea" || tag === "select") return true;
+    if (el.isContentEditable) return true;
+    return false;
+  }
+
+  function cmdkShortcutLabel() {
+    const mac = /Mac|iPhone|iPad|iPod/i.test(navigator.platform || navigator.userAgent || "");
+    return mac ? "⌘K" : "Ctrl+K";
+  }
+
+  function scoreItem(item, q) {
+    if (!q) return 1;
+    const hay = (item.label + " " + item.slug + " " + (item.keywords || "")).toLowerCase();
+    if (hay.includes(q)) return q.length / hay.length + (item.label.toLowerCase().startsWith(q) ? 1 : 0);
+    const parts = q.split(/\s+/).filter(Boolean);
+    if (parts.every((p) => hay.includes(p))) return 0.5;
+    return 0;
+  }
+
+  function filterCmdk(query) {
+    const q = query.trim().toLowerCase();
+    const scored = [];
+    for (const item of cmdkItems || []) {
+      const s = scoreItem(item, q);
+      if (s > 0) scored.push({ item, s });
+    }
+    scored.sort((a, b) => b.s - a.s || a.item.group.localeCompare(b.item.group) || a.item.label.localeCompare(b.item.label));
+    return scored.map((x) => x.item);
+  }
+
+  async function loadCmdkIndex() {
+    if (cmdkLoaded && cmdkItems) return cmdkItems;
+    if (cmdkIndexPromise) return cmdkIndexPromise;
+    cmdkIndexPromise = (async () => {
+      const items = PAGES.map((p) => ({ ...p, slug: "" }));
+      try {
+        const [chRes, rmRes, desRes, blogRes] = await Promise.all([
+          fetch("/api/challenges"),
+          fetch("/api/roadmaps"),
+          fetch("/api/design"),
+          fetch("/api/blog"),
+        ]);
+        if (chRes.ok) {
+          const data = await chRes.json();
+          for (const c of data.challenges || []) {
+            items.push({
+              group: "Challenges",
+              label: c.name || c.slug,
+              slug: c.slug || "",
+              href: "/challenges/" + c.slug,
+              keywords: (c.tagline || "") + " " + (c.difficulty || ""),
+            });
+          }
+        }
+        if (rmRes.ok) {
+          const data = await rmRes.json();
+          for (const r of data.roadmaps || []) {
+            items.push({
+              group: "Roadmaps",
+              label: r.name || r.slug,
+              slug: r.slug || "",
+              href: "/roadmaps/" + r.slug,
+              keywords: r.tagline || "",
+            });
+          }
+        }
+        if (desRes.ok) {
+          const data = await desRes.json();
+          for (const d of data.design || []) {
+            items.push({
+              group: "Design",
+              label: d.name || d.slug,
+              slug: d.slug || "",
+              href: "/design/" + d.slug,
+              keywords: (d.tagline || "") + " " + (d.category || ""),
+            });
+          }
+        }
+        if (blogRes.ok) {
+          const data = await blogRes.json();
+          for (const p of data.posts || []) {
+            items.push({
+              group: "Blog",
+              label: p.title || p.slug,
+              slug: p.slug || "",
+              href: "/blog/" + p.slug,
+              keywords: p.description || "",
+            });
+          }
+        }
+      } catch {
+        /* pages-only fallback */
+      }
+      cmdkItems = items;
+      cmdkLoaded = true;
+      return items;
+    })();
+    return cmdkIndexPromise;
+  }
+
+  function ensureCmdkDOM() {
+    if (cmdkEls) return cmdkEls;
+    const root = document.createElement("div");
+    root.id = "cmdk-root";
+    root.className = "fixed inset-0 z-76 hidden";
+    root.setAttribute("aria-hidden", "true");
+    root.innerHTML =
+      '<div data-cmdk-backdrop class="absolute inset-0 bg-canvas/90 backdrop-blur-sm"></div>' +
+      '<div class="relative mx-auto mt-[12vh] flex max-h-[70vh] w-full max-w-[580px] flex-col overflow-hidden rounded-[14px] border border-border bg-surface shadow-[0_4px_20px_rgba(110,231,183,0.08)]" role="dialog" aria-modal="true" aria-label="Jump anywhere">' +
+      '<div class="flex shrink-0 items-center gap-2 border-b border-border-soft px-4 py-3">' +
+      '<span class="font-mono text-accent">$</span>' +
+      '<input data-cmdk-input type="text" autocomplete="off" spellcheck="false" placeholder="Jump to challenge, roadmap, design, blog…" class="min-w-0 flex-1 bg-transparent font-mono text-sm text-ink outline-none placeholder:text-muted" />' +
+      '<kbd class="hidden rounded border border-border-soft bg-canvas-elevated px-1.5 py-0.5 font-mono text-[0.58rem] text-muted sm:inline">esc</kbd>' +
+      "</div>" +
+      '<div data-cmdk-list class="min-h-0 flex-1 overflow-auto py-2" role="listbox"></div>' +
+      '<div data-cmdk-empty class="hidden shrink-0 px-4 py-6 text-center font-mono text-sm text-muted">No matches</div>' +
+      "</div>";
+    document.body.appendChild(root);
+    cmdkEls = {
+      root,
+      backdrop: root.querySelector("[data-cmdk-backdrop]"),
+      input: root.querySelector("[data-cmdk-input]"),
+      list: root.querySelector("[data-cmdk-list]"),
+      empty: root.querySelector("[data-cmdk-empty]"),
+    };
+    cmdkEls.backdrop.addEventListener("click", closeCmdk);
+    cmdkEls.input.addEventListener("input", () => {
+      cmdkState.query = cmdkEls.input.value;
+      cmdkState.active = 0;
+      renderCmdkList();
+    });
+    cmdkEls.input.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        moveCmdk(1);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        moveCmdk(-1);
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        activateCmdk();
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        closeCmdk();
+      }
+    });
+    return cmdkEls;
+  }
+
+  function renderCmdkList() {
+    const els = ensureCmdkDOM();
+    const filtered = filterCmdk(cmdkState.query);
+    cmdkState.filtered = filtered;
+    if (cmdkState.active >= filtered.length) cmdkState.active = Math.max(0, filtered.length - 1);
+    els.list.innerHTML = "";
+    if (!filtered.length) {
+      els.empty.classList.remove("hidden");
+      els.list.classList.add("hidden");
+      return;
+    }
+    els.empty.classList.add("hidden");
+    els.list.classList.remove("hidden");
+    let lastGroup = "";
+    filtered.forEach((item, i) => {
+      if (item.group !== lastGroup) {
+        lastGroup = item.group;
+        const h = document.createElement("div");
+        h.className =
+          "px-4 pb-1 pt-2 font-mono text-[0.62rem] font-semibold uppercase tracking-widest text-muted";
+        h.textContent = item.group;
+        els.list.appendChild(h);
+      }
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.role = "option";
+      btn.setAttribute("aria-selected", i === cmdkState.active ? "true" : "false");
+      btn.dataset.index = String(i);
+      btn.className =
+        "flex w-full items-baseline gap-2 px-4 py-2 text-left text-sm transition-[background-color] duration-150 " +
+        (i === cmdkState.active ? "bg-accent/10 text-ink" : "text-ink hover:bg-surface-hover");
+      const label = document.createElement("span");
+      label.className = "min-w-0 flex-1 truncate font-display font-medium";
+      label.textContent = item.label;
+      btn.appendChild(label);
+      if (item.slug) {
+        const slug = document.createElement("span");
+        slug.className = "shrink-0 font-mono text-[0.72rem] text-muted";
+        slug.textContent = item.slug;
+        btn.appendChild(slug);
+      }
+      btn.addEventListener("mousemove", () => {
+        if (cmdkState.active !== i) {
+          cmdkState.active = i;
+          renderCmdkList();
+        }
+      });
+      btn.addEventListener("click", () => {
+        cmdkState.active = i;
+        activateCmdk();
+      });
+      els.list.appendChild(btn);
+    });
+    const activeBtn = els.list.querySelector('[aria-selected="true"]');
+    if (activeBtn) activeBtn.scrollIntoView({ block: "nearest" });
+  }
+
+  function moveCmdk(delta) {
+    const n = cmdkState.filtered.length;
+    if (!n) return;
+    cmdkState.active = (cmdkState.active + delta + n) % n;
+    renderCmdkList();
+  }
+
+  function activateCmdk() {
+    const item = cmdkState.filtered[cmdkState.active];
+    if (!item || !item.href) return;
+    closeCmdk();
+    window.location.href = item.href;
+  }
+
+  async function openCmdk() {
+    const els = ensureCmdkDOM();
+    const openId = ++cmdkOpenGen;
+    cmdkState.open = true;
+    cmdkState.query = "";
+    cmdkState.active = 0;
+    els.input.value = "";
+    els.root.classList.remove("hidden");
+    els.root.setAttribute("aria-hidden", "false");
+    document.documentElement.classList.add("overflow-hidden");
+    if (!cmdkItems) {
+      cmdkItems = PAGES.map((p) => ({ ...p, slug: "" }));
+    }
+    renderCmdkList();
+    requestAnimationFrame(() => els.input.focus());
+    await loadCmdkIndex();
+    if (!cmdkState.open || openId !== cmdkOpenGen) return;
+    renderCmdkList();
+  }
+
+  function closeCmdk() {
+    if (!cmdkEls || !cmdkState.open) return;
+    cmdkState.open = false;
+    cmdkOpenGen++;
+    cmdkEls.root.classList.add("hidden");
+    cmdkEls.root.setAttribute("aria-hidden", "true");
+    document.documentElement.classList.remove("overflow-hidden");
+  }
+
+  function toggleCmdk() {
+    if (cmdkState.open) closeCmdk();
+    else openCmdk();
+  }
+
+  function initCmdk() {
+    document.querySelectorAll("[data-cmdk-hint]").forEach((el) => {
+      el.textContent = cmdkShortcutLabel();
+    });
+    document.querySelectorAll("[data-cmdk-open]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        openCmdk();
+      });
+    });
+    document.addEventListener("keydown", (e) => {
+      const key = e.key && e.key.toLowerCase();
+      if ((e.metaKey || e.ctrlKey) && key === "k") {
+        if (isEditableTarget(e.target) && !cmdkState.open) return;
+        e.preventDefault();
+        toggleCmdk();
+        return;
+      }
+      if (key === "escape" && cmdkState.open) {
+        e.preventDefault();
+        closeCmdk();
+      }
+    });
+  }
+
   function initProgressSync() {
     const exportBtn = document.getElementById("progress-export");
     const importInput = document.getElementById("progress-import");
@@ -501,5 +801,6 @@
     initSubmitForm();
     initProgressSync();
     initInstallCTA();
+    initCmdk();
   });
 })();
