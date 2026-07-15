@@ -127,6 +127,34 @@ func TestSEOAndBlogRoutes(t *testing.T) {
 			t.Fatalf("status %d", rec.Code)
 		}
 	})
+
+	t.Run("api_blog", func(t *testing.T) {
+		rec := get(t, mux, "/api/blog")
+		if rec.Code != http.StatusOK {
+			t.Fatalf("status %d", rec.Code)
+		}
+		body := rec.Body.String()
+		if !strings.Contains(body, `"posts"`) {
+			t.Fatalf("missing posts: %q", body)
+		}
+		if !strings.Contains(body, "write-ahead-log-durability") {
+			t.Fatalf("missing wal post: %q", body)
+		}
+	})
+
+	t.Run("home_has_cmdk_trigger", func(t *testing.T) {
+		rec := get(t, mux, "/")
+		if rec.Code != http.StatusOK {
+			t.Fatalf("status %d", rec.Code)
+		}
+		body := rec.Body.String()
+		if !strings.Contains(body, `data-cmdk-open`) {
+			t.Fatalf("missing cmdk open button")
+		}
+		if !strings.Contains(body, "/learn.js") {
+			t.Fatalf("missing learn.js")
+		}
+	})
 }
 
 func get(t *testing.T, mux http.Handler, path string) *httptest.ResponseRecorder {

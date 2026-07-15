@@ -35,6 +35,7 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET /api/roadmaps", s.handleAPIRoadmaps)
 	mux.HandleFunc("GET /api/design", s.handleAPIDesign)
 	mux.HandleFunc("GET /api/design/roadmaps", s.handleAPIDesignRoadmaps)
+	mux.HandleFunc("GET /api/blog", s.handleAPIBlog)
 	mux.HandleFunc("POST /api/submit", s.handleSubmit)
 	mux.HandleFunc("GET /api/jobs/{id}", s.handleSubmitJob)
 	mux.HandleFunc("GET /style.css", s.handleCSS)
@@ -83,6 +84,10 @@ func (s *Server) handleAPIDesign(w http.ResponseWriter, _ *http.Request) {
 
 func (s *Server) handleAPIDesignRoadmaps(w http.ResponseWriter, _ *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]any{"roadmaps": s.catalog.APIDesignRoadmaps()})
+}
+
+func (s *Server) handleAPIBlog(w http.ResponseWriter, _ *http.Request) {
+	writeJSON(w, http.StatusOK, map[string]any{"posts": s.catalog.APIBlogList()})
 }
 
 func (s *Server) handleCSS(w http.ResponseWriter, _ *http.Request) {
