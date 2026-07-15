@@ -10,6 +10,7 @@ import (
 	"net"
 	"os"
 	"sync"
+	"time"
 )
 
 const (
@@ -112,20 +113,28 @@ func (e *engine) lookupNode(key string) (string, error) {
 }
 
 func (e *engine) raftCall(method string, params map[string]any, out any) error {
+	// Raft election can take a beat after compose boot; retry NOT_LEADER.
+	deadline := time.Now().Add(5 * time.Second)
 	var last error
-	for _, addr := range e.raft {
-		if addr == "" {
-			continue
+	for {
+		for _, addr := range e.raft {
+			if addr == "" {
+				continue
+			}
+			err := rpc(addr, method, params, out)
+			if err == nil {
+				return nil
+			}
+			if re, ok := err.(*rpcErr); ok && re.code == "NOT_LEADER" {
+				last = err
+				continue
+			}
+			return err
 		}
-		err := rpc(addr, method, params, out)
-		if err == nil {
-			return nil
+		if time.Now().After(deadline) {
+			break
 		}
-		if re, ok := err.(*rpcErr); ok && re.code == "NOT_LEADER" {
-			last = err
-			continue
-		}
-		return err
+		time.Sleep(50 * time.Millisecond)
 	}
 	if last != nil {
 		return last

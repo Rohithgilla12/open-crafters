@@ -60,5 +60,6 @@ Metrics: enqueue rate, delivery latency per channel, provider error codes, opt-o
 | Durable job delivery | `build-your-own-queue` |
 | Digest / delayed send | `build-your-own-scheduler` |
 | Provider + user caps | `build-your-own-rate-limiter` |
+| Compose gateway | `build-your-own-notification-platform` |
 
-Notifications are a **fan-out queue problem** with policy in front — you've built every layer.
+Notifications are a **fan-out queue problem** with policy in front — you've built every layer, then wired them in the compose gateway.

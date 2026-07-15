@@ -65,7 +65,7 @@ func TestCatalogListsAllChallenges(t *testing.T) {
 			}
 		}
 	}
-	if composeStacks != 6 {
-		t.Fatalf("want 6 design stacks with compose capstones, got %d", composeStacks)
+	if composeStacks != 8 {
+		t.Fatalf("want 8 design stacks with compose capstones, got %d", composeStacks)
 	}
 }

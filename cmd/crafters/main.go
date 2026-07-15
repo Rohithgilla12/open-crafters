@@ -39,7 +39,9 @@ import (
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/logstore"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/lsm"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/mvcc"
+	"github.com/Rohithgilla12/open-crafters/internal/challenges/notifplatform"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/objectstore"
+	"github.com/Rohithgilla12/open-crafters/internal/challenges/payledger"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/queue"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/raft"
 	"github.com/Rohithgilla12/open-crafters/internal/challenges/ratelimiter"
@@ -76,6 +78,8 @@ var challenges = map[string]harness.Challenge{
 	"build-your-own-workflow-worker":         workflowworker.Challenge(),
 	"build-your-own-distributed-kv":          distkv.Challenge(),
 	"build-your-own-chat-service":          chatservice.Challenge(),
+	"build-your-own-notification-platform": notifplatform.Challenge(),
+	"build-your-own-payment-ledger":        payledger.Challenge(),
 	"build-your-own-harness":               grader.Challenge(),
 }
 

@@ -55,5 +55,6 @@ Entries are **append-only**. Corrections = new compensating transaction, never U
 | Append-before-ack | `build-your-own-wal` |
 | Snapshot balance reads | `build-your-own-mvcc` |
 | Transaction IDs | `build-your-own-id-generator` |
+| Compose gateway | `build-your-own-payment-ledger` |
 
-Money is the ultimate durability test — the ledger is a WAL with accounting semantics.
+Money is the ultimate durability test — the ledger is a WAL with accounting semantics, wired through the compose gateway.

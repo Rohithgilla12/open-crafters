@@ -6,6 +6,7 @@ import os
 import socket
 import socketserver
 import threading
+import time
 
 RING_ID = "kv"
 RAFT_SHARD = "raft-shard"
@@ -87,17 +88,23 @@ class Engine:
         return out["node_id"]
 
     def raft_call(self, method, params, out=None):
+        # Raft election can take a beat after compose boot; retry NOT_LEADER.
+        deadline = time.monotonic() + 5.0
         last = None
-        for addr in self.raft:
-            if not addr:
-                continue
-            try:
-                return rpc(addr, method, params, out)
-            except RPCError as e:
-                if e.code == "NOT_LEADER":
-                    last = e
+        while True:
+            for addr in self.raft:
+                if not addr:
                     continue
-                raise
+                try:
+                    return rpc(addr, method, params, out)
+                except RPCError as e:
+                    if e.code == "NOT_LEADER":
+                        last = e
+                        continue
+                    raise
+            if time.monotonic() >= deadline:
+                break
+            time.sleep(0.05)
         if last:
             raise last
         raise GWError("NOT_LEADER", "no raft leader available")

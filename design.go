@@ -149,6 +149,7 @@ var DesignProblems = []DesignProblem{
 			"build-your-own-wal",
 			"build-your-own-mvcc",
 			"build-your-own-id-generator",
+			"build-your-own-payment-ledger",
 		},
 		DiscussionPrompts: []string{
 			"What is your ledger data model — accounts, entries, transactions?",
@@ -169,6 +170,7 @@ var DesignProblems = []DesignProblem{
 			"build-your-own-queue",
 			"build-your-own-scheduler",
 			"build-your-own-rate-limiter",
+			"build-your-own-notification-platform",
 		},
 		DiscussionPrompts: []string{
 			"How do you model user channel preferences (push vs email vs quiet hours)?",

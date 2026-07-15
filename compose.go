@@ -9,6 +9,8 @@ var ComposeChallenges = []string{
 	"build-your-own-workflow-worker",
 	"build-your-own-distributed-kv",
 	"build-your-own-chat-service",
+	"build-your-own-notification-platform",
+	"build-your-own-payment-ledger",
 }
 
 // IsComposeChallenge reports whether slug is a compose capstone.
